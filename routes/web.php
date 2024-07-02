@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminControllers\AdminController;
+use App\Http\Controllers\AdminControllers\AdminUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteControllers\ClientBookController;
@@ -30,5 +31,9 @@ Route::middleware('role')->group(function () {
     route::post('cliente/prestar/libro/{id}', [ClientBookController::class, 'store'])->name('prestarLibro');
 });
 
-Route::get('/admin/home',[AdminController::class,'index'])->name('home.adim');
-Route::get('/admin/edit',[AdminController::class,'edit'])->name('admin.edit');
+Route::get('/admin/home', [AdminController::class, 'index'])->name('home.adim');
+Route::get('/admin/edit', [AdminController::class, 'edit'])->name('admin.edit');
+Route::put('/admin/update', [AdminController::class,'update'])->name('admin.update');
+
+Route::get('/lista/usuarios', [AdminUserController::class, 'index'])->name('list.users');
+Route::delete('/admin/eliminar-usuario/{id}', [AdminUserController::class,'destroy'])->name('admin.elimiarUser');
