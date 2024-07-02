@@ -31,3 +31,4 @@ Route::middleware('role')->group(function () {
 });
 
 Route::get('/admin/home',[AdminController::class,'index'])->name('home.adim');
+Route::get('/admin/edit',[AdminController::class,'edit'])->name('admin.edit');
