@@ -1,0 +1,84 @@
+@extends('Layouts.menu_cliente')
+
+@section('title')
+Libreria
+@endsection
+
+@section('content')
+<div class="row" style="display: flex; justify-content: center;padding-top:3vw;">
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Mis datos</h4>
+                @foreach ($usuario as $item)
+                                    <form action="{{route('cliente.update',$item->id)}}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="formrow-firstname-input" class="form-label">Nombre(s)</label>
+                                                    <input type="text" name="nombre" class="form-control" id="formrow-firstname-input"
+                                                        placeholder="Mario" value="{{$item->nombre}}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="formrow-firstname-input" class="form-label">Apellidos</label>
+                                                    <input type="text" name="apellido" class="form-control" id="formrow-firstname-input"
+                                                        placeholder="Perez" value="{{$item->apellido}}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="formrow-email-input" class="form-label">Email</label>
+                                                    <input type="email" class="form-control" name="email" id="formrow-email-input"
+                                                        placeholder="Enter Your Email ID" value="{{$item->email}}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="formrow-password-input" class="form-label">Password</label>
+                                                    <input type="password" name="password" class="form-control" id="formrow-password-input"
+                                                        placeholder="Enter Your Password" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="mb-3">
+                                                    <label for="formrow-inputCity" class="form-label">Ciudad</label>
+                                                    <select id="formrow-inputState" name="ciudad_id" class="form-select">
+                                                        <option selected="" >Seleccionar...</option>
+                                                        @foreach ($cities as $city)
+                                                            <option value="{{$city->id}}">{{$city->nombre_ciudad}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="mb-3">
+                                                    <label for="formrow-inputState" class="form-label">Estado</label>
+                                                    <select id="formrow-inputState" class="form-select">
+                                                        <option selected="">Seleccionar...</option>
+                                                        @foreach ($states as $state)
+                                                            <option>{{$state->nombre_estado}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button type="submit" class="btn btn-primary w-md">Guardar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- end card body -->
+                            </div>
+                            <!-- end card -->
+                        </div>
+                    </div>
+                @endforeach
+@endsection
