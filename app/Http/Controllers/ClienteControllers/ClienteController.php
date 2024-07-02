@@ -22,21 +22,19 @@ if (session_status() == PHP_SESSION_NONE) {
                     'id' => $user
                 ]);
                 if ($_SESSION['user']->rol_id === 2) {
-                    if ($query) {
-                        $books = DB::select(
-                            'SELECT b.id,b.titulo_libro,b.descripcion,b.categoria_id, c.nombre_categoria
+
+                    $books = DB::select(
+                        'SELECT b.id,b.titulo_libro,b.descripcion,b.categoria_id, c.nombre_categoria
                                 FROM books b
                                 JOIN categories c
                                 ON b.categoria_id = c.id
                                 ORDER BY b.id;'
-                        );
-                        return view('U_Cliente.index')->with('books', $books);
-                    }
-                    return redirect('/admin/home')->with('message_error', 'No tienes permiso par acceder a esta ruta');
+                    );
+                    return view('U_Cliente.index')->with('books', $books);
                 }
                 return redirect('/admin/home')->with('message_error', 'No tienes permiso par acceder a esta ruta');
             }
-            return redirect('/inicio_sesion')->with('login_error','Debes de iniciar sesion');
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
 
         public function edit()

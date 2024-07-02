@@ -51,7 +51,7 @@ Libreria
                             <h4 class="mb-0">{{$item}}</h4>
                         @endforeach
                         <br>
-                        <a href="{{route('list.users')}}" class="btn btn-primary waves-effect waves-light btn-sm">Ver
+                        <a href="{{route('admin.listBooks')}}" class="btn btn-primary waves-effect waves-light btn-sm">Ver
                             más</a>
                     </div>
 

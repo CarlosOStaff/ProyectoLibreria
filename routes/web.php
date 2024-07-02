@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminControllers\AdminBooksController;
 use App\Http\Controllers\AdminControllers\AdminController;
 use App\Http\Controllers\AdminControllers\AdminUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -16,9 +17,6 @@ Route::get('/inicio_session', [AuthController::class, 'index']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/prueba', function () {
-    return 'prueba middleware-cliente';
-})->middleware('role');
 
 Route::middleware('role')->group(function () {
     route::get('/cliente/home', [ClienteController::class, 'index'])->name('home.cliente');
@@ -31,9 +29,16 @@ Route::middleware('role')->group(function () {
     route::post('cliente/prestar/libro/{id}', [ClientBookController::class, 'store'])->name('prestarLibro');
 });
 
-Route::get('/admin/home', [AdminController::class, 'index'])->name('home.adim');
-Route::get('/admin/edit', [AdminController::class, 'edit'])->name('admin.edit');
-Route::put('/admin/update', [AdminController::class,'update'])->name('admin.update');
+Route::middleware('role')->group(function () {
 
-Route::get('/lista/usuarios', [AdminUserController::class, 'index'])->name('list.users');
-Route::delete('/admin/eliminar-usuario/{id}', [AdminUserController::class,'destroy'])->name('admin.elimiarUser');
+    Route::get('/admin/home', [AdminController::class, 'index'])->name('home.adim');
+    Route::get('/admin/edit', [AdminController::class, 'edit'])->name('admin.edit');
+    Route::put('/admin/update', [AdminController::class, 'update'])->name('admin.update');
+
+    Route::get('/lista/usuarios', [AdminUserController::class, 'index'])->name('list.users');
+    Route::delete('/admin/eliminar-usuario/{id}', [AdminUserController::class, 'destroy'])->name('admin.elimiarUser');
+    Route::get('/admin/lista/libros', [AdminBooksController::class, 'index'])->name('admin.listBooks');
+    Route::get('/admin/editar/libro/{id}', [AdminBooksController::class, 'edit'])->name('admin.editBook');
+    Route::put('/admin/update/libro/{id}', [AdminBooksController::class, 'update'])->name('admin.updateBook');
+    Route::delete('/admin/eliminar/libro/{id}', [AdminBooksController::class, 'destroy'])->name('deleteBook');
+});
