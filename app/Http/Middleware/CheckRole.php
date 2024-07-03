@@ -16,6 +16,7 @@ if (session_status() == PHP_SESSION_NONE) {
             if (isset($_SESSION['user'])) {
                 $user_rol = $_SESSION['user']->rol_id;
                 if ($user_rol === 1) {
+                    return 'a';
                     return redirect('/admin/home');
                 } elseif ($user_rol === 2) {
                     return redirect('/cliente/home');

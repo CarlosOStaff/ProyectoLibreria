@@ -57,15 +57,25 @@ class AuthController extends Controller
             ['email' => $request->email]
         );
         if ($query) {
-            DB::insert('INSERT INTO users (email,password,rol_id)
-            VALUES (:email,:password,);',
-                [
-                    'email' => $request->email,
-                    'password' => bcrypt($request->password)
-                ]
-            );
+            return response()->json(['message', 'El correo ya existe']);
         }
-        return response()->json(['message', 'El correo ingresado ya existe']);
+        $newUser = DB::insert(
+            'INSERT INTO users (rol_id,nombre,apellido,ciudad_id,email,password) 
+            VALUES (:rol_id,:nombre,:apellido,:ciudad_id,:email,:password)',
+            [
+                'rol_id' => 2,
+                'nombre' => $request->nombre,
+                'apellido' => $request->apellido,
+                'ciudad_id' => $request->ciudad_id,
+                'email' => $request->email,
+                'password' => bcrypt($request->password)
+            ]
+        );
+        return view('login');
+    }
+    public function newUser()
+    {
+        $ciudades = DB::select('SELECT * FROM cities;');
+        return view('register')->with('ciudades', $ciudades);
     }
 }
-

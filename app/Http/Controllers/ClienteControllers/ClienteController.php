@@ -42,18 +42,19 @@ if (session_status() == PHP_SESSION_NONE) {
             /*         session_start();
              */
             if (isset($_SESSION['user'])) {
-                $user = $_SESSION['user']->rol_id;
-                if ($user === 2) {
+                $user_rol = $_SESSION['user']->rol_id;
+                $user_id = $_SESSION['user']->id;
+                if ($user_rol === 2) {
                     $usuario = DB::select(
                         'SELECT id,rol_id,nombre,apellido,ciudad_id,email,password 
-                    FROM users WHERE id = (:id)',
-                        ['id' => $user]
+                        FROM users WHERE id = (:id)',
+                        ['id' => $user_id]
                     );
                     $cities = DB::select(
-                        'SELECT id, nombre_ciudad FROM cities '
+                        'SELECT id, nombre_ciudad FROM cities;'
                     );
                     $states = DB::select('SELECT s.nombre_estado FROM states s GROUP BY s.nombre_estado;');
-                    return view('U_cliente.cliente_edit')->with('usuario', $usuario)
+                    return view('U_Cliente.cliente_edit')->with('usuario', $usuario)
                         ->with('cities', $cities)
                         ->with('states', $states);
                 }

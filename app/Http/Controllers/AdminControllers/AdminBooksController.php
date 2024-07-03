@@ -11,7 +11,12 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
     class AdminBooksController extends Controller
     {
-
+        public function catalogues()
+        {
+            $categorias = DB::select('select * from categories;');
+            $etiquetas = DB::select('select * from tags');
+            return view('U_Admin.books.nuevo_libro')->with('categorias', $categorias)->with('etiquetas', $etiquetas);
+        }
         public function index()
         {
             if (isset($_SESSION['user'])) {
@@ -37,7 +42,6 @@ if (session_status() == PHP_SESSION_NONE) {
             }
             return response()->json(['message', 'Debes de iniciar sesion']);
         }
-
         public function edit($id)
         {
             if (isset($_SESSION['user'])) {
@@ -64,7 +68,6 @@ if (session_status() == PHP_SESSION_NONE) {
             }
             return response()->json(['message', 'Debes de iniciar sesion']);
         }
-
         public function update(Request $request, $id)
         {
             if (isset($_SESSION['user'])) {
@@ -98,7 +101,6 @@ if (session_status() == PHP_SESSION_NONE) {
             }
             return response()->json(['message', 'Debes de iniciar sesion']);
         }
-
         public function destroy($id)
         {
             if (isset($_SESSION['user'])) {
@@ -118,6 +120,48 @@ if (session_status() == PHP_SESSION_NONE) {
                 return response()->json(['message', 'No tienes permisos para realizar esta accion']);
             }
             return response()->json(['message', 'Debes de iniciar sesion']);
+        }
+        public function newbook()
+        {
+            if (isset($_SESSION['user'])) {
+                $catalogues = $this->catalogues();
+                $user_rol = $_SESSION['user']->rol_id;
+                $query = DB::select('SELECT rol_id FROM users WHERE rol_id = (:rol_id)', ['rol_id' => $user_rol]);
+                if ($query) {
+                    return view('U_Admin.books.nuevo_libro')->with($catalogues->getData());
+                }
+            }
+        }
+        public function store(Request $request)
+        {
+            if (isset($_SESSION['user'])) {
+                $user_rol = $_SESSION['user']->rol_id;
+                $query = DB::select(
+                    'SELECT rol_id FROM users WHERE rol_id = (:rol_id)',
+                    ['rol_id' => $user_rol]
+                );
+                if ($query) {
+                    $book = DB::insert(
+                        'INSERT INTO books 
+                        (titulo_libro,descripcion,contenido,fecha_publicacion,categoria_id)
+                        VALUES (:titulo_libro,:descripcion,:contenido,:fecha_publicacion,:categoria_id)',
+                        [
+                            'titulo_libro' => $request->titulo_libro,
+                            'descripcion' => $request->descripcion,
+                            'contenido' => $request->contenido,
+                            'fecha_publicacion' => $request->fecha_publicacion,
+                            'categoria_id' => intval($request->categoria_id)
+                        ]
+                    );
+                    /* DB::insert(
+                        'INSERT INTO book_tag (book_id,tag_id) VALUES (:book_id,:tag_id)',
+                        ['book_id' => $book->id, 'tag_id' => intval($request->etiqueta_id)]
+                    ); */
+                    return redirect('/admin/lista/libros');
+                }
+                return response()->json(['message', 'Usuario no encontrado']);
+            }
+            return view('login');
         }
     }
 }

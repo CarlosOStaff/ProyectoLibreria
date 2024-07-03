@@ -22,9 +22,9 @@
 <div class="col-xl-6">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title mb-4"></h4>
+            <h4 class="card-title mb-4">Ingresa los datos del nuevo usuario</h4>
 
-            <form action="{{url('/registro/usuario')}}" method="POST">
+            <form action="{{url('/new-admin')}}" method="POST">
                 @csrf
                 <div class="row mb-4">
                     <label for="horizontal-firstname-input" class="col-sm-3 col-form-label">First name</label>

@@ -32,6 +32,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{url('/inicio_session')}}">Login</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('newUser')}}">Registrate</a>
+                </li>
             </ul>
         </div>
     </nav>

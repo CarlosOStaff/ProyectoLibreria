@@ -32,7 +32,6 @@ if (session_status() == PHP_SESSION_NONE) {
                 }
             }
         }
-
         public function destroy($id)
         {
             $admin_id = $_SESSION['user']->id;
