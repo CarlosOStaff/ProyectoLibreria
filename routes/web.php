@@ -38,7 +38,7 @@ Route::middleware('role')->group(function () {
     Route::post('/new-admin', [AdminController::class,'store'])->name('store.newAdmin');
     Route::get('/admin-activos', [AdminController::class,'listAdmin'])->name('listAdmin');
     Route::delete('/eliminar/admin/{id}', [AdminController::class,'destroy'])->name('elimiaradmin');
-    Route::get('/lista/usuarios', [AdminUserController::class, 'index'])->name('list.users');
+    Route::get('/admin/lista/usuarios', [AdminUserController::class, 'index'])->name('list.users');
     Route::delete('/admin/eliminar-usuario/{id}', [AdminUserController::class, 'destroy'])->name('admin.elimiarUser');
 
     Route::get('/admin/lista/libros', [AdminBooksController::class, 'index'])->name('admin.listBooks');

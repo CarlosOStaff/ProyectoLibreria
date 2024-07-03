@@ -5,62 +5,67 @@ Proyecto Libreria - Admin
 @endsection
 
 @section('content')
-<div class="card-body col-md-5">
-    <h4 class="card-title mb-4">Información personal</h4>
-    <form action="{{route('admin.update')}}" method="POST">
-        @csrf
-        @method('PUT')
-        <div class="table">
-            <table class="table table-nowrap mb-0 row align-items-start">
-                <tbody>
-                    <tr>
-                        <th scope="row">Nombre :</th>
-                        @foreach ($admin as $item)
-                                    <td>
-                                        <div class="col-md-6">
-                                            <input class="form-control" name="nombre" type="text" value="{{$item->nombre}}"
+
+<div class="container">
+    <div class="row mx-auto mt-4 justify-content-center align-items-center">
+        <div class="col-lg-12">
+            <h3 class="card-title mb-4 text-center">Información personal</h3>
+            <div class="card-body col-md-7 mx-auto">
+                <form action="{{ route('admin.update') }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="shadow-lg p-4 rounded-5">
+                        <table class="table mb-0 align-items-center table-borderless">
+                            <tbody>
+
+                                @foreach ($admin as $item)
+                                    <tr>
+                                        <th scope="row" class="text-end">Nombre :</th>
+                                        <td>
+                                            <input class="form-control" name="nombre" type="text"
+                                                value="{{ $item->nombre }}" id="example-text-input">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="text-end">Apellido :</th>
+                                        <td>
+                                            <input class="form-control" name="apellido" type="text"
+                                                value="{{ $item->apellido }}" id="example-text-input">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="text-end">Ciudad :</th>
+                                        <td>
+                                            <select name="ciudad_id" class="form-control">
+                                                <option value="{{ $item->ciudad_id }}">{{ $item->nombre_ciudad }}</option>
+                                                @foreach ($ciudades as $ciudad)
+                                                    <option value="{{ $ciudad->id }}">{{ $ciudad->nombre_ciudad }}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="text-end">E-mail :</th>
+                                        <td>
+                                            <input class="form-control" name="email" type="text" value="{{ $item->email }}"
                                                 id="example-text-input">
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 <tr>
-                                    <th scope="row">Apellido :</th>
-                                    <td>
-                                        <div class="col-md-6">
-                                            <input class="form-control" name="apellido" type="text" value="{{$item->apellido}}"
-                                                id="example-text-input">
-                                        </div>
+                                    <td colspan="2" class="text-center">
+                                        <button type="submit" class="btn btn-success waves-effect waves-light">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th scope="row">Ciudad :</th>
-                                    <td>
-                                        <select name="ciudad_id" id="">
-                                            <option value="{{$item->ciudad_id}}">__{{$item->nombre_ciudad}}__</option>
-                                            @foreach ($ciudades as $ciudad)
-                                                <option name="ciudad_id" value="{{$ciudad->id}}">{{$ciudad->nombre_ciudad}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">E-mail :</th>
-                                    <td>
-                                        <div class="col-md-6">
-                                            <input class="form-control" name="email" type="text" value="{{$item->email}}"
-                                                id="example-text-input">
-                                        </div>
-                                    </td>
-                                </tr>
-                                <td>
-                                    <button type="submit" class="btn btn-success waves-effect waves-light">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </button>
-                                </td>
                             </tbody>
-                        @endforeach
-            </table>
+                        </table>
+                    </div>
+                </form>
+            </div>
         </div>
-    </form>
+    </div>
 </div>
+
 @endsection

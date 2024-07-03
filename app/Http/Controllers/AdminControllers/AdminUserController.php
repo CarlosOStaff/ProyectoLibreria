@@ -23,7 +23,7 @@ if (session_status() == PHP_SESSION_NONE) {
                     ['id' => $admin_id, 'rol_id' => $admin_rol]
                 );
                 if ($query) {
-                    $users = DB::select('SELECT  u.id,u.nombre,u.apellido,u.ciudad_id,u.email,c.id,c.nombre_ciudad
+                    $users = DB::select('SELECT u.id AS user_id,u.nombre,u.apellido,u.ciudad_id,u.email,c.nombre_ciudad
                     FROM users u
                     JOIN cities c
                     ON u.ciudad_id = c.id
