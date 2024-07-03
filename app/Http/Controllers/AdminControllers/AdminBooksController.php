@@ -163,5 +163,34 @@ if (session_status() == PHP_SESSION_NONE) {
             }
             return view('login');
         }
+        public function librosprestados()
+        {
+            $user_rol = $_SESSION['user']->rol_id;
+            $query = DB::select(
+                'SELECT rol_id 
+                FROM users 
+                WHERE rol_id = (:rol_id)',
+                ['rol_id' => $user_rol]
+            );
+            if ($query) {
+                $books = DB::select(
+                    'SELECT br.user_id,br.prestamo_id,
+                    l.libro_id,b.titulo_libro,
+                    b.descripcion,l.fecha_prestamo,
+                    ct.nombre_categoria,
+                    s.nombre,s.email 
+                    FROM book_returns br
+                    JOIN loans l
+                    ON br.user_id = l.user_id
+                    JOIN books b
+                    ON b.id = l.libro_id
+                    JOIN categories ct
+                    ON b.categoria_id = ct.id
+                    JOIN users s
+                    ON br.user_id = s.id;'
+                );
+                return view('U_Admin.books.lista_libros_prestados')->with('books', $books);
+            }
+        }
     }
 }

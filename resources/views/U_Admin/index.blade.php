@@ -61,7 +61,7 @@ Libreria
                             <h4 class="mb-2 text-center h1">{{$item}}</h4>
                         @endforeach
                         <br>
-                        <a href="{{route('list.users')}}"
+                        <a href="{{route('listaLibrosPrestados')}}"
                             class="btn btn-primary waves-effect waves-light btn-sm d-flex justify-content-center">Ver
                             más</a>
                     </div>

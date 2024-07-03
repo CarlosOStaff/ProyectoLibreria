@@ -47,4 +47,5 @@ Route::middleware('role')->group(function () {
     Route::get('/admin/editar/libro/{id}', [AdminBooksController::class, 'edit'])->name('admin.editBook');
     Route::put('/admin/update/libro/{id}', [AdminBooksController::class, 'update'])->name('admin.updateBook');
     Route::delete('/admin/eliminar/libro/{id}', [AdminBooksController::class, 'destroy'])->name('deleteBook');
+    Route::get('/admin/lista/libros/prestados', [AdminBooksController::class,'librosprestados'])->name('listaLibrosPrestados');
 });
