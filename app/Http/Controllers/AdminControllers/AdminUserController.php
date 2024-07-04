@@ -46,7 +46,7 @@ if (session_status() == PHP_SESSION_NONE) {
             );
             if ($query) {
                 DB::delete('DELETE FROM users WHERE id = (:id) AND rol_id = 2',['id'=>$id]);
-                return redirect('/lista/usuarios')->with('success','usuario eliminado correctamente');
+                return redirect('admin/lista/usuarios')->with('success','usuario eliminado correctamente');
             } else {
                 return 'no tienes permiso para borrar este usuario';
             }

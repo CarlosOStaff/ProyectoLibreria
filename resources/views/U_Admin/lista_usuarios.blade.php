@@ -6,7 +6,7 @@ Proyecto Libreria
 
 @section('content')
 <div class="container">
-    <h4 class="card-title mt-4 text-center">Bienvenido, aqui puedes visualizar los usuarios activos</h4>
+    <h2 class="card-title mt-4 text-center fst-italic">Bienvenido, aqui puedes visualizar los usuarios activos</h42>
     <div class="row mx-auto mt-4 justify-content-center align-items-center">
         <div class="col-lg-12">
             <div class="card">
@@ -15,26 +15,26 @@ Proyecto Libreria
                         <table class="table align-middle table-nowrap mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="align-middle">ID</th>
-                                    <th class="align-middle">Nombre</th>
-                                    <th class="align-middle">Apellido</th>
-                                    <th class="align-middle">Ciudad</th>
-                                    <th class="align-middle">Emial</th>
-                                    <th class="align-middle"></th>
+                                    <th class="align-middle h5">ID</th>
+                                    <th class="align-middle h5">Nombre</th>
+                                    <th class="align-middle h5">Apellido</th>
+                                    <th class="align-middle h5">Ciudad</th>
+                                    <th class="align-middle h5">Emial</th>
+                                    <th class="align-middle h5"></th>
                                 </tr>
                             </thead>
                             @foreach ($users as $user)
                                 <tbody>
                                     <tr>
-                                        <td>{{$user->user_id}}</td>
-                                        <td>{{$user->nombre}}</td>
-                                        <td>
+                                        <td class="h6">{{$user->user_id}}</td>
+                                        <td class="h6">{{$user->nombre}}</td>
+                                        <td class="h6">
                                             {{$user->apellido}}
                                         </td>
-                                        <td>
+                                        <td class="h6">
                                             {{$user->nombre_ciudad}}
                                         </td>
-                                        <td>
+                                        <td class="h6">
                                             {{$user->email}}
                                         </td>
                                         <td>

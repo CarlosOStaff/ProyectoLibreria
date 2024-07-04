@@ -5,11 +5,13 @@ Proyecto Libreria - Admin
 @endsection
 
 @section('content')
+<style>
 
+</style>
 <div class="container">
     <div class="row mx-auto mt-4 justify-content-center align-items-center">
         <div class="col-lg-12">
-            <h3 class="card-title mb-4 text-center">Información personal</h3>
+            <h2 class="card-title mb-4 text-center fst-italic">Información personal</h2>
             <div class="card-body col-md-7 mx-auto">
                 <form action="{{ route('admin.update') }}" method="POST">
                     @csrf
