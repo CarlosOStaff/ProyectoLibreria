@@ -1,30 +1,23 @@
-<!DOCTYPE html>
-<html lang="es">
+@extends('Layouts.menu_admin')
 
-<head>
-    <title>Proyecto - Libreria</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="./css/app.css" />
+@section('title')
+Proyecto - Libreria
+@endsection
 
-</head>
+@section('content')
 
-<body>
+<body class="">
     <div class="container">
-        <h2 class="text-center fst-italic fw-bold mt-3 mb-3">Registrate para poder ver nuestros catalogos de libros</h2>
-        <div class="row justify-content-center align-items-center">
-            <div class="col-xl-6 shadow-lg mt-4 p-4 rounded-4">
+        <h2 class="card-title mb-4 text-center mt-3 mb-3 fst-italic ">Nuevo Administrador</h2>
+        <div class="row mx-auto mt-4 justify-content-center">
+            <div class="col-xl-6 shadow-lg p-5 rounded-5 bg-white">
                 <div class="">
-                    <div class="card-body">
-                        <h3 class="card-title mb-4 text-center fst-italic fw-bold">Ingresa tus datos personales</h3>
-
-                        <form action="{{url('/registro/usuario')}}" method="POST">
+                    <div class="">
+                        <form action="{{ url('/new-admin') }}" method="POST">
                             @csrf
                             <div class="row mb-4">
                                 <label for="horizontal-firstname-input"
-                                    class="col-sm-3 col-form-label fst-italic fw-bold text-end">Nombre:</label>
+                                    class="col-sm-3 col-form-label text-center fst-italic fw-bold">Nombre:</label>
                                 <div class="col-sm-9">
                                     <input type="text" name="nombre" class="form-control"
                                         id="horizontal-firstname-input" placeholder="Enter Your ">
@@ -32,7 +25,7 @@
                             </div>
                             <div class="row mb-4">
                                 <label for="horizontal-firstname-input"
-                                    class="col-sm-3 col-form-label fw-bold fst-italic text-end">Apellidos:</label>
+                                    class="col-sm-3 col-form-label text-center fst-italic fw-bold">Apellido:</label>
                                 <div class="col-sm-9">
                                     <input type="text" name="apellido" class="form-control"
                                         id="horizontal-firstname-input" placeholder="Enter Your ">
@@ -40,7 +33,7 @@
                             </div>
                             <div class="row mb-4">
                                 <label for="horizontal-email-input"
-                                    class="col-sm-3 col-form-label fw-bold fst-italic text-end">Email:</label>
+                                    class="col-sm-3 col-form-label text-center fst-italic fw-bold">Email:</label>
                                 <div class="col-sm-9">
                                     <input type="email" name="email" class="form-control" id="horizontal-email-input"
                                         placeholder="Enter Your Email ID">
@@ -48,15 +41,15 @@
                             </div>
                             <div class="row mb-4">
                                 <label for="horizontal-password-input"
-                                    class="col-sm-3 col-form-label fw-bold fst-italic text-end">Password:</label>
+                                    class="col-sm-3 col-form-label text-center fst-italic fw-bold">Password:</label>
                                 <div class="col-sm-9">
                                     <input type="password" name="password" class="form-control"
                                         id="horizontal-password-input" placeholder="Enter Your Password">
                                 </div>
                             </div>
                             <div class="row mb-4">
-                                <label for="formrow-inputState"
-                                    class="col-sm-3 col-form-label text-end fst-italic fw-bold">Ciudades:</label>
+                                <label for="horizontal-password-input"
+                                    class="col-sm-3 col-form-label text-center fst-italic fw-bold">Ciudades:</label>
                                 <div class="col-sm-9">
                                     <select name="ciudad_id" id="ciudad_id" class="form-control">
                                         <option value="">select...</option>
@@ -65,13 +58,13 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="row justify-content-end mt-3 mx-1">
-                                    <div class="col-sm-9">
-                                        <div>
-                                            <button type="submit" class="btn btn-primary w-md fst-italic fw-bold">Guardar</button>
-                                        </div>
-                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 text-center">
+                                    <button type="submit"
+                                        class="btn btn-primary w-md fst-italic fw-bold">Guardar</button>
                                 </div>
+                            </div>
                         </form>
                     </div>
                     <!-- end card body -->
@@ -82,4 +75,4 @@
     </div>
 </body>
 
-</html>
+@endsection

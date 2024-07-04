@@ -27,16 +27,16 @@
         <div class="container-fluid">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{url('/cliente/home')}}">Inicio</a>
+                    <a class="nav-link text-white fst-italic fw-bold" href="{{url('/cliente/home')}}">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{route('user.listBooks')}}">Mis libros</a>
+                    <a class="nav-link text-white fst-italic fw-bold" href="{{route('user.listBooks')}}">Mis libros</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{route('cliente.edit')}}">Mi cuenta</a>
+                    <a class="nav-link text-white fst-italic fw-bold" href="{{route('cliente.edit')}}">Mi cuenta</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{route('logout')}}" class="nav-link">Logout</a>
+                    <a href="{{route('logout')}}" class="nav-link text-white fst-italic fw-bold">Logout</a>
                 </li>
             </ul>
         </div>
