@@ -134,10 +134,13 @@ if (session_status() == PHP_SESSION_NONE) {
                         ]
                     );
                     return redirect('/admin/home');
-                } return response()->json(['message','Usuario no encontrado']);
-            } return response()->json(['message','Debes de iniciar sesion']);
+                }
+                return response()->json(['message', 'Usuario no encontrado']);
+            }
+            return response()->json(['message', 'Debes de iniciar sesion']);
         }
-        public function listAdmin(){
+        public function listAdmin()
+        {
             if (isset($_SESSION['user'])) {
                 $admin_id = $_SESSION['user']->id;
                 $admin_rol = $_SESSION['user']->rol_id;
@@ -170,10 +173,27 @@ if (session_status() == PHP_SESSION_NONE) {
                 ['id' => $admin_id, 'rol_id' => $admin_rol]
             );
             if ($query) {
-                DB::delete('DELETE FROM users WHERE id = (:id) AND rol_id = 1',['id'=>$id]);
-                return redirect('/admin/home')->with('success','usuario eliminado correctamente');
+                DB::delete('DELETE FROM users WHERE id = (:id) AND rol_id = 1', ['id' => $id]);
+                return redirect('/admin/home')->with('success', 'usuario eliminado correctamente');
             } else {
                 return 'no tienes permiso para borrar este usuario';
+            }
+        }
+        public function charts()
+        {
+            if (isset($_SESSION['user'])) {
+                $admin_id = $_SESSION['user']->id;
+                $admin_rol = $_SESSION['user']->rol_id;
+                $query = DB::select(
+                    'SELECT c.nombre_categoria, 
+                    COUNT(b.id) 
+                    as total_libros 
+                    FROM categories c 
+                    LEFT JOIN books b 
+                    ON c.id = b.categoria_id 
+                    GROUP BY c.nombre_categoria;'
+                );
+                return $query;
             }
         }
     }

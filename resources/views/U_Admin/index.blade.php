@@ -71,7 +71,7 @@ Libreria
 
 <div class="container">
     <div class="row mx-auto mt-4 justify-content-center align-items-center">
-
+        <h3 class="text-center fst-italic fw-bold mb-3">Opciones de administrador</h3>
         <div class="col-md-3 shadow-lg p-4 mb-5 mx-4">
             <div class="text-center">
                 <div class="card-body">
@@ -91,7 +91,8 @@ Libreria
                         <i class="fas fa-users fa-3x"></i>
                         </span>
                     </div>
-                    <h5 class="font-size-15 mb-1"><a href="{{url('/admin-activos')}}" class="text-dark fst-italic">Administradores
+                    <h5 class="font-size-15 mb-1"><a href="{{url('/admin-activos')}}"
+                            class="text-dark fst-italic">Administradores
                             activos</a></h5>
                 </div>
             </div>
@@ -104,11 +105,26 @@ Libreria
                         <i class="fas fa-book fa-3x"></i>
                         </span>
                     </div>
-                    <h5 class="font-size-15 mb-1"><a href="{{url('/admin/nuevo/libro')}}" class="text-dark fst-italic">Nuevo
+                    <h5 class="font-size-15 mb-1"><a href="{{url('/admin/nuevo/libro')}}"
+                            class="text-dark fst-italic">Nuevo
                             libro</a></h5>
                 </div>
             </div>
         </div>
+
+        <div class="col-md-3 shadow-lg p-4 mb-5 mx-4">
+            <div class="text-center">
+                <div class="card-body">
+                    <div class="avatar-lg mx-auto mb-4">
+                        <i class="fas fa-chart-pie fa-3x"></i>
+                        </span>
+                    </div>
+                    <h5 class="font-size-15 mb-1"><a href="{{route('charts')}}" class="text-dark fst-italic">Estadisticas</a>
+                    </h5>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
