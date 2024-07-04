@@ -13,12 +13,6 @@
             height: 200px;
             background: #aaa;
         }
-
-        .titulo {
-            text-align: center;
-            padding-top: 3vw;
-            padding-bottom: 3vw;
-        }
     </style>
 </head>
 
@@ -27,23 +21,32 @@
         <div class="container-fluid">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{url('/')}}">Inicio</a>
+                    <a class="nav-link fst-italic text-white fw-bold" href="{{url('/')}}">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{url('/inicio_session')}}">Login</a>
+                    <a class="nav-link fst-italic text-white fw-bold" href="{{url('/inicio_session')}}">Login</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{route('newUser')}}">Registrate</a>
+                    <a class="nav-link fst-italic text-white fw-bold" href="{{route('newUser')}}">Registrate</a>
                 </li>
             </ul>
         </div>
     </nav>
 
-    @yield('content')
+    <main class="flex-grow-1">
+        <div class="container mt-4 mb-4">
+            @yield('content')
+        </div>
+    </main>
 
-    <div class="mt-5 p-4 bg-dark text-white text-center">
-        <p>Footer</p>
-    </div>
+    <footer class="footer mt-auto  py-3 bg-dark text-white">
+        <div class="container text-center">
+            <p>Footer</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>

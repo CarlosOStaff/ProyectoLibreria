@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ClienteControllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Book;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,7 @@ if (session_status() == PHP_SESSION_NONE) {
              */
             if (isset($_SESSION['user'])) {
                 $user = $_SESSION['user']->id;
+                $user_name = $_SESSION['user']->nombre;
                 $query = DB::select('SELECT id FROM users WHERE id = (:id)', [
                     'id' => $user
                 ]);
@@ -30,13 +32,12 @@ if (session_status() == PHP_SESSION_NONE) {
                                 ON b.categoria_id = c.id
                                 ORDER BY b.id;'
                     );
-                    return view('U_Cliente.index')->with('books', $books);
+                    return view('U_Cliente.index')->with('books', $books)->with('user', $user_name);
                 }
                 return redirect('/admin/home')->with('message_error', 'No tienes permiso par acceder a esta ruta');
             }
             return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
-
         public function edit()
         {
             /*         session_start();
@@ -112,7 +113,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                 ]
                             );
                             session_destroy();
-                            return redirect('/login');
+                            return redirect('/inicio_session');
                         }
                     } else {
                         // El usuario no está logeado, redirecciona o muestra un mensaje de error

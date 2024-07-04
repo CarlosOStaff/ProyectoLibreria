@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/inicio_session', [AuthController::class, 'index']);
+Route::get('/inicio_session', [AuthController::class, 'index'])->name('iniciar-sesion');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/registro/nuevo_usuario', [AuthController::class,'newUser'])->name('newUser');

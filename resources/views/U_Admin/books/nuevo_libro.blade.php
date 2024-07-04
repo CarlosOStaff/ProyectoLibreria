@@ -5,7 +5,7 @@ Libros
 @endsection
 
 @section('content')
-<div class="container bg-body col-lg-4 p-3 mt-3 pb-4 shadow-lg rounded-4">
+<div class="container bg-body col-lg-6 p-3 mt-3 pb-4 shadow-lg rounded-4">
     <h2 class="card-title mb-4 text-center mt-2 fst-italic">Registrar un nuevo libro</h2>
 
     <div class="row justify-content-center align-items-center">
@@ -23,13 +23,13 @@ Libros
                         <div class="mb-3">
                             <label for="formrow-email-input" class="form-label fw-bold fst-italic">Descripcion</label>
                             <input type="text" class="form-control" name="descripcion"
-                                placeholder="Enter Your Email ID">
+                                placeholder="Descripcion...">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="formrow-email-input" class="form-label fw-bold fst-italic">Contenido</label>
-                            <input type="text" class="form-control" name="contenido" placeholder="Enter Your Email ID">
+                            <input type="text" class="form-control" name="contenido" placeholder="Contenido...">
                         </div>
                     </div>
                     <div class="col-md-6">

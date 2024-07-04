@@ -5,12 +5,12 @@ inicio
 @endsection
 
 @section('content')
-<h1 class="titulo">Libreria</h1>
+<h1 class="titulo text-center mt-3 mb-5 fst-italic fw-bold">Libreria</h1>
 
 <div class="container">
-    <div class="row align-items-start">
+    <div class="row justify-content-center align-items-center">
         <div class="col-6">
-            <p>Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha
+            <p class="mt-5">Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha
                 sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T.
                 persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal
                 manera que logró hacer un libro de textos especimen.
@@ -28,5 +28,4 @@ inicio
         </div>
     </div>
 </div>
-
 @endsection

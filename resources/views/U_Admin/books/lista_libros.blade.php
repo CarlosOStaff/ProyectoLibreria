@@ -9,9 +9,9 @@ Proyecto - Libreria -lista de libros
 
     <div class="row mx-auto mt-4 justify-content-center align-items-center d-flex">
         @foreach ($books as $book)
-            <div class="col-sm-6">
-                <div class="card" style="width:40vw;">
-                    <div class="card-body">
+            <div class="col-lg-6">
+                <div class="col-xl-12 shadow-lg p-4 mb-5 mx-2 mh-50 mw-100">
+                    <div class="card-body m-3">
                         <img class="card-img-top" src="..." alt="Card image cap">
                         <div class="card-body">
                             <h5 class="card-title fst-italic">{{$book->titulo_libro}}</h5>
