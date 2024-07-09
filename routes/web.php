@@ -17,6 +17,9 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/registro/nuevo_usuario', [AuthController::class, 'newUser'])->name('newUser');
 Route::post('/registro/usuario', [AuthController::class, 'register'])->name('register.newUser');
+Route::get('/recuperar_contraseña',[AuthController::class,'recuperarContraseña'])->name('recuperarContraseña');
+Route::get('/recuperarcontraseña',[AuthController::class,'forgotPassword'])->name('forgotPassword');
+Route::get('/nuevo-password',[AuthController::class,'newpassword'])->name('newpassword');
 
 Route::middleware('role')->group(function () {
     route::get('/cliente/home', [ClienteController::class, 'index'])->name('home.cliente');

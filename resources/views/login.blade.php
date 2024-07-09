@@ -29,14 +29,16 @@
                         <form action="{{url('/login')}}" method="POST">
                             @csrf
                             <div class="row mb-4">
-                                <label for="horizontal-email-input" class="col-sm-3 col-form-label text-end fw-bold fst-italic">Email</label>
+                                <label for="horizontal-email-input"
+                                    class="col-sm-3 col-form-label text-end fw-bold fst-italic">Email</label>
                                 <div class="col-sm-9">
                                     <input type="email" name="email" class="form-control" id="horizontal-email-input"
                                         placeholder="Enter Your Email ID">
                                 </div>
                             </div>
                             <div class="row mb-4">
-                                <label for="horizontal-password-input" class="col-sm-3 col-form-label text-end fw-bold fst-italic">Password</label>
+                                <label for="horizontal-password-input"
+                                    class="col-sm-3 col-form-label text-end fw-bold fst-italic">Password</label>
                                 <div class="col-sm-9">
                                     <input type="password" name="password" class="form-control"
                                         id="horizontal-password-input" placeholder="Enter Your Password">
@@ -46,18 +48,21 @@
                                 <div class="col-sm-9">
 
                                     <div>
-                                        <button type="submit" class="btn btn-primary w-md fw-bold fst-italic">Iniciar sesion</button>
+                                        <button type="submit" class="btn btn-primary w-md fw-bold fst-italic">Iniciar
+                                            sesion</button>
                                     </div>
                                 </div>
                             </div>
                         </form>
+                        <div class="col-6 text-center">
+                            <span class="mx-auto d-block"><a href="{{route('recuperarContraseña')}}">Recuperar contraseña</a></span>
+                        </div>
+                        <!-- end card body -->
                     </div>
-                    <!-- end card body -->
+                    <!-- end card -->
                 </div>
-                <!-- end card -->
             </div>
         </div>
+
+
     </div>
-
-
-</div>
