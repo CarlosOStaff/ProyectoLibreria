@@ -55,7 +55,8 @@
                             </div>
                         </form>
                         <div class="col-6 text-center">
-                            <span class="mx-auto d-block"><a href="{{route('recuperarContraseña')}}">Recuperar contraseña</a></span>
+                            <span class="mx-auto d-block"><a href="{{route('recuperarContraseña')}}">Recuperar
+                                    contraseña</a></span>
                         </div>
                         <!-- end card body -->
                     </div>
@@ -63,6 +64,4 @@
                 </div>
             </div>
         </div>
-
-
     </div>

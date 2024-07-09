@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Console\View\Components\Alert;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -99,7 +100,7 @@ class AuthController extends Controller
             $mail = new PHPMailer(true);
             try {
                 //Server settings
-                $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+                $mail->SMTPDebug = 0;                      //Enable verbose debug output
                 $mail->isSMTP();                                            //Send using SMTP
                 $mail->Host = 'smtp.gmail.com';                     //Set the SMTP server to send through
                 $mail->SMTPAuth = true;                                   //Enable SMTP authentication
@@ -110,24 +111,35 @@ class AuthController extends Controller
 
                 //Recipients
                 $mail->setFrom('carlos.ovando@staffbridge.com.mx', 'Carlos Ivan Ovando Toledo');
-                $mail->addAddress($user->email, $user->nombre);     //Add a recipient
+                $mail->addAddress('carlos.ovando@staffbridge.com.mx', $user->nombre);     //Add a recipient
 
                 //Content
                 $mail->isHTML(true);                                  //Set email format to HTML
                 $mail->Subject = 'Recuperacion de password';
-                $mail->Body = '<h3>Hola, este es un correo generado para la recupreacion de tu password, sigue los pasos a continuación</h3>';
-                $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+                $mail->Body = 'Hola, este es un correo generado para la recuperación de tu contraseña. Sigue los pasos a continuación:<br>
+                        Haz clic en el siguiente enlace: <a href="http://127.0.0.1:8000/nuevo-password/' . $user->id . '">Recuperar contraseña</a>';
+                $mail->AltBody = 'Hola, este es un correo generado para la recuperación de tu contraseña. Sigue los pasos a continuación: 
+                        Copia y pega el siguiente enlace en tu navegador: http://127.0.0.1:8000/nuevo-password/' . $user->id;
+
 
                 $mail->send();
-                echo 'Message has been sent';
+                return redirect('/recuperar_contraseña')->with('message_ok', 'Correo enviado con exito');
             } catch (Exception $e) {
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+            return redirect('/recuperar_contraseña')->with('message_error', 'No se pudo enviar el correo. Inténtalo de nuevo más tarde.');
             }
         } else {
             return response()->json(['message', 'Correo no encontrado']);
         }
     }
-    public function newpassword(){
-        return view('nueva_contraseña');
+    public function newpassword($id)
+    {
+        $user = DB::select(
+            'SELECT * FROM 
+            users WHERE id = (:id)',
+            ['id' => $id]
+        );
+
+        return view('nueva_contraseña')->with('user', $user);
     }
 }
