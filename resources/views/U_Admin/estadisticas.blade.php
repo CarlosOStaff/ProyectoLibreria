@@ -9,7 +9,7 @@ Proyecto - Libros
     <div class="row">
         <div class="col-6">
             <h2 class="">Ejemplo de Tabla con Bootstrap</h2>
-            <table class="table table-bordered">
+            <table class="table table-bordered mt-3">
                 <thead>
                     <tr>
                         <th>Categorias</th>
