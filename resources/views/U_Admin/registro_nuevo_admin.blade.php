@@ -8,9 +8,9 @@ Proyecto - Libreria
 
 <body class="">
     <div class="container">
-        <h2 class="card-title mb-4 text-center mt-3 mb-3 fst-italic ">Nuevo Administrador</h2>
-        <div class="row mx-auto mt-4 justify-content-center">
-            <div class="col-xl-6 shadow-lg p-5 rounded-5 bg-white">
+        <h2 class="card-title text-center p-5 fst-italic ">Nuevo Administrador</h2>
+        <div class="row mx-auto justify-content-center">
+            <div class="col-xl-6 shadow-lg p-3 rounded-5 bg-white">
                 <div class="">
                     <div class="">
                         <form action="{{ url('/new-admin') }}" method="POST">

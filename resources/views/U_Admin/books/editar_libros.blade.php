@@ -6,10 +6,10 @@ Proyeto - Libreria
 
 @section('content')
 <div class="card-body" style="padding-left:3vw;padding-right:3vw;padding-top:3vw;">
-    <h5 class="card-title">Actualiza la informacion necesaria del libro</h5>
+    <h4 class="card-title">Actualiza la informacion necesaria del libro</h4>
     <br>
     @foreach ($books as $book)
-        <form action="{{route('admin.updateBook', $book->id)}}" , method="POST">
+        <form action="{{route('admin.updateBook', $book->id)}}" , method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="form-floating mb-4 col-md-6">
@@ -39,7 +39,8 @@ Proyeto - Libreria
                     </div>
                     <div class="form-group mb-4">
                         <label for="input-date1">Fecha de publicacion</label>
-                        <input id="input-date1" name="fecha_publicacion" value="{{$book->fecha_publicacion}}" class="form-control input-mask" data-inputmask="'alias': 'datetime'"
+                        <input id="input-date1" name="fecha_publicacion" value="{{$book->fecha_publicacion}}"
+                            class="form-control input-mask" data-inputmask="'alias': 'datetime'"
                             data-inputmask-inputformat="dd/mm/yyyy" im-insert="false">
                     </div>
                 </div>
@@ -49,9 +50,13 @@ Proyeto - Libreria
                 <textarea name="contenido" class="form-control" id="exampleFormControlTextarea1"
                     rows="3">{{$book->contenido}}</textarea>
             </div>
+            <div class="mb-3">
+                <label for="formrow-inputState" class="form-label fw-bold fst-italic">Imagen</label>
+                <input class="form-control" type="file" id="imagen" name="imagen">
+            </div>
             <br>
             <div>
-                <button type="submit" class="btn btn-primary w-md">Submit</button>
+                <button type="submit" class="btn btn-primary w-md">Guardar</button>
             </div>
         </form>
     @endforeach

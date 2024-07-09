@@ -4,15 +4,15 @@ Proyecto - Libreria -lista de libros
 @endsection
 
 @section('content')
-<div class="container">
+<div class="container p-5">
     <h2 class="card-title text-center mt-3 fst-italic">Libros regresados</h2>
 
     <div class="row mx-auto mt-4 justify-content-center align-items-center">
         @foreach ($books as $book)
             <div class="col-sm-6">
-                <div class="card" style="width:40vw;">
+                <div class="card">
                     <div class="card-body">
-                        <img class="card-img-top" src="..." alt="Card image cap">
+                        <img class="img-top d-block mx-auto" src="/img/imagenLibros/{{$book->imagen}}" alt="Card image cap">
                         <div class="card-body">
                             <h5 class="card-title">{{$book->titulo_libro}}</h5>
                             <p class="card-text">{{$book->descripcion}}</p>

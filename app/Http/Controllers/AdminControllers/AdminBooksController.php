@@ -31,7 +31,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 );
                 if ($query) {
                     $books = DB::select(
-                        'SELECT b.id,b.titulo_libro,b.descripcion,b.contenido,b.fecha_publicacion,c.nombre_categoria
+                        'SELECT b.imagen,b.id,b.titulo_libro,b.descripcion,b.contenido,b.fecha_publicacion,c.nombre_categoria
                         FROM books b
                         JOIN categories c
                         ON b.categoria_id = c.id;'
@@ -78,15 +78,24 @@ if (session_status() == PHP_SESSION_NONE) {
                     ['id' => $user_id, 'rol_id' => $user_rol]
                 );
                 if ($query) {
+                    if( $request->hasFile('imagen') ) {
+                        $imagen = $request->imagen;
+                        $nombreimagen = \Str::slug($request->titulo_libro) . "." . $imagen->guessExtension();
+                        $ruta = public_path('/img/imagenLibros/');
+                        /* $file->move($ruta,$nombreimagen ); */
+                        copy($imagen->getRealPath(), $ruta . $nombreimagen);
+                        $imagen = $nombreimagen;
+                    }
                     $book = DB::update(
                         'UPDATE books 
-                        SET titulo_libro = (:titulo_libro), 
+                        SET imagen = (:imagen),titulo_libro = (:titulo_libro), 
                         descripcion = (:descripcion), contenido = (:contenido), 
                         fecha_publicacion = (:fecha_publicacion), 
                         categoria_id = (:categoria_id)
                         WHERE id = (:id)'
                         ,
                         [
+                            'imagen' => $imagen,
                             'titulo_libro' => $request->titulo_libro,
                             'descripcion' => $request->descripcion,
                             'contenido' => $request->contenido,
@@ -141,11 +150,20 @@ if (session_status() == PHP_SESSION_NONE) {
                     ['rol_id' => $user_rol]
                 );
                 if ($query) {
+                    if ($request->hasFile('imagen')) {
+                        $file = $request->imagen;
+                        $nombreimagen = \Str::slug($request->titulo_libro) . "." . $file->guessExtension();
+                        $ruta = public_path('/img/imagenLibros/');
+                        /* $file->move($ruta,$nombreimagen ); */
+                        copy($file->getRealPath(), $ruta . $nombreimagen);
+                        $file->imagen = $nombreimagen;
+                    }
                     $book = DB::insert(
                         'INSERT INTO books 
-                        (titulo_libro,descripcion,contenido,fecha_publicacion,categoria_id)
-                        VALUES (:titulo_libro,:descripcion,:contenido,:fecha_publicacion,:categoria_id)',
+                        (imagen,titulo_libro,descripcion,contenido,fecha_publicacion,categoria_id)
+                        VALUES (:imagen,:titulo_libro,:descripcion,:contenido,:fecha_publicacion,:categoria_id)',
                         [
+                            'imagen' => $file->imagen = $nombreimagen,
                             'titulo_libro' => $request->titulo_libro,
                             'descripcion' => $request->descripcion,
                             'contenido' => $request->contenido,
@@ -176,7 +194,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 $books = DB::select(
                     'SELECT br.user_id,br.prestamo_id,
                     l.libro_id,b.titulo_libro,
-                    b.descripcion,l.fecha_prestamo,
+                    b.descripcion,b.imagen,l.fecha_prestamo,
                     ct.nombre_categoria,
                     s.nombre,s.email 
                     FROM book_returns br
@@ -191,6 +209,28 @@ if (session_status() == PHP_SESSION_NONE) {
                 );
                 return view('U_Admin.books.lista_libros_prestados')->with('books', $books);
             }
+        }
+        public function detallesLibro($id)
+        {
+            if (isset($_SESSION['user'])) {
+                $user_id = $_SESSION['user']->id;
+                $user_rol = $_SESSION['user']->rol_id;
+                $query = DB::select(
+                    'SELECT id, rol_id FROM users WHERE id = (:id) AND rol_id = (:rol_id)',
+                    ['id' => $user_id, 'rol_id' => $user_rol]
+                );
+                if ($query) {
+                    $book_id = intval($id);
+                    $booksDetails = DB::select(
+                        'SELECT * FROM books
+                        WHERE id = (:id)',
+                        ['id' => $book_id]
+                    );
+                    /* return view('U_Admin.books.modal_libro')->with('booksDetails', $booksDetails); */
+                    return response()->json($booksDetails);
+                }
+            }
+            return response()->json(['message', 'Debes de iniciar sesion']);
         }
     }
 }

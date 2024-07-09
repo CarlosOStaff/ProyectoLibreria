@@ -42,8 +42,11 @@ Route::middleware('role')->group(function () {
     Route::delete('/admin/eliminar-usuario/{id}', [AdminUserController::class, 'destroy'])->name('admin.elimiarUser');
 
     Route::get('/admin/estadisticas', [AdminController::class, 'charts'])->name('charts');
+    Route::get('/admin/export', [AdminController::class,'exportexcel'])->name('exportexcel');
+
 
     Route::get('/admin/lista/libros', [AdminBooksController::class, 'index'])->name('admin.listBooks');
+    Route::get('/admin/detalles/libro/{id}',[AdminBooksController::class,'detallesLibro'])->name('detallesLibro');
     Route::get('/admin/nuevo/libro', [AdminBooksController::class, 'newbook'])->name('newBook');
     Route::post('/admin/nuevo/libro', [AdminBooksController::class, 'store'])->name('store.newBook');
     Route::get('/admin/editar/libro/{id}', [AdminBooksController::class, 'edit'])->name('admin.editBook');

@@ -6,7 +6,7 @@ Proyecto Libreria
 
 @section('content')
 <div class="container">
-    <h2 class="card-title mt-4 text-center fst-italic">Bienvenido, aqui puedes visualizar los usuarios activos</h42>
+    <h2 class="card-title p-5 text-center fst-italic">Bienvenido, aqui puedes visualizar los usuarios activos</h42>
     <div class="row mx-auto mt-4 justify-content-center align-items-center">
         <div class="col-lg-12">
             <div class="card">

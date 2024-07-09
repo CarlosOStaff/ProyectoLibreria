@@ -11,7 +11,7 @@ Libreria
     </script>
 @endif
 @foreach ($query as $item)
-    <h1 class="text-center fst-italic mt-4">Bienvenido {{$item->nombre}}</h1>
+    <h1 class="text-center fst-italic pt-5">Bienvenido {{$item->nombre}}</h1>
 @endforeach
 
 <div class="container">

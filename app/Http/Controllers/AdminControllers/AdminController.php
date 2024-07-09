@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\AdminControllers;
 
+use App\Exports\CategoriaExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Exports\UserExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -193,8 +196,13 @@ if (session_status() == PHP_SESSION_NONE) {
                     ON c.id = b.categoria_id 
                     GROUP BY c.nombre_categoria;'
                 );
-                return $query;
+                /* return $query; */
+                return view('U_Admin.estadisticas')->with('query',$query);
             }
+        }
+        public function exportexcel()
+        {
+            return Excel::download(new CategoriaExport, 'Reporte_Cantidad_Libros_Categoria.xlsx');
         }
     }
 }
