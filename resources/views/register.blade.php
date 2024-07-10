@@ -20,13 +20,13 @@
                     <div class="card-body">
                         <h3 class="card-title mb-4 text-center fst-italic fw-bold">Ingresa tus datos personales</h3>
 
-                        <form action="{{url('/registro/usuario')}}" method="POST">
+                        <form action="{{url('/registro/usuario')}}" method="POST" enctype="text/plain">
                             @csrf
                             <div class="row mb-4">
                                 <label for="horizontal-firstname-input"
                                     class="col-sm-3 col-form-label fst-italic fw-bold text-end">Nombre:</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="nombre" class="form-control"
+                                    <input type="text" required name="nombre" class="form-control"
                                         id="horizontal-firstname-input" placeholder="Enter Your ">
                                 </div>
                             </div>

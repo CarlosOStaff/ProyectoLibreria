@@ -16,9 +16,9 @@ class CategoriaExport implements FromView
     {
         return view('catagoriaslibros', [
             'categorias' => \DB::select('SELECT c.nombre_categoria, COUNT(b.id) as total_libros
-FROM categories c
-LEFT JOIN books b ON c.id = b.categoria_id
-GROUP BY c.nombre_categoria')
+            FROM categories c
+            LEFT JOIN books b ON c.id = b.categoria_id
+            GROUP BY c.nombre_categoria')
         ]);
     }
 }

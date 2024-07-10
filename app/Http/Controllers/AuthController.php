@@ -75,6 +75,7 @@ class AuthController extends Controller
                 'password' => bcrypt($request->password)
             ]
         );
+
         return view('login');
     }
     public function newUser()

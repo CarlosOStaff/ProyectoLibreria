@@ -20,7 +20,7 @@ Route::post('/registro/usuario', [AuthController::class, 'register'])->name('reg
 Route::get('/recuperar_contraseña',[AuthController::class,'recuperarContraseña'])->name('recuperarContraseña');
 Route::get('/recuperarcontraseña',[AuthController::class,'forgotPassword'])->name('forgotPassword');
 Route::get('/nuevo-password/{id}',[AuthController::class,'newpassword'])->name('newpassword');
-Route::put('/nuevopontraseña/{id}',[AuthController::class,'uploadPassword'])->name('uploadPassword');
+Route::put('/nuevocontraseña/{id}',[AuthController::class,'uploadPassword'])->name('uploadPassword');
 
 Route::middleware('role')->group(function () {
     route::get('/cliente/home', [ClienteController::class, 'index'])->name('home.cliente');
