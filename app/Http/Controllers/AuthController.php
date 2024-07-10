@@ -28,7 +28,6 @@ class AuthController extends Controller
 
         $query = DB::table("users")
             ->where('email', $request->email)->first();
-
         if (password_verify($request->password, $query->password)) {
             $_SESSION['user'] = $query;
             $user = json_decode(json_encode($_SESSION['user'], true));

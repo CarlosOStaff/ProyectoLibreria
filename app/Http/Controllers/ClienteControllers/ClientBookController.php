@@ -26,7 +26,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 if ($query) {
                     if ($rol_id === 2) {
                         $listBooks = DB::select(
-                            'SELECT s.id,s.libro_id,s.fecha_prestamo,b.id,
+                            'SELECT s.id,s.libro_id,s.fecha_prestamo,b.imagen,b.id,
                             b.titulo_libro,b.descripcion,ct.nombre_categoria 
                             FROM loans s 
                             JOIN books b ON s.libro_id = b.id 

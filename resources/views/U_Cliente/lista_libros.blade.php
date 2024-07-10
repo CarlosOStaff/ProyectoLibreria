@@ -9,13 +9,11 @@ Libreria
 <div class="container">
     <div class="row mx-auto mt-4 justify-content-center align-items-center">
         @foreach ($listBooks as $book)
-            <div class="col">
-                <div class="card mb-2 mw-50 mh-100">
-                    <div class="row g-0">
-                        <div class="col-md-2">
-                            <img src="..." class="img-fluid rounded-start" alt="...">
-                        </div>
-                        <div class="col-md-12">
+        <div class="col-lg-6">
+                <div class="col-xl-12 shadow-lg p-4 mb-5 mx-2 h-50 mw-100">
+                    <div class="card-body m-3">
+                        <img class="img-top img-fluid mb-3 mx-auto d-block rounded" src="/img/imagenLibros/{{$book->imagen}}" alt="Card image cap">
+                        <div class="card-body">
                             <div class="card-body">
                                 <h5 class="card-title fst-italic fw-bold">{{$book->titulo_libro}}</h5>
                                 <p class="card-text">{{$book->descripcion}}</p>
