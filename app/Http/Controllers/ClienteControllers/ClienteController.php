@@ -82,7 +82,6 @@ if (session_status() == PHP_SESSION_NONE) {
             }
             return 'debes de iniciar sesion';
         }
-
         public function update(Request $request, $id)
         {
             if (isset($_SESSION['user'])) {
