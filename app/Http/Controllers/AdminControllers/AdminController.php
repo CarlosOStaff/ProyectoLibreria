@@ -6,7 +6,6 @@ use App\Exports\CategoriaExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Exports\UserExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 if (session_status() == PHP_SESSION_NONE) {
