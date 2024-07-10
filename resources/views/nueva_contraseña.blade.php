@@ -6,23 +6,24 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <div class="container p-5">
+    
     @foreach ($user as $item)
         <div class="body-card shadow-lg mt-5 col-7 p-5 rounded-5 d-block mx-auto align-items-center">
             <h2 class="fst-italic text-center">Hola {{$item->nombre}}</h2>
-    @endforeach
-        <div class="row justify-content-center">
-            <div class="col-8">
-                <h4 class="fst-italic fw-bold">Ingresa tu nueva contraseña</h4>
-                <form action="" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <label class="fst-italic fw-bold">Contraseña:</label>
-                    <input class="forn-control" name="password" type="password" placeholder="1234567">
-                    <button>
-                        Guardar
-                    </button>
-                </form>
+            <div class="row justify-content-center">
+                <div class="col-8">
+                    <h4 class="fst-italic fw-bold">Ingresa tu nueva contraseña</h4>
+                    <form action="{{route('uploadPassword', $item->id)}}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <label class="fst-italic fw-bold">Contraseña:</label>
+                        <input class="forn-control" name="password" type="password" placeholder="1234567">
+                        <button>
+                            Guardar
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    @endforeach
 </div>

@@ -17,6 +17,9 @@
                         <h3>Recuperar Contraseña</h3>
                     </div>
                     <div class="card-body">
+                        <div class="col-6 text-start mb-3">
+                            <span class="mx-auto d-block"><a href="{{route('home')}}">Volver al inicio</a></span>
+                        </div>
                         <form action="{{route('forgotPassword')}}">
                             <div class="form-group">
                                 <label for="email">Correo Electrónico</label>

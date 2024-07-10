@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 Route::get('/inicio_session', [AuthController::class, 'index'])->name('iniciar-sesion');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -20,6 +20,7 @@ Route::post('/registro/usuario', [AuthController::class, 'register'])->name('reg
 Route::get('/recuperar_contraseña',[AuthController::class,'recuperarContraseña'])->name('recuperarContraseña');
 Route::get('/recuperarcontraseña',[AuthController::class,'forgotPassword'])->name('forgotPassword');
 Route::get('/nuevo-password/{id}',[AuthController::class,'newpassword'])->name('newpassword');
+Route::put('/nuevopontraseña/{id}',[AuthController::class,'uploadPassword'])->name('uploadPassword');
 
 Route::middleware('role')->group(function () {
     route::get('/cliente/home', [ClienteController::class, 'index'])->name('home.cliente');

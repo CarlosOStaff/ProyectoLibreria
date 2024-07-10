@@ -129,24 +129,37 @@ class AuthController extends Controller
             return response()->json(['message', 'Correo no encontrado']);
         }
     }
-    public function newpassword($id,Request $request)
+    public function newpassword($id, Request $request)
     {
         $user = DB::select(
             'SELECT * FROM 
             users WHERE id = (:id)',
             ['id' => $id]
         );
-        if($user){
-            $newPassword = DB::update(
-                'UPDATE users SET password 
-                WHERE id = (:id)',[
-                    'password'=> $request->password,
-                ]);
-            if($newPassword){
-                session_destroy();
-            }
+        if ($user) {
             return view('nueva_contraseña')->with('user', $user);
         }
-        return response()->json(['message','usuario no encontrado']);
+        return response()->json(['message', 'usuario no encontrado']);
+    }
+    public function uploadPassword($id, Request $request)
+    {
+        $user = DB::select(
+            'SELECT * FROM 
+            users WHERE id = (:id)',
+            ['id' => $id]
+        );
+        if ($user) {
+            $newPassword = DB::update(
+                'UPDATE users 
+                SET password = (:password)
+                WHERE id = (:id)',
+                [
+                    'id' => $id,
+                    'password' => bcrypt($request->password),
+                ]
+            );
+            return view('nueva_contraseña')->with('user', $user);
+        }
+        return response()->json(['message', 'usuario no encontrado']);
     }
 }

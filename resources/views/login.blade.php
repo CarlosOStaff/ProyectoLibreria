@@ -18,9 +18,12 @@
             @endif
 
             <div class="col-xl-12 d-flex justify-content-center align-items-center mt-5">
-                <div class="col-sm-6 shadow-lg p-4 rounded-4">
+                <div class="col-sm-8 shadow-lg p-4 rounded-4">
                     <div class="card-body">
                         <h4 class="card-title mb-4 text-center fst-italic fw-bold">Login - Libreria</h4>
+                        <div class="col-6 text-center mb-3">
+                            <span class="mx-auto d-block"><a href="{{route('home')}}">Volver al inicio</a></span>
+                        </div>
                         @if (session('error'))
                             <script>
                                 alert("{{ session('error') }}");
@@ -46,7 +49,6 @@
                             </div>
                             <div class="row justify-content-end">
                                 <div class="col-sm-9">
-
                                     <div>
                                         <button type="submit" class="btn btn-primary w-md fw-bold fst-italic">Iniciar
                                             sesion</button>
