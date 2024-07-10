@@ -48,8 +48,14 @@ if (session_status() == PHP_SESSION_NONE) {
                 $user_id = $_SESSION['user']->id;
                 $user_rol = $_SESSION['user']->rol_id;
                 $query = DB::select(
-                    'SELECT id, rol_id FROM users WHERE id = (:id) AND rol_id = (:rol_id)',
-                    ['id' => $user_id, 'rol_id' => $user_rol]
+                    'SELECT id, rol_id 
+                    FROM users 
+                    WHERE id = (:id) 
+                    AND rol_id = (:rol_id)',
+                    [
+                        'id' => $user_id,
+                        'rol_id' => $user_rol
+                    ]
                 );
                 if ($query) {
                     $books = DB::select(
@@ -74,15 +80,20 @@ if (session_status() == PHP_SESSION_NONE) {
                 $user_id = $_SESSION['user']->id;
                 $user_rol = $_SESSION['user']->rol_id;
                 $query = DB::select(
-                    'SELECT id, rol_id FROM users WHERE id = (:id) AND rol_id = (:rol_id)',
-                    ['id' => $user_id, 'rol_id' => $user_rol]
+                    'SELECT id, rol_id 
+                    FROM users 
+                    WHERE id = (:id) 
+                    AND rol_id = (:rol_id)',
+                    [
+                        'id' => $user_id,
+                        'rol_id' => $user_rol
+                    ]
                 );
                 if ($query) {
-                    if( $request->hasFile('imagen') ) {
+                    if ($request->hasFile('imagen')) {
                         $imagen = $request->imagen;
                         $nombreimagen = \Str::slug($request->titulo_libro) . "." . $imagen->guessExtension();
                         $ruta = public_path('/img/imagenLibros/');
-                        /* $file->move($ruta,$nombreimagen ); */
                         copy($imagen->getRealPath(), $ruta . $nombreimagen);
                         $imagen = $nombreimagen;
                     }
@@ -123,7 +134,13 @@ if (session_status() == PHP_SESSION_NONE) {
                     ['id' => $user_id, 'rol_id' => $user_rol]
                 );
                 if ($query) {
-                    $delteBook = DB::delete('DELETE FROM books WHERE id = (:id)', ['id' => $id]);
+                    $delteBook = DB::delete(
+                        'DELETE FROM books 
+                        WHERE id = (:id)',
+                        [
+                            'id' => $id
+                        ]
+                    );
                     return redirect('/admin/lista/libros');
                 }
                 return response()->json(['message', 'No tienes permisos para realizar esta accion']);
@@ -135,7 +152,14 @@ if (session_status() == PHP_SESSION_NONE) {
             if (isset($_SESSION['user'])) {
                 $catalogues = $this->catalogues();
                 $user_rol = $_SESSION['user']->rol_id;
-                $query = DB::select('SELECT rol_id FROM users WHERE rol_id = (:rol_id)', ['rol_id' => $user_rol]);
+                $query = DB::select(
+                    'SELECT rol_id 
+                    FROM users 
+                    WHERE rol_id = (:rol_id)',
+                    [
+                        'rol_id' => $user_rol
+                    ]
+                );
                 if ($query) {
                     return view('U_Admin.books.nuevo_libro')->with($catalogues->getData());
                 }
@@ -146,8 +170,12 @@ if (session_status() == PHP_SESSION_NONE) {
             if (isset($_SESSION['user'])) {
                 $user_rol = $_SESSION['user']->rol_id;
                 $query = DB::select(
-                    'SELECT rol_id FROM users WHERE rol_id = (:rol_id)',
-                    ['rol_id' => $user_rol]
+                    'SELECT rol_id 
+                    FROM users 
+                    WHERE rol_id = (:rol_id)',
+                    [
+                        'rol_id' => $user_rol
+                    ]
                 );
                 if ($query) {
                     if ($request->hasFile('imagen')) {
@@ -171,10 +199,6 @@ if (session_status() == PHP_SESSION_NONE) {
                             'categoria_id' => intval($request->categoria_id)
                         ]
                     );
-                    /* DB::insert(
-                        'INSERT INTO book_tag (book_id,tag_id) VALUES (:book_id,:tag_id)',
-                        ['book_id' => $book->id, 'tag_id' => intval($request->etiqueta_id)]
-                    ); */
                     return redirect('/admin/lista/libros');
                 }
                 return response()->json(['message', 'Usuario no encontrado']);
@@ -216,8 +240,14 @@ if (session_status() == PHP_SESSION_NONE) {
                 $user_id = $_SESSION['user']->id;
                 $user_rol = $_SESSION['user']->rol_id;
                 $query = DB::select(
-                    'SELECT id, rol_id FROM users WHERE id = (:id) AND rol_id = (:rol_id)',
-                    ['id' => $user_id, 'rol_id' => $user_rol]
+                    'SELECT id, rol_id 
+                    FROM users 
+                    WHERE id = (:id) 
+                    AND rol_id = (:rol_id)',
+                    [
+                        'id' => $user_id,
+                        'rol_id' => $user_rol
+                    ]
                 );
                 if ($query) {
                     $book_id = intval($id);
@@ -226,7 +256,6 @@ if (session_status() == PHP_SESSION_NONE) {
                         WHERE id = (:id)',
                         ['id' => $book_id]
                     );
-                    /* return view('U_Admin.books.modal_libro')->with('booksDetails', $booksDetails); */
                     return response()->json($booksDetails);
                 }
             }

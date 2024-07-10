@@ -102,7 +102,10 @@ if (session_status() == PHP_SESSION_NONE) {
                     FROM users 
                     WHERE id = (:id) 
                     AND rol_id = (:rol_id)',
-                    ['id' => $user_id, 'rol_id' => $user_rol]
+                    [
+                        'id' => $user_id,
+                        'rol_id' => $user_rol
+                    ]
                 );
                 $ciudades = DB::select('SELECT * FROM cities;');
                 if ($admin) {
@@ -117,11 +120,15 @@ if (session_status() == PHP_SESSION_NONE) {
             if (isset($_SESSION['user'])) {
                 $user_id = $_SESSION['user']->id;
                 $user_rol = $_SESSION['user']->rol_id;
-                $user_admin = DB::select('SELECT id,rol_id 
-                FROM users 
-                WHERE id = (:id) 
-                AND rol_id = (:rol_id)',
-                    ['id' => $user_id, 'rol_id' => $user_rol]
+                $user_admin = DB::select(
+                    'SELECT id,rol_id 
+                    FROM users 
+                    WHERE id = (:id) 
+                    AND rol_id = (:rol_id)',
+                    [
+                        'id' => $user_id,
+                        'rol_id' => $user_rol
+                    ]
                 );
                 if ($user_admin) {
                     $newUser = DB::insert(
@@ -154,11 +161,13 @@ if (session_status() == PHP_SESSION_NONE) {
                     ['id' => $admin_id, 'rol_id' => $admin_rol]
                 );
                 if ($query) {
-                    $admins = DB::select('SELECT  u.id,u.nombre,u.apellido,u.ciudad_id,u.email,c.id,c.nombre_ciudad
-                    FROM users u
-                    JOIN cities c
-                    ON u.ciudad_id = c.id
-                    WHERE rol_id = 1;');
+                    $admins = DB::select(
+                        'SELECT  u.id,u.nombre,u.apellido,u.ciudad_id,u.email,c.id,c.nombre_ciudad
+                        FROM users u
+                        JOIN cities c
+                        ON u.ciudad_id = c.id
+                        WHERE rol_id = 1;'
+                    );
                     return view('U_Admin.lista_administradores')->with('admins', $admins);
                 }
             }
@@ -167,7 +176,6 @@ if (session_status() == PHP_SESSION_NONE) {
         {
             $admin_id = $_SESSION['user']->id;
             $admin_rol = $_SESSION['user']->rol_id;
-
             $query = DB::select(
                 'SELECT id, rol_id 
                 FROM users 
@@ -176,7 +184,12 @@ if (session_status() == PHP_SESSION_NONE) {
                 ['id' => $admin_id, 'rol_id' => $admin_rol]
             );
             if ($query) {
-                DB::delete('DELETE FROM users WHERE id = (:id) AND rol_id = 1', ['id' => $id]);
+                DB::delete(
+                    'DELETE FROM users 
+                    WHERE id = (:id) 
+                    AND rol_id = 1',
+                    ['id' => $id]
+                );
                 return redirect('/admin/home')->with('success', 'usuario eliminado correctamente');
             } else {
                 return 'no tienes permiso para borrar este usuario';
@@ -196,8 +209,7 @@ if (session_status() == PHP_SESSION_NONE) {
                     ON c.id = b.categoria_id 
                     GROUP BY c.nombre_categoria;'
                 );
-                /* return $query; */
-                return view('U_Admin.estadisticas')->with('query',$query);
+                return view('U_Admin.estadisticas')->with('query', $query);
             }
         }
         public function exportexcel()

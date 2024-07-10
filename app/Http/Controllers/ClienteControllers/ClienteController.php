@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\ClienteControllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Book;
-use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Controllers\BookController;
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -15,8 +12,6 @@ if (session_status() == PHP_SESSION_NONE) {
     {
         public function index()
         {
-            /*         session_start();
-             */
             if (isset($_SESSION['user'])) {
                 $user = $_SESSION['user']->id;
                 $user_name = $_SESSION['user']->nombre;
@@ -40,8 +35,6 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function edit()
         {
-            /*         session_start();
-             */
             if (isset($_SESSION['user'])) {
                 $user_rol = $_SESSION['user']->rol_id;
                 $user_id = $_SESSION['user']->id;
@@ -61,14 +54,11 @@ if (session_status() == PHP_SESSION_NONE) {
                 }
                 return 'no tienes permisos';
             }
-
             return 'debes de iniciar sesion';
         }
 
         public function update(Request $request, $id)
         {
-            /*         session_start();
-             */
             if (isset($_SESSION['user'])) {
                 $user = $_SESSION['user']->id;
                 $rol_id = $_SESSION['user']->rol_id;
@@ -116,18 +106,14 @@ if (session_status() == PHP_SESSION_NONE) {
                             return redirect('/inicio_session');
                         }
                     } else {
-                        // El usuario no está logeado, redirecciona o muestra un mensaje de error
                         $errorMessage = "Debes iniciar sesión para acceder a esta página.";
-                        // Puedes redireccionar a otra página o mostrar un mensaje aquí mismo
                         echo "<script>alert('$errorMessage'); window.location.href = 'login.blade.phpS';</script>";
-                        exit; // Asegura que el script se detenga después de mostrar el mensaje
+                        exit;
                     }
                 }
-                // El usuario no está logeado, redirecciona o muestra un mensaje de error
                 $errorMessage = "Debes iniciar sesión para acceder a esta página.";
-                // Puedes redireccionar a otra página o mostrar un mensaje aquí mismo
                 echo "<script>alert('$errorMessage'); window.location.href = 'login.blade.phpS';</script>";
-                exit; // Asegura que el script se detenga después de mostrar el mensaje
+                exit;
             }
             return redirect('login');
         }

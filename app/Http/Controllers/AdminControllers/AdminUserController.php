@@ -23,11 +23,14 @@ if (session_status() == PHP_SESSION_NONE) {
                     ['id' => $admin_id, 'rol_id' => $admin_rol]
                 );
                 if ($query) {
-                    $users = DB::select('SELECT u.id AS user_id,u.nombre,u.apellido,u.ciudad_id,u.email,c.nombre_ciudad
+                    $users = DB::select(
+                        'SELECT u.id 
+                    AS user_id,u.nombre,u.apellido,u.ciudad_id,u.email,c.nombre_ciudad
                     FROM users u
                     JOIN cities c
                     ON u.ciudad_id = c.id
-                    WHERE rol_id = 2;');
+                    WHERE rol_id = 2;'
+                    );
                     return view('U_Admin.lista_usuarios')->with('users', $users);
                 }
             }
@@ -36,17 +39,24 @@ if (session_status() == PHP_SESSION_NONE) {
         {
             $admin_id = $_SESSION['user']->id;
             $admin_rol = $_SESSION['user']->rol_id;
-
             $query = DB::select(
                 'SELECT id, rol_id 
                 FROM users 
                 WHERE id = (:id) 
                 AND rol_id = (:rol_id)',
-                ['id' => $admin_id, 'rol_id' => $admin_rol]
+                [
+                    'id' => $admin_id,
+                    'rol_id' => $admin_rol
+                ]
             );
             if ($query) {
-                DB::delete('DELETE FROM users WHERE id = (:id) AND rol_id = 2',['id'=>$id]);
-                return redirect('admin/lista/usuarios')->with('success','usuario eliminado correctamente');
+                DB::delete(
+                    'DELETE FROM users 
+                    WHERE id = (:id) 
+                    AND rol_id = 2',
+                    ['id' => $id]
+                );
+                return redirect('admin/lista/usuarios')->with('success', 'usuario eliminado correctamente');
             } else {
                 return 'no tienes permiso para borrar este usuario';
             }

@@ -17,7 +17,7 @@
                     @csrf
                     @method('PUT')
                     <label class="fst-italic fw-bold">Contraseña:</label>
-                    <input class="forn-control" type="password" placeholder="1234567">
+                    <input class="forn-control" name="password" type="password" placeholder="1234567">
                     <button>
                         Guardar
                     </button>
