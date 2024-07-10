@@ -97,13 +97,13 @@ class AuthController extends Controller
             $mail = new PHPMailer(true);
             try {
                 //Server settings
-                $mail->SMTPDebug = 0;                      //Enable verbose debug output
-                $mail->isSMTP();                                            //Send using SMTP
-                $mail->Host = 'smtp.gmail.com';                     //Set the SMTP server to send through
-                $mail->SMTPAuth = true;                                   //Enable SMTP authentication
-                $mail->Username = 'carlos.ovando@staffbridge.com.mx';                     //SMTP username
+                $mail->SMTPDebug = 0;
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'carlos.ovando@staffbridge.com.mx';
                 $mail->Password = 'ravk gxlu tgov upyt'; ///2AvD$iFEbS*t3SM 
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // TLS Encryption
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port = 587;
 
                 //Recipients
