@@ -12,9 +12,9 @@ if (session_status() == PHP_SESSION_NONE) {
     {
         public function index()
         {
-            if (isset($_SESSION['user'])) {
-                $admin_id = $_SESSION['user']->id;
-                $admin_rol = $_SESSION['user']->rol_id;
+            if (isset($_SESSION['admin'])) {
+                $admin_id = $_SESSION['admin']->id;
+                $admin_rol = $_SESSION['admin']->rol_id;
                 $query = DB::select(
                     'SELECT * FROM users 
                     WHERE id = (:id) 
@@ -36,8 +36,8 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function destroy($id)
         {
-            $admin_id = $_SESSION['user']->id;
-            $admin_rol = $_SESSION['user']->rol_id;
+            $admin_id = $_SESSION['admin']->id;
+            $admin_rol = $_SESSION['admin']->rol_id;
             $query = DB::select(
                 'SELECT id, rol_id 
                 FROM users 

@@ -11,10 +11,10 @@ if (session_status() == PHP_SESSION_NONE) {
     {
         public function listBooks()
         {
-            if (isset($_SESSION['user'])) {
+            if (isset($_SESSION['cliente'])) {
 
-                $user = $_SESSION['user'];
-                $rol_id = $_SESSION['user']->rol_id;
+                $user = $_SESSION['cliente'];
+                $rol_id = $_SESSION['cliente']->rol_id;
                 $id = $user->id;
                 $query = DB::select(
                     'SELECT id,rol_id 
@@ -58,7 +58,7 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function regresarLibro($id)
         {
-            $user = $_SESSION['user']->id;
+            $user = $_SESSION['cliente']->id;
             $id = intval($id);
             $loan = DB::select(
                 'SELECT * FROM loans 
@@ -88,7 +88,7 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function store($id)
         {
-            $user = $_SESSION['user']->id;
+            $user = $_SESSION['cliente']->id;
             $loanBook = DB::insert(
                 'INSERT INTO loans (user_id,libro_id,fecha_prestamo) 
                 VALUES (:user_id,:libro_id,:fecha_prestamo)',

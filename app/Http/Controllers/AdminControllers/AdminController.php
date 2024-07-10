@@ -14,8 +14,8 @@ if (session_status() == PHP_SESSION_NONE) {
     {
         public function index()
         {
-            if (isset($_SESSION['user'])) {
-                $user = $_SESSION['user']->id;
+            if (isset($_SESSION['admin'])) {
+                $user = $_SESSION['admin']->id;
                 $query = DB::select('SELECT id,rol_id,nombre FROM users WHERE id = (:id)', ['id' => $user]);
                 if ($query) {
                     $rol_id = reset($query);
@@ -39,9 +39,9 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function edit()
         {
-            if (isset($_SESSION['user'])) {
-                $user = $_SESSION['user']->id;
-                $user_rol = $_SESSION['user']->rol_id;
+            if (isset($_SESSION['admin'])) {
+                $user = $_SESSION['admin']->id;
+                $user_rol = $_SESSION['admin']->rol_id;
                 $query = DB::select(
                     'SELECT s.id, s.nombre, s.apellido, s.ciudad_id, s.email,c.id, c.nombre_ciudad 
                     FROM users s
@@ -61,9 +61,9 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function update(Request $request)
         {
-            if (isset($_SESSION['user'])) {
-                $user = $_SESSION['user']->id;
-                $user_rol = $_SESSION['user']->rol_id;
+            if (isset($_SESSION['admin'])) {
+                $user = $_SESSION['admin']->id;
+                $user_rol = $_SESSION['admin']->rol_id;
                 $user = DB::select(
                     'SELECT id, rol_id 
                     FROM users 
@@ -93,9 +93,9 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function newAdmin()
         {
-            if (isset($_SESSION['user'])) {
-                $user_id = $_SESSION['user']->id;
-                $user_rol = $_SESSION['user']->rol_id;
+            if (isset($_SESSION['admin'])) {
+                $user_id = $_SESSION['admin']->id;
+                $user_rol = $_SESSION['admin']->rol_id;
                 $admin = DB::select(
                     'SELECT id,rol_id 
                     FROM users 
@@ -116,9 +116,9 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function store(Request $request)
         {
-            if (isset($_SESSION['user'])) {
-                $user_id = $_SESSION['user']->id;
-                $user_rol = $_SESSION['user']->rol_id;
+            if (isset($_SESSION['admin'])) {
+                $user_id = $_SESSION['admin']->id;
+                $user_rol = $_SESSION['admin']->rol_id;
                 $user_admin = DB::select(
                     'SELECT id,rol_id 
                     FROM users 
@@ -150,9 +150,9 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function listAdmin()
         {
-            if (isset($_SESSION['user'])) {
-                $admin_id = $_SESSION['user']->id;
-                $admin_rol = $_SESSION['user']->rol_id;
+            if (isset($_SESSION['admin'])) {
+                $admin_id = $_SESSION['admin']->id;
+                $admin_rol = $_SESSION['admin']->rol_id;
                 $query = DB::select(
                     'SELECT * FROM users 
                     WHERE id = (:id) 
@@ -173,8 +173,8 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function destroy($id)
         {
-            $admin_id = $_SESSION['user']->id;
-            $admin_rol = $_SESSION['user']->rol_id;
+            $admin_id = $_SESSION['admin']->id;
+            $admin_rol = $_SESSION['admin']->rol_id;
             $query = DB::select(
                 'SELECT id, rol_id 
                 FROM users 
@@ -196,9 +196,9 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function charts()
         {
-            if (isset($_SESSION['user'])) {
-                $admin_id = $_SESSION['user']->id;
-                $admin_rol = $_SESSION['user']->rol_id;
+            if (isset($_SESSION['admin'])) {
+                $admin_id = $_SESSION['admin']->id;
+                $admin_rol = $_SESSION['admin']->rol_id;
                 $query = DB::select(
                     'SELECT c.nombre_categoria, 
                     COUNT(b.id) 

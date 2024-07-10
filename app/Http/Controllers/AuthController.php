@@ -32,8 +32,10 @@ class AuthController extends Controller
             $_SESSION['user'] = $query;
             $user = json_decode(json_encode($_SESSION['user'], true));
             if ($user->rol_id === 1) {
+                $admin = $_SESSION['admin'] = $query;
                 return redirect('/admin/home');
             } elseif ($user->rol_id === 2) {
+                $cliente = $_SESSION['cliente'] = $query;
                 return redirect('/cliente/home');
             }
         }

@@ -19,9 +19,9 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function index()
         {
-            if (isset($_SESSION['user'])) {
-                $user_id = $_SESSION['user']->id;
-                $user_rol = $_SESSION['user']->rol_id;
+            if (isset($_SESSION['admin'])) {
+                $user_id = $_SESSION['admin']->id;
+                $user_rol = $_SESSION['admin']->rol_id;
                 $query = DB::select(
                     'SELECT id, rol_id 
                     FROM users 
@@ -44,9 +44,9 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function edit($id)
         {
-            if (isset($_SESSION['user'])) {
-                $user_id = $_SESSION['user']->id;
-                $user_rol = $_SESSION['user']->rol_id;
+            if (isset($_SESSION['admin'])) {
+                $user_id = $_SESSION['admin']->id;
+                $user_rol = $_SESSION['admin']->rol_id;
                 $query = DB::select(
                     'SELECT id, rol_id 
                     FROM users 
@@ -76,9 +76,9 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function update(Request $request, $id)
         {
-            if (isset($_SESSION['user'])) {
-                $user_id = $_SESSION['user']->id;
-                $user_rol = $_SESSION['user']->rol_id;
+            if (isset($_SESSION['admin'])) {
+                $user_id = $_SESSION['admin']->id;
+                $user_rol = $_SESSION['admin']->rol_id;
                 $query = DB::select(
                     'SELECT id, rol_id 
                     FROM users 
@@ -123,9 +123,9 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function destroy($id)
         {
-            if (isset($_SESSION['user'])) {
-                $user_id = $_SESSION['user']->id;
-                $user_rol = $_SESSION['user']->rol_id;
+            if (isset($_SESSION['admin'])) {
+                $user_id = $_SESSION['admin']->id;
+                $user_rol = $_SESSION['admin']->rol_id;
                 $query = DB::select(
                     'SELECT id, rol_id 
                     FROM users 
@@ -149,9 +149,9 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function newbook()
         {
-            if (isset($_SESSION['user'])) {
+            if (isset($_SESSION['admin'])) {
                 $catalogues = $this->catalogues();
-                $user_rol = $_SESSION['user']->rol_id;
+                $user_rol = $_SESSION['admin']->rol_id;
                 $query = DB::select(
                     'SELECT rol_id 
                     FROM users 
@@ -167,8 +167,8 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function store(Request $request)
         {
-            if (isset($_SESSION['user'])) {
-                $user_rol = $_SESSION['user']->rol_id;
+            if (isset($_SESSION['admin'])) {
+                $user_rol = $_SESSION['admin']->rol_id;
                 $query = DB::select(
                     'SELECT rol_id 
                     FROM users 
@@ -207,7 +207,7 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function librosprestados()
         {
-            $user_rol = $_SESSION['user']->rol_id;
+            $user_rol = $_SESSION['admin']->rol_id;
             $query = DB::select(
                 'SELECT rol_id 
                 FROM users 
@@ -215,7 +215,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 ['rol_id' => $user_rol]
             );
             if ($query) {
-                $books = DB::select(
+                /* $books = DB::select(
                     'SELECT br.user_id,br.prestamo_id,
                     l.libro_id,b.titulo_libro,
                     b.descripcion,b.imagen,l.fecha_prestamo,
@@ -230,15 +230,24 @@ if (session_status() == PHP_SESSION_NONE) {
                     ON b.categoria_id = ct.id
                     JOIN users s
                     ON br.user_id = s.id;'
+                ); */
+                $books = DB::select(
+                    'SELECT l.id,l.libro_id,l.fecha_prestamo,b.imagen,b.id,
+                    b.titulo_libro,b.descripcion,ct.nombre_categoria,u.nombre AS nombre_del_usuario 
+                    FROM loans l 
+                    JOIN books b ON l.libro_id = b.id 
+                    JOIN categories ct ON b.categoria_id = ct.id 
+                    JOIN users u ON l.user_id = u.id
+                    ORDER BY b.id',
                 );
                 return view('U_Admin.books.lista_libros_prestados')->with('books', $books);
             }
         }
         public function detallesLibro($id)
         {
-            if (isset($_SESSION['user'])) {
-                $user_id = $_SESSION['user']->id;
-                $user_rol = $_SESSION['user']->rol_id;
+            if (isset($_SESSION['admin'])) {
+                $user_id = $_SESSION['admin']->id;
+                $user_rol = $_SESSION['admin']->rol_id;
                 $query = DB::select(
                     'SELECT id, rol_id 
                     FROM users 

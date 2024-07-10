@@ -12,13 +12,13 @@ if (session_status() == PHP_SESSION_NONE) {
     {
         public function index()
         {
-            if (isset($_SESSION['user'])) {
-                $user = $_SESSION['user']->id;
-                $user_name = $_SESSION['user']->nombre;
+            if (isset($_SESSION['cliente'])) {
+                $user = $_SESSION['cliente']->id;
+                $user_name = $_SESSION['cliente']->nombre;
                 $query = DB::select('SELECT id FROM users WHERE id = (:id)', [
                     'id' => $user
                 ]);
-                if ($_SESSION['user']->rol_id === 2) {
+                if ($_SESSION['cliente']->rol_id === 2) {
 
                     /* $books = DB::select(
                         'SELECT b.id,b.titulo_libro,b.descripcion,b.categoria_id, c.nombre_categoria
@@ -61,9 +61,9 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function edit()
         {
-            if (isset($_SESSION['user'])) {
-                $user_rol = $_SESSION['user']->rol_id;
-                $user_id = $_SESSION['user']->id;
+            if (isset($_SESSION['cliente'])) {
+                $user_rol = $_SESSION['cliente']->rol_id;
+                $user_id = $_SESSION['cliente']->id;
                 if ($user_rol === 2) {
                     $usuario = DB::select(
                         'SELECT id,rol_id,nombre,apellido,ciudad_id,email,password 
@@ -84,9 +84,9 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function update(Request $request, $id)
         {
-            if (isset($_SESSION['user'])) {
-                $user = $_SESSION['user']->id;
-                $rol_id = $_SESSION['user']->rol_id;
+            if (isset($_SESSION['cliente'])) {
+                $user = $_SESSION['cliente']->id;
+                $rol_id = $_SESSION['cliente']->rol_id;
                 $id = intval($id);
                 if ($rol_id === 2) {
                     if ($user === $id) {
