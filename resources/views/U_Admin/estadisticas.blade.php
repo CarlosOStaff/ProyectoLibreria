@@ -23,11 +23,8 @@ Proyecto - Libros
                             <td>{{$item->total_libros}}</td>
                         </tr>
                     @endforeach
-
                 </tbody>
             </table>
-        </div>
-        <div class="col-6">
         </div>
         <form action="{{route('exportexcel')}}" method="GET">
             <button type="submit" class="btn btn-success waves-effect waves-light">

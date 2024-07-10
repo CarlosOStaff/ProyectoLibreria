@@ -18,7 +18,7 @@ class BooksSeeder extends Seeder
 
         $libro = new Book();
         
-        $libro->imagen = 'alienigenas';
+        $libro->imagen = 'alienigenas.jpg';
         $libro->titulo_libro = $faker->name();
         $libro->descripcion = $faker->sentence(20);
         $libro->contenido = $faker->sentence(50);
@@ -29,7 +29,7 @@ class BooksSeeder extends Seeder
 
 
         $libro = new Book();
-        $libro->imagen = 'cruce de caminos';
+        $libro->imagen = 'cruce de caminos.jpg';
         $libro->titulo_libro = $faker->name();
         $libro->descripcion = $faker->sentence(20);
         $libro->contenido = $faker->sentence(50);
@@ -40,7 +40,7 @@ class BooksSeeder extends Seeder
 
 
         $libro = new Book();
-        $libro->imagen = 'images (1)';
+        $libro->imagen = 'images (1).jpg';
         $libro->titulo_libro = $faker->name();
         $libro->descripcion = $faker->sentence(20);
         $libro->contenido = $faker->sentence(50);
@@ -51,7 +51,7 @@ class BooksSeeder extends Seeder
 
 
         $libro = new Book();
-        $libro->imagen = 'images (2)';
+        $libro->imagen = 'images (2).jpg';
         $libro->titulo_libro = $faker->name();
         $libro->descripcion = $faker->sentence(20);
         $libro->contenido = $faker->sentence(50);
@@ -62,7 +62,7 @@ class BooksSeeder extends Seeder
 
 
         $libro = new Book();
-        $libro->imagen = 'images (3)';
+        $libro->imagen = 'images (3).jpg';
         $libro->titulo_libro = $faker->name();
         $libro->descripcion = $faker->sentence(20);
         $libro->contenido = $faker->sentence(50);
@@ -73,7 +73,7 @@ class BooksSeeder extends Seeder
 
 
         $libro = new Book();
-        $libro->imagen = 'images (4)';
+        $libro->imagen = 'images (4).jpg';
         $libro->titulo_libro = $faker->name();
         $libro->descripcion = $faker->sentence(20);
         $libro->contenido = $faker->sentence(50);
@@ -84,7 +84,7 @@ class BooksSeeder extends Seeder
 
 
         $libro = new Book();
-        $libro->imagen = 'images (5)';
+        $libro->imagen = 'images (5).jpg';
         $libro->titulo_libro = $faker->name();
         $libro->descripcion = $faker->sentence(20);
         $libro->contenido = $faker->sentence(50);
@@ -94,7 +94,7 @@ class BooksSeeder extends Seeder
         $libro->etiquetas()->attach([2]); //Relacionar el libro a dos etiquetas
 
         $libro = new Book();
-        $libro->imagen = 'images (6)';
+        $libro->imagen = 'images (6).jpg';
         $libro->titulo_libro = $faker->name();
         $libro->descripcion = $faker->sentence(20);
         $libro->contenido = $faker->sentence(50);
@@ -104,7 +104,7 @@ class BooksSeeder extends Seeder
         $libro->etiquetas()->attach([2]); //Relacionar el libro a dos etiquetas
 
         $libro = new Book();
-        $libro->imagen = 'images';
+        $libro->imagen = 'images.jpg';
         $libro->titulo_libro = $faker->name();
         $libro->descripcion = $faker->sentence(20);
         $libro->contenido = $faker->sentence(50);
@@ -114,7 +114,7 @@ class BooksSeeder extends Seeder
         $libro->etiquetas()->attach([2]); //Relacionar el libro a dos etiquetas
 
         $libro = new Book();
-        $libro->imagen = 'it';
+        $libro->imagen = 'it.jpg';
         $libro->titulo_libro = $faker->name();
         $libro->descripcion = $faker->sentence(20);
         $libro->contenido = $faker->sentence(50);
@@ -124,7 +124,7 @@ class BooksSeeder extends Seeder
         $libro->etiquetas()->attach([2]); //Relacionar el libro a dos etiquetas
 
         $libro = new Book();
-        $libro->imagen = 'reyes_caidos';
+        $libro->imagen = 'reyes_caidos.jpg';
         $libro->titulo_libro = $faker->name();
         $libro->descripcion = $faker->sentence(20);
         $libro->contenido = $faker->sentence(50);

@@ -6,8 +6,8 @@ Proyeto - Libreria
 
 @section('content')
 <div class="card-body" style="padding-left:3vw;padding-right:3vw;padding-top:3vw;">
-    <h4 class="card-title">Actualiza la informacion necesaria del libro</h4>
-    <br>
+    <h4 class="card-title mt-2 mb-3">Actualiza la informacion necesaria del libro</h4>
+    
     @foreach ($books as $book)
         <form action="{{route('admin.updateBook', $book->id)}}" , method="POST" enctype="multipart/form-data">
             @csrf

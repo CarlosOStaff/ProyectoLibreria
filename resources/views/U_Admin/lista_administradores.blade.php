@@ -16,7 +16,6 @@ Proyecto - Libreria
                                 class="text-dark">{{$admin->nombre}}</a>
                         </h5>
                         <p class="text-muted fw-bold">{{$admin->apellido}}</p>
-
                         <div>
                             <form action="{{route('elimiaradmin', $admin->id)}}" method="post">
                                 @csrf
@@ -30,7 +29,6 @@ Proyecto - Libreria
                 </div>
             </div>
         @endforeach
-
     </div>
 </div>
 @endsection
