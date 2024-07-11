@@ -53,7 +53,6 @@ class AuthController extends Controller
             "email" => "required",
             "password" => "required",
         ]);
-
         $query = DB::select(
             'SELECT email 
             FROM users 
@@ -75,9 +74,32 @@ class AuthController extends Controller
                 'password' => bcrypt($request->password)
             ]
         );
-
-        return view('login');
-    }
+        $mail = new PHPMailer();
+        try {
+            $mail->SMTPDebug = 0;
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'carlos.ovando@staffbridge.com.mx';
+            $mail->Password = 'ravk gxlu tgov upyt'; ///2AvD$iFEbS*t3SM 
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+            $mail->setFrom('carlos.ovando@staffbridge.com.mx', 'Carlos Ivan Ovando Toledo');
+            $mail->addAddress($request->email, $request->nombre);
+            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->Subject = 'Verificacion de cuenta';
+            $mail->Body = 'Hola, este es un correo generado para la verificacion de tu cuenta en nuestra libreria. Sigue los pasos a continuación:<br>
+                        Haz clic en el siguiente enlace: <a href="#">Recuperar contraseña</a>';
+            $mail->AltBody = 'Hola, este es un correo generado para la verificacion de tu cuenta en nuestra libreria. Sigue los pasos a continuación: 
+                        Copia y pega el siguiente enlace en tu navegador:';
+            $mail->send();
+/*             return response()->json(['message', 'Correo enviado']);
+ */            return redirect('/registro/nuevo_usuario')->with('message_cliente_ok', 'Usuario creado con exito, verifique su cuenta por correo');
+        } catch (Exception $e) {
+            return response()->json(['message', $e->getMessage()]);
+        }
+/*         return view('login');
+ */    }
     public function newUser()
     {
         $ciudades = DB::select('SELECT * FROM cities;');

@@ -20,7 +20,7 @@
                     <div class="card-body">
                         <h3 class="card-title mb-4 text-center fst-italic fw-bold">Ingresa tus datos personales</h3>
 
-                        <form action="{{url('/registro/usuario')}}" method="POST" enctype="text/plain">
+                        <form action="{{url('/registro/usuario')}}" method="POST">
                             @csrf
                             <div class="row mb-4">
                                 <label for="horizontal-firstname-input"
@@ -42,8 +42,8 @@
                                 <label for="horizontal-email-input"
                                     class="col-sm-3 col-form-label fw-bold fst-italic text-end">Email:</label>
                                 <div class="col-sm-9">
-                                    <input type="email" name="email" required class="form-control" id="horizontal-email-input"
-                                        placeholder="Enter Your Email ID">
+                                    <input type="email" name="email" required class="form-control"
+                                        id="horizontal-email-input" placeholder="Enter Your Email ID">
                                 </div>
                             </div>
                             <div class="row mb-4">
@@ -68,7 +68,8 @@
                                 <div class="row justify-content-end mt-3 mx-1">
                                     <div class="col-sm-9">
                                         <div>
-                                            <button type="submit" class="btn btn-primary w-md fst-italic fw-bold">Guardar</button>
+                                            <button type="submit"
+                                                class="btn btn-primary w-md fst-italic fw-bold">Guardar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -77,6 +78,9 @@
                     <!-- end card body -->
                 </div>
                 <!-- end card -->
+                @if (session('message_cliente_ok'))
+                    <div class="alert alert-primary">{{session('message_cliente_ok')}}</div>
+                @endif
             </div>
         </div>
     </div>

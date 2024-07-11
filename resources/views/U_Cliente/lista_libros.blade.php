@@ -11,9 +11,9 @@ Libreria
         @foreach ($listBooks as $book)
         <div class="col-lg-6">
                 <div class="col-xl-12 shadow-lg p-4 mb-5 mx-2 h-50 mw-100">
-                    <div class="card-body m-3">
+                    <div class="card-body m-3 d-flex">
                         <img class="img-top img-fluid mb-3 mx-auto d-block rounded" src="/img/imagenLibros/{{$book->imagen}}" alt="Card image cap">
-                        <div class="card-body">
+                        <div class="card-body mx-4">
                             <div class="card-body">
                                 <h5 class="card-title fst-italic fw-bold">{{$book->titulo_libro}}</h5>
                                 <p class="card-text">{{$book->descripcion}}</p>
