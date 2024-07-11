@@ -44,7 +44,7 @@ class AuthController extends Controller
                     return redirect('/cliente/home');
                 }
             }
-            return redirect('/inicio_session')->with('message_error_validacion','Tu correo no esta validado');
+            return redirect('/inicio_session')->with('message_error_validacion', 'Tu correo no esta validado');
         }
         return view('login');
     }
@@ -67,7 +67,7 @@ class AuthController extends Controller
             ['email' => $request->email]
         );
         if ($query) {
-            return redirect('/registro/nuevo_usuario')->with('message_error_register','El correo ya existe');
+            return redirect('/registro/nuevo_usuario')->with('message_error_register', 'El correo ya existe');
         }
         $newUser = DB::insert(
             'INSERT INTO users (rol_id,nombre,apellido,ciudad_id,email,password) 
@@ -95,10 +95,12 @@ class AuthController extends Controller
             $mail->addAddress($request->email, $request->nombre);
             $mail->isHTML(true);                                  //Set email format to HTML
             $mail->Subject = 'Verificacion de cuenta';
-            $mail->Body = 'Hola, este es un correo generado para la verificacion de tu cuenta en nuestra libreria. Sigue los pasos a continuación:<br>
-                        Haz clic en el siguiente enlace: <a href="' . url('/validar/cuenta_de_usuario') . '>Recuperar contraseña</a>';
-            $mail->AltBody = 'Hola, este es un correo generado para la verificacion de tu cuenta en nuestra libreria. Sigue los pasos a continuación: 
-                        Copia y pega el siguiente enlace en tu navegador:' . url('/validar/cuenta_de_usuario');
+            $mail->Body = '<div style="max-width:100%; width:80%; margin:auto; padding:2vw; font-family: Arial, sans-serif; background-color: #f9f9f9; border:0.2vw solid #ddd;">
+                                <h3 style="font-style:italick;font-weight:bold; color:black;">Hola, este es un correo generado para la verificacion de tu cuenta en nuestra libreria.</h3>
+                                <p style="font-style: italic; color: #555;">Sigue los pasos a continuación.</p>
+                                <p style="color: #555;">Haz clic en el siguiente enlace:</p>
+                                <a href="' . url('/validar/cuenta_de_usuario') . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Confirmar cuenta</a>
+                            </div>';
             $mail->send();
             return redirect('/registro/nuevo_usuario')->with('message_cliente_ok', 'Usuario creado con exito, verifique su cuenta por correo');
         } catch (Exception $e) {
@@ -162,16 +164,18 @@ class AuthController extends Controller
 
                 //Recipients
                 $mail->setFrom('carlos.ovando@staffbridge.com.mx', 'Carlos Ivan Ovando Toledo');
-                $mail->addAddress('carlos.ovando@staffbridge.com.mx', $user->nombre);     //Add a recipient
+                $mail->addAddress($user->email, $user->nombre);     //Add a recipient
 
                 //Content
                 $mail->isHTML(true);                                  //Set email format to HTML
                 $mail->Subject = 'Recuperacion de password';
-                $mail->Body = 'Hola, este es un correo generado para la recuperación de tu contraseña. Sigue los pasos a continuación:<br>
-                        Haz clic en el siguiente enlace: <a href="' . url('/nuevo-password/' . $user->id) . '">Recuperar contraseña</a>';
-                $mail->AltBody = 'Hola, este es un correo generado para la recuperación de tu contraseña. Sigue los pasos a continuación: 
-                        Copia y pega el siguiente enlace en tu navegador:' . url('/nuevo-password/' . $user->id);
-
+                $mail->Body =
+                    '<div style="max-width:100%; width:80%; margin: auto; padding: 2vw; font-family: Arial, sans-serif; background-color: #f9f9f9; border: 0.2vw solid #ddd;">
+                        <h3 style="font-style: italic; font-weight: bold; color: black;">Hola, este es un correo generado para la recuperación de tu contraseña.</h3>
+                        <p style="font-style: italic; color: #555;">Sigue los pasos a continuación para poder cambiar tu contraseña:</p>
+                        <p style="color: #555;">Haz clic en el siguiente enlace:</p>
+                        <a href="' . url('/nuevo-password/' . $user->id) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Cambiar contraseña</a>
+                    </div>';
 
                 $mail->send();
                 return redirect('/recuperar_contraseña')->with('message_ok', 'Correo enviado con exito');
@@ -180,7 +184,7 @@ class AuthController extends Controller
                 return redirect('/recuperar_contraseña')->with('message_error', 'No se pudo enviar el correo. Inténtalo de nuevo más tarde.');
             }
         } else {
-            return response()->json(['message', 'Correo no encontrado']);
+            return redirect('/recuperar_contraseña')->with('message_error', 'No se pudo enviar el correo. Inténtalo de nuevo más tarde.');
         }
     }
     public function newpassword($id, Request $request)

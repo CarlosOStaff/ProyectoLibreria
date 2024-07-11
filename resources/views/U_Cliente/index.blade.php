@@ -34,9 +34,9 @@ Libreria
                                         <td>
                                             <form action="{{url('/cliente/prestar/libro', $book->id)}}" method="POST">
                                                 @csrf
-                                                <button type="submit" class="btn btn-success" aria-label="Eliminar Usuario"
+                                                <button type="submit" class="btn btn-success m-2" aria-label="Eliminar Usuario"
                                                     title="Eliminar Usuario">
-                                                    <i class="fas fa-book">Pedir Prestado</i>
+                                                    <i class="fas fa-book"> Pedir Prestado</i>
                                             </form>
                                         </td>
                                 @endforeach
