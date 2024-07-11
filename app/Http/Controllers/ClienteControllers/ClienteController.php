@@ -19,29 +19,8 @@ if (session_status() == PHP_SESSION_NONE) {
                     'id' => $user
                 ]);
                 if ($_SESSION['cliente']->rol_id === 2) {
-
-                    /* $books = DB::select(
-                        'SELECT b.id,b.titulo_libro,b.descripcion,b.categoria_id, c.nombre_categoria
-                                FROM books b
-                                JOIN categories c
-                                ON b.categoria_id = c.id
-                                ORDER BY b.id;'
-                    );
-
-                    $booksloans = DB::select(
-                        'SELECT b.id,
-                        b.imagen,b.titulo_libro,
-                        b.descripcion,b.contenido,
-                        b.fecha_publicacion
-                        FROM loans l
-                        JOIN books b
-                        ON l.libro_id = b.id
-                        WHERE l.user_id = (:user_id) 
-                        ORDER BY b.id',
-                        ['user_id'=>$user]
-                    ); */
                     $books = DB::select(
-                        'SELECT b.id, b.titulo_libro, b.descripcion, b.categoria_id, c.nombre_categoria
+                        'SELECT b.id, b.imagen, b.titulo_libro, b.descripcion, b.categoria_id, c.nombre_categoria
                         FROM books b
                         JOIN categories c ON b.categoria_id = c.id
                         WHERE b.id NOT IN (

@@ -23,7 +23,7 @@
                         <form action="{{route('forgotPassword')}}">
                             <div class="form-group">
                                 <label for="email">Correo Electrónico</label>
-                                <input type="email" class="form-control" name="email" id="email"
+                                <input type="email" required class="form-control" name="email" id="email"
                                     placeholder="Introduce tu correo electrónico">
                             </div>
                             <button type="submit" class="btn btn-primary btn-block">Enviar Enlace de

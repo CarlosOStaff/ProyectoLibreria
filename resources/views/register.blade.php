@@ -34,7 +34,7 @@
                                 <label for="horizontal-firstname-input"
                                     class="col-sm-3 col-form-label fw-bold fst-italic text-end">Apellidos:</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="apellido" class="form-control"
+                                    <input type="text" name="apellido" required class="form-control"
                                         id="horizontal-firstname-input" placeholder="Enter Your ">
                                 </div>
                             </div>
@@ -42,7 +42,7 @@
                                 <label for="horizontal-email-input"
                                     class="col-sm-3 col-form-label fw-bold fst-italic text-end">Email:</label>
                                 <div class="col-sm-9">
-                                    <input type="email" name="email" class="form-control" id="horizontal-email-input"
+                                    <input type="email" name="email" required class="form-control" id="horizontal-email-input"
                                         placeholder="Enter Your Email ID">
                                 </div>
                             </div>
@@ -50,7 +50,7 @@
                                 <label for="horizontal-password-input"
                                     class="col-sm-3 col-form-label fw-bold fst-italic text-end">Password:</label>
                                 <div class="col-sm-9">
-                                    <input type="password" name="password" class="form-control"
+                                    <input type="password" required name="password" class="form-control"
                                         id="horizontal-password-input" placeholder="Enter Your Password">
                                 </div>
                             </div>
@@ -58,8 +58,8 @@
                                 <label for="formrow-inputState"
                                     class="col-sm-3 col-form-label text-end fst-italic fw-bold">Ciudades:</label>
                                 <div class="col-sm-9">
-                                    <select name="ciudad_id" id="ciudad_id" class="form-control">
-                                        <option value="">select...</option>
+                                    <select name="ciudad_id" id="ciudad_id" class="form-select">
+                                        <option value="">Selecciona una ciudad</option>
                                         @foreach ($ciudades as $ciudad)
                                             <option value="{{ $ciudad->id }}">{{ $ciudad->nombre_ciudad }}</option>
                                         @endforeach

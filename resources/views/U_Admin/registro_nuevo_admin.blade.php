@@ -19,7 +19,7 @@ Proyecto - Libreria
                                 <label for="horizontal-firstname-input"
                                     class="col-sm-3 col-form-label text-center fst-italic fw-bold">Nombre:</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="nombre" class="form-control"
+                                    <input type="text" name="nombre" required class="form-control"
                                         id="horizontal-firstname-input" placeholder="Enter Your ">
                                 </div>
                             </div>
@@ -27,7 +27,7 @@ Proyecto - Libreria
                                 <label for="horizontal-firstname-input"
                                     class="col-sm-3 col-form-label text-center fst-italic fw-bold">Apellido:</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="apellido" class="form-control"
+                                    <input type="text" name="apellido" required class="form-control"
                                         id="horizontal-firstname-input" placeholder="Enter Your ">
                                 </div>
                             </div>
@@ -35,7 +35,7 @@ Proyecto - Libreria
                                 <label for="horizontal-email-input"
                                     class="col-sm-3 col-form-label text-center fst-italic fw-bold">Email:</label>
                                 <div class="col-sm-9">
-                                    <input type="email" name="email" class="form-control" id="horizontal-email-input"
+                                    <input type="email" name="email" required class="form-control" id="horizontal-email-input"
                                         placeholder="Enter Your Email ID">
                                 </div>
                             </div>
@@ -43,7 +43,7 @@ Proyecto - Libreria
                                 <label for="horizontal-password-input"
                                     class="col-sm-3 col-form-label text-center fst-italic fw-bold">Password:</label>
                                 <div class="col-sm-9">
-                                    <input type="password" name="password" class="form-control"
+                                    <input type="password" name="password" required class="form-control"
                                         id="horizontal-password-input" placeholder="Enter Your Password">
                                 </div>
                             </div>
@@ -51,8 +51,8 @@ Proyecto - Libreria
                                 <label for="horizontal-password-input"
                                     class="col-sm-3 col-form-label text-center fst-italic fw-bold">Ciudades:</label>
                                 <div class="col-sm-9">
-                                    <select name="ciudad_id" id="ciudad_id" class="form-control">
-                                        <option value="">select...</option>
+                                    <select name="ciudad_id" id="ciudad_id" required class="form-select">
+                                        <option value="">Seleciona una ciudad</option>
                                         @foreach ($ciudades as $ciudad)
                                             <option value="{{ $ciudad->id }}">{{ $ciudad->nombre_ciudad }}</option>
                                         @endforeach

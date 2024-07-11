@@ -10,10 +10,11 @@ Proyecto - Libreria -lista de libros
     <div class="row mx-auto mt-4 justify-content-center align-items-center d-flex">
         @foreach ($books as $book)
             <div class="col-lg-6">
-                <div class="col-xl-12 shadow-lg p-4 mb-5 mx-2 h-50 mw-100">
-                    <div class="card-body m-3">
-                        <img class="img-top img-fluid mb-3 mx-auto d-block rounded" src="/img/imagenLibros/{{$book->imagen}}" alt="Card image cap">
-                        <div class="card-body">
+                <div class="col-xl-12 shadow-lg p-3 mb-5 mx-2 h-50 mw-100">
+                    <div class="card-body m-3 d-flex col-4">
+                        <img class="img-top img-fluid mb-3 mx-auto d-block rounded img-fluid mw-100 w-100 h.auto"
+                            src="/img/imagenLibros/{{$book->imagen}}" alt="Card image cap">
+                        <div class="card-body mx-2">
                             <h5 class="card-title fst-italic">{{$book->titulo_libro}}</h5>
                             <p class="card-text">{{$book->descripcion}}</p>
                             <strong><span class="fst-italic">Fecha de publicacion:
@@ -63,10 +64,11 @@ Proyecto - Libreria -lista de libros
                 <h5 id="modalBookTitle"></h5>
                 <label class="fw-bold fst-italic">Contenido</label>
                 <p id="modalBookContenido"></p>
-                
+
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>            </div>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
