@@ -16,7 +16,10 @@
                     alert("{{ session('login_error') }}");
                 </script>
             @endif
-
+            @if (session('message_error_validacion'))
+                <div class="alert alert-danger"><i
+                        class="fas fa-exclamation-triangle"></i>{{session('message_error_validacion')}}</div>
+            @endif
             <div class="col-xl-12 d-flex justify-content-center align-items-center mt-5">
                 <div class="col-sm-8 shadow-lg p-4 rounded-4">
                     <div class="card-body">
@@ -35,8 +38,8 @@
                                 <label for="horizontal-email-input"
                                     class="col-sm-3 col-form-label text-end fw-bold fst-italic">Email</label>
                                 <div class="col-sm-9">
-                                    <input type="email" required name="email" class="form-control" id="horizontal-email-input"
-                                        placeholder="Enter Your Email ID">
+                                    <input type="email" required name="email" class="form-control"
+                                        id="horizontal-email-input" placeholder="Enter Your Email ID">
                                 </div>
                             </div>
                             <div class="row mb-4">

@@ -26,18 +26,25 @@ class AuthController extends Controller
             "password" => "required",
         ]);
 
-        $query = DB::table("users")
-            ->where('email', $request->email)->first();
+        $query = DB::select(
+            'SELECT * FROM users 
+            WHERE email = (:email)',
+            ['email' => $request->email]
+        );
+        $query = reset($query);
         if (password_verify($request->password, $query->password)) {
             $_SESSION['user'] = $query;
             $user = json_decode(json_encode($_SESSION['user'], true));
-            if ($user->rol_id === 1) {
-                $admin = $_SESSION['admin'] = $query;
-                return redirect('/admin/home');
-            } elseif ($user->rol_id === 2) {
-                $cliente = $_SESSION['cliente'] = $query;
-                return redirect('/cliente/home');
+            if ($user->email_verified_at === 1) {
+                if ($user->rol_id === 1) {
+                    $admin = $_SESSION['admin'] = $query;
+                    return redirect('/admin/home');
+                } elseif ($user->rol_id === 2) {
+                    $cliente = $_SESSION['cliente'] = $query;
+                    return redirect('/cliente/home');
+                }
             }
+            return redirect('/inicio_session')->with('message_error_validacion','Tu correo no esta validado');
         }
         return view('login');
     }
@@ -60,7 +67,7 @@ class AuthController extends Controller
             ['email' => $request->email]
         );
         if ($query) {
-            return response()->json(['message', 'El correo ya existe']);
+            return redirect('/registro/nuevo_usuario')->with('message_error_register','El correo ya existe');
         }
         $newUser = DB::insert(
             'INSERT INTO users (rol_id,nombre,apellido,ciudad_id,email,password) 
@@ -89,17 +96,40 @@ class AuthController extends Controller
             $mail->isHTML(true);                                  //Set email format to HTML
             $mail->Subject = 'Verificacion de cuenta';
             $mail->Body = 'Hola, este es un correo generado para la verificacion de tu cuenta en nuestra libreria. Sigue los pasos a continuación:<br>
-                        Haz clic en el siguiente enlace: <a href="#">Recuperar contraseña</a>';
+                        Haz clic en el siguiente enlace: <a href="' . url('/validar/cuenta_de_usuario') . '>Recuperar contraseña</a>';
             $mail->AltBody = 'Hola, este es un correo generado para la verificacion de tu cuenta en nuestra libreria. Sigue los pasos a continuación: 
-                        Copia y pega el siguiente enlace en tu navegador:';
+                        Copia y pega el siguiente enlace en tu navegador:' . url('/validar/cuenta_de_usuario');
             $mail->send();
-/*             return response()->json(['message', 'Correo enviado']);
- */            return redirect('/registro/nuevo_usuario')->with('message_cliente_ok', 'Usuario creado con exito, verifique su cuenta por correo');
+            return redirect('/registro/nuevo_usuario')->with('message_cliente_ok', 'Usuario creado con exito, verifique su cuenta por correo');
         } catch (Exception $e) {
             return response()->json(['message', $e->getMessage()]);
         }
-/*         return view('login');
- */    }
+    }
+    public function validarCuenta()
+    {
+        return view('validar_cuenta');
+    }
+    public function validarCorreo(Request $request)
+    {
+        $correoValidacion = \DB::select(
+            'SELECT email FROM users 
+            WHERE email = (:email)',
+            ['email' => $request->email]
+        );
+        if ($correoValidacion) {
+            $validar = \DB::update(
+                'UPDATE users 
+                SET email_verified_at = (:email_verified_at)
+                WHERE email = (:email)',
+                [
+                    'email_verified_at' => $request->btn,
+                    'email' => $request->email
+                ]
+            );
+            return redirect('/validar/cuenta_de_usuario')->with('message_ok', 'Correo validado con exito');
+        }
+        return redirect('/validar/cuenta_de_usuario')->with('message_error', 'El correo ingresado no existe');
+    }
     public function newUser()
     {
         $ciudades = DB::select('SELECT * FROM cities;');

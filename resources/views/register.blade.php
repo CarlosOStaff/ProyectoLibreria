@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="./css/app.css" />
 
 </head>
@@ -17,6 +18,7 @@
         <div class="row justify-content-center align-items-center">
             <div class="col-xl-6 shadow-lg mt-4 p-4 rounded-4">
                 <div class="">
+                    <a href="{{route('home')}}">Volver al inicio</a>
                     <div class="card-body">
                         <h3 class="card-title mb-4 text-center fst-italic fw-bold">Ingresa tus datos personales</h3>
 
@@ -27,7 +29,7 @@
                                     class="col-sm-3 col-form-label fst-italic fw-bold text-end">Nombre:</label>
                                 <div class="col-sm-9">
                                     <input type="text" required name="nombre" class="form-control"
-                                        id="horizontal-firstname-input" placeholder="Enter Your ">
+                                        id="horizontal-firstname-input" placeholder="Joaquin">
                                 </div>
                             </div>
                             <div class="row mb-4">
@@ -35,7 +37,7 @@
                                     class="col-sm-3 col-form-label fw-bold fst-italic text-end">Apellidos:</label>
                                 <div class="col-sm-9">
                                     <input type="text" name="apellido" required class="form-control"
-                                        id="horizontal-firstname-input" placeholder="Enter Your ">
+                                        id="horizontal-firstname-input" placeholder="Villa Garcia">
                                 </div>
                             </div>
                             <div class="row mb-4">
@@ -43,7 +45,7 @@
                                     class="col-sm-3 col-form-label fw-bold fst-italic text-end">Email:</label>
                                 <div class="col-sm-9">
                                     <input type="email" name="email" required class="form-control"
-                                        id="horizontal-email-input" placeholder="Enter Your Email ID">
+                                        id="horizontal-email-input" placeholder="Ingresa tu correo electronico">
                                 </div>
                             </div>
                             <div class="row mb-4">
@@ -51,7 +53,7 @@
                                     class="col-sm-3 col-form-label fw-bold fst-italic text-end">Password:</label>
                                 <div class="col-sm-9">
                                     <input type="password" required name="password" class="form-control"
-                                        id="horizontal-password-input" placeholder="Enter Your Password">
+                                        id="horizontal-password-input" placeholder="Ingresa tu contraseña">
                                 </div>
                             </div>
                             <div class="row mb-4">
@@ -79,7 +81,11 @@
                 </div>
                 <!-- end card -->
                 @if (session('message_cliente_ok'))
-                    <div class="alert alert-primary">{{session('message_cliente_ok')}}</div>
+                    <div class="alert alert-success"><i class="fas fa-check m-2"></i>{{session('message_cliente_ok')}}</div>
+                @endif
+                @if (session('message_error_register'))
+                    <div class="alert alert-warning"><i
+                            class="fas fa-exclamation-triangle m-2"></i>{{session('message_error_register')}}</div>
                 @endif
             </div>
         </div>
