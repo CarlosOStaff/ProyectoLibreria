@@ -215,5 +215,18 @@ if (session_status() == PHP_SESSION_NONE) {
         {
             return Excel::download(new CategoriaExport, 'Reporte_Cantidad_Libros_Categoria.xlsx');
         }
+        public function index2()
+        {
+            $user = \Auth::user();
+            if ($user->rol_id === 1) {
+                $books = \DB::select('select * from books');
+                $response = [
+                    'user' => $user,
+                    'books' => $books
+                ];
+                return response($response, 200);
+            }
+            return response('No tienes los permisos para acceder a esta ruta',404);
+        }
     }
 }

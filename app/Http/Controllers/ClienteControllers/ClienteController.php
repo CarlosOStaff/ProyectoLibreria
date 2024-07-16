@@ -121,5 +121,23 @@ if (session_status() == PHP_SESSION_NONE) {
             }
             return redirect('login');
         }
+        public function newindex(){
+            $user = \Auth::user();
+            if($user->rol_id ===2){
+                $books =\DB::select('SELECT b.id, b.imagen, b.titulo_libro, b.descripcion, b.categoria_id, c.nombre_categoria
+                        FROM books b
+                        JOIN categories c ON b.categoria_id = c.id
+                        WHERE b.id NOT IN (
+                            SELECT b.id
+                            FROM loans l
+                            JOIN books b ON l.libro_id = b.id
+                            WHERE l.user_id = (:user_id)
+                        )
+                        ORDER BY b.id;',
+                        ['user_id' => $user->id]
+                    );
+                    return response($books,200);
+            }
+        }
     }
 }

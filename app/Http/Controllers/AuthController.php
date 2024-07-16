@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -38,6 +39,7 @@ class AuthController extends Controller
             if ($user->email_verified_at === 1) {
                 if ($user->rol_id === 1) {
                     $admin = $_SESSION['admin'] = $query;
+                    
                     return redirect('/admin/home');
                 } elseif ($user->rol_id === 2) {
                     $cliente = $_SESSION['cliente'] = $query;
@@ -219,5 +221,27 @@ class AuthController extends Controller
             return view('nueva_contraseña')->with('user', $user);
         }
         return response()->json(['message', 'usuario no encontrado']);
+    }
+    public function newindex(Request $request){
+        $user = User::where('email', $request->email)->first();
+        // print_r($data);
+        if (!$user || !password_verify($request->password, $user->password)) {
+            return response([
+                'message' => ['These credentials do not match our records.']
+            ], 404);
+        }
+
+        $token = $user->createToken('my-app-token')->plainTextToken;
+
+        $response = [
+            'user' => $user,
+            'token' => $token
+        ];
+
+        return response($response, 201);
+    }
+    public function newlogout(){
+        auth()->user()->tokens()->delete();
+        return response()->json(['message','Has cerrado sesion']);
     }
 }
