@@ -241,7 +241,7 @@ if (session_status() == PHP_SESSION_NONE) {
                     ON c.id = b.categoria_id 
                     GROUP BY c.nombre_categoria;'
                 );
-                return view('U_Admin.estadisticas')->with('query', $query);
+                return view('U_Admin.estadisticas',compact('query'));
             }
         }
         public function exportexcel()
