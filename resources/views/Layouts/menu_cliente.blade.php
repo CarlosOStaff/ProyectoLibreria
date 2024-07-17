@@ -26,7 +26,7 @@
 
 <body>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-    <div class="container-fluid">
+    <div class="container-fluid ">
         <ul class="navbar-nav me-auto">
             <li class="nav-item">
                 <a class="nav-link text-white fst-italic fw-bold" href="{{url('/cliente/home')}}">Inicio</a>

@@ -21,7 +21,7 @@ if (session_status() == PHP_SESSION_NONE) {
                     FROM users 
                     WHERE id = (:id) 
                     AND rol_id = (:rol_id)',
-                    ['id' => $id, 'rol_id' => $rol_id]
+                    ['id' => $user->id, 'rol_id' => $rol_id]
                 );
                 if ($query) {
                     if ($rol_id === 2) {

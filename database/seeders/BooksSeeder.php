@@ -16,17 +16,17 @@ class BooksSeeder extends Seeder
     {
         $faker = faker::create();
 
-        $libro = new Book();
-        
-        $libro->imagen = 'alienigenas.jpg';
-        $libro->titulo_libro = $faker->name();
-        $libro->descripcion = $faker->sentence(20);
-        $libro->contenido = $faker->sentence(50);
-        $libro->fecha_publicacion = $faker->date("Y-m-d");
-        $libro->categoria_id = 1;
-        $libro->save();
-        $libro->etiquetas()->attach([1]); //Relacionar el libro a dos etiquetas
-
+        for ($i = 0; $i < 6; $i++) {
+            $libro = new Book();
+            $libro->imagen = 'alienigenas.jpg';
+            $libro->titulo_libro = $faker->name();
+            $libro->descripcion = $faker->sentence(20);
+            $libro->contenido = $faker->sentence(50);
+            $libro->fecha_publicacion = $faker->date("Y-m-d");
+            $libro->categoria_id = 1;
+            $libro->save();
+            $libro->etiquetas()->attach([1]); //Relacionar el libro a dos etiquetas
+        }
 
         $libro = new Book();
         $libro->imagen = 'cruce de caminos.jpg';
