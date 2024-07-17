@@ -28,7 +28,8 @@ if (session_status() == PHP_SESSION_NONE) {
                     FROM users u
                     JOIN cities c
                     ON u.ciudad_id = c.id
-                    WHERE rol_id = 2;'
+                    WHERE rol_id = 2
+                    AND u.email_verified_at IS NOT NULL;'
                     );
                     return view('U_Admin.lista_usuarios')->with('users', $users);
                 }
