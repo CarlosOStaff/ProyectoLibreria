@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
+require 'C:\laragon\www\prueba\ProyectoPrueba\vendor\autoload.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
     class AdminController extends Controller
@@ -130,19 +135,40 @@ if (session_status() == PHP_SESSION_NONE) {
                     ]
                 );
                 if ($user_admin) {
-                    $newUser = DB::insert(
-                        'INSERT INTO users (rol_id,nombre,apellido,ciudad_id,email,password) 
-                        VALUES (:rol_id,:nombre,:apellido,:ciudad_id,:email,:password)',
-                        [
-                            'rol_id' => 1,
-                            'nombre' => $request->nombre,
-                            'apellido' => $request->apellido,
-                            'ciudad_id' => $request->ciudad_id,
-                            'email' => $request->email,
-                            'password' => bcrypt($request->password)
-                        ]
-                    );
-                    return redirect('/admin/home');
+                    $userId = DB::table('users')->insertGetId([
+                        'rol_id' => 1,
+                        'nombre' => $request->nombre,
+                        'apellido' => $request->apellido,
+                        'ciudad_id' => $request->ciudad_id,
+                        'email' => $request->email,
+                        'password' => bcrypt($request->password),
+                    ]);
+
+                    $mail = new PHPMailer();
+                    try {
+                        $mail->SMTPDebug = 0;
+                        $mail->isSMTP();
+                        $mail->Host = 'smtp.gmail.com';
+                        $mail->SMTPAuth = true;
+                        $mail->Username = 'carlos.ovando@staffbridge.com.mx';
+                        $mail->Password = 'ravk gxlu tgov upyt'; // Actualiza con la contraseña correcta
+                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                        $mail->Port = 587;
+                        $mail->setFrom('carlos.ovando@staffbridge.com.mx', 'Carlos Ivan Ovando Toledo');
+                        $mail->addAddress($request->email, $request->nombre);
+                        $mail->isHTML(true);
+                        $mail->Subject = 'Verificacion de cuenta';
+                        $mail->Body = '<div style="max-width:100%; width:80%; margin:auto; padding:2vw; font-family: Arial, sans-serif; background-color: #f9f9f9; border:0.2vw solid #ddd;">
+                                        <h3 style="font-style:italic; font-weight:bold; color:black;">Hola, este es un correo generado para la verificación de tu cuenta en nuestra librería.</h3>
+                                        <p style="font-style:italic; color: #555;">Sigue los pasos a continuación.</p>
+                                        <p style="color: #555;">Haz clic en el siguiente enlace:</p>
+                                        <a href="' . url('/validar/correo/' . $userId) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Confirmar cuenta</a>
+                                    </div>';
+                        $mail->send();
+                        return redirect('/admin/home')->with('message_cliente_ok', 'Usuario creado con exito, verifique su cuenta por correo');
+                    } catch (Exception $e) {
+                        return response()->json(['message' => $e->getMessage()]);
+                    }
                 }
                 return response()->json(['message', 'Usuario no encontrado']);
             }
@@ -161,11 +187,18 @@ if (session_status() == PHP_SESSION_NONE) {
                 );
                 if ($query) {
                     $admins = DB::select(
-                        'SELECT  u.id,u.nombre,u.apellido,u.ciudad_id,u.email,c.id,c.nombre_ciudad
+                        'SELECT  u.id,u.nombre,
+                        u.apellido,u.ciudad_id,
+                        u.email,c.id,
+                        c.nombre_ciudad,u.email_verified_at
                         FROM users u
                         JOIN cities c
                         ON u.ciudad_id = c.id
-                        WHERE rol_id = 1;'
+                        WHERE rol_id = 1
+                        AND u.id != (:admin_id)',
+                        [
+                            'admin_id' => $_SESSION['admin']->id,
+                        ]
                     );
                     return view('U_Admin.lista_administradores')->with('admins', $admins);
                 }
@@ -226,7 +259,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 ];
                 return response($response, 200);
             }
-            return response('No tienes los permisos para acceder a esta ruta',404);
+            return response('No tienes los permisos para acceder a esta ruta', 404);
         }
     }
 }

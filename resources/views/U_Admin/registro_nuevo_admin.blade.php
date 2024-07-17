@@ -13,7 +13,8 @@ Proyecto - Libreria
             <div class="col-xl-6 shadow-lg p-3 rounded-5 bg-white">
                 <div class="">
                     <div class="">
-                        <form action="{{ url('/new-admin') }}" method="POST">
+                        <form action="{{ url('/new-admin') }}" method="POST" id="frm"
+                            onsubmit="return validarPasswords()">
                             @csrf
                             <div class="row mb-4">
                                 <label for="horizontal-firstname-input"
@@ -35,16 +36,27 @@ Proyecto - Libreria
                                 <label for="horizontal-email-input"
                                     class="col-sm-3 col-form-label text-center fst-italic fw-bold">Email:</label>
                                 <div class="col-sm-9">
-                                    <input type="email" name="email" required class="form-control" id="horizontal-email-input"
-                                        placeholder="Enter Your Email ID">
+                                    <input type="email" name="email" required class="form-control"
+                                        id="horizontal-email-input" placeholder="Enter Your Email ID">
                                 </div>
                             </div>
                             <div class="row mb-4">
                                 <label for="horizontal-password-input"
                                     class="col-sm-3 col-form-label text-center fst-italic fw-bold">Password:</label>
                                 <div class="col-sm-9">
-                                    <input type="password" name="password" required class="form-control"
-                                        id="horizontal-password-input" placeholder="Enter Your Password">
+                                    <input type="password" name="password" required class="form-control" id="password"
+                                        placeholder="Enter Your Password">
+                                </div>
+                            </div>
+                            <div class="row mb-4">
+                                <label for="horizontal-password-input"
+                                    class="col-sm-3 col-form-label text-center fst-italic fw-bold">Validar
+                                    Password:</label>
+                                <div class="col-sm-9">
+                                    <input type="password" name="confirmar_password" required class="form-control mt-3"
+                                        id="confirmar_password" placeholder="Enter Your Password">
+                                    <div id="error_confirmar_password" style="color: red; display: none;">Las
+                                        contraseñas no coinciden.</div>
                                 </div>
                             </div>
                             <div class="row mb-4">
@@ -73,6 +85,21 @@ Proyecto - Libreria
             </div>
         </div>
     </div>
-</body>
+    <script defer type="text/javascript">
+        function validarPasswords() {
+            var pass = document.getElementById("password").value;
+            var repass = document.getElementById("confirmar_password").value;
 
+            if (pass !== repass) {
+                alert("Las contraseñas no coinciden");
+                return false; // Evita el envío del formulario
+            }
+            return true; // Permite el envío del formulario
+        }
+
+        document.getElementById("frm").onsubmit = function () {
+            return validarPasswords();
+        };
+    </script>
+</body>
 @endsection
