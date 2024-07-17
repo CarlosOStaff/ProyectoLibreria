@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('apellido')->nullable();
             $table->foreignId('ciudad_id')->references('id')->on('cities')->nullable(true);
             $table->string('email')->unique();
-            $table->boolean('email_verified_at')->default(false);
+            $table->timestamp('email_verified_at')->nullable(true);
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

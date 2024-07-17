@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Faker\Factory as faker;
@@ -20,6 +21,7 @@ class UsersSeeder extends Seeder
         $user->nombre = $faker->firstName();
         $user->apellido = $faker->lastName();
         $user->email = $faker->email();
+        $user->email_verified_at = Carbon::now();
         $user->ciudad_id = 1;
         $user->password = bcrypt(12345678);
         $user->save();

@@ -9,7 +9,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="./css/app.css" />
-
 </head>
 
 <body>
@@ -22,7 +21,8 @@
                     <div class="card-body">
                         <h3 class="card-title mb-4 text-center fst-italic fw-bold">Ingresa tus datos personales</h3>
 
-                        <form action="{{url('/registro/usuario')}}" method="POST">
+                        <form action="{{url('/registro/usuario')}}" method="POST" id="frm"
+                            onsubmit="return validarPasswords()">
                             @csrf
                             <div class="row mb-4">
                                 <label for="horizontal-firstname-input"
@@ -52,8 +52,17 @@
                                 <label for="horizontal-password-input"
                                     class="col-sm-3 col-form-label fw-bold fst-italic text-end">Password:</label>
                                 <div class="col-sm-9">
-                                    <input type="password" required name="password" class="form-control"
-                                        id="horizontal-password-input" placeholder="Ingresa tu contraseña">
+                                    <input type="password" required name="password" id="password" class="form-control"
+                                        placeholder="Ingresa tu contraseña">
+                                </div>
+                            </div>
+                            <div class="row mb-4">
+                                <label for="horizontal-password-input"
+                                    class="col-sm-3 col-form-label fw-bold fst-italic text-end">Confirmar
+                                    Password:</label>
+                                <div class="col-sm-9">
+                                    <input type="password" required name="confirmar_password" id="confirmar_password"
+                                        class="form-control mt-3" placeholder="Ingresa tu contraseña">
                                 </div>
                             </div>
                             <div class="row mb-4">
@@ -87,6 +96,18 @@
                     <div class="alert alert-warning"><i
                             class="fas fa-exclamation-triangle m-2"></i>{{session('message_error_register')}}</div>
                 @endif
+                <script type="text/javascript">
+                    function validarPasswords() {
+                        var pass = document.getElementById("password").value;
+                        var repass = document.getElementById("confirmar_password").value;
+
+                        if (pass != repass) {
+                            alert("Las contraseñas no coinciden");
+                            return false; // Evita el envío del formulario
+                        }
+                        return true; // Permite el envío del formulario
+                    }
+                </script>
             </div>
         </div>
     </div>

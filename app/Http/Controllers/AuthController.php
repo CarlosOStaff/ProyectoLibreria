@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -36,10 +37,10 @@ class AuthController extends Controller
         if (password_verify($request->password, $query->password)) {
             $_SESSION['user'] = $query;
             $user = json_decode(json_encode($_SESSION['user'], true));
-            if ($user->email_verified_at === 1) {
+            if (!is_null($user->email_verified_at)) {
                 if ($user->rol_id === 1) {
                     $admin = $_SESSION['admin'] = $query;
-                    
+
                     return redirect('/admin/home');
                 } elseif ($user->rol_id === 2) {
                     $cliente = $_SESSION['cliente'] = $query;
@@ -62,27 +63,27 @@ class AuthController extends Controller
             "email" => "required",
             "password" => "required",
         ]);
+
         $query = DB::select(
             'SELECT email 
             FROM users 
             WHERE email = (:email)',
             ['email' => $request->email]
         );
+
         if ($query) {
             return redirect('/registro/nuevo_usuario')->with('message_error_register', 'El correo ya existe');
         }
-        $newUser = DB::insert(
-            'INSERT INTO users (rol_id,nombre,apellido,ciudad_id,email,password) 
-            VALUES (:rol_id,:nombre,:apellido,:ciudad_id,:email,:password)',
-            [
-                'rol_id' => 2,
-                'nombre' => $request->nombre,
-                'apellido' => $request->apellido,
-                'ciudad_id' => $request->ciudad_id,
-                'email' => $request->email,
-                'password' => bcrypt($request->password)
-            ]
-        );
+
+        $userId = DB::table('users')->insertGetId([
+            'rol_id' => 2,
+            'nombre' => $request->nombre,
+            'apellido' => $request->apellido,
+            'ciudad_id' => $request->ciudad_id,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
+
         $mail = new PHPMailer();
         try {
             $mail->SMTPDebug = 0;
@@ -90,47 +91,48 @@ class AuthController extends Controller
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
             $mail->Username = 'carlos.ovando@staffbridge.com.mx';
-            $mail->Password = 'ravk gxlu tgov upyt'; ///2AvD$iFEbS*t3SM 
+            $mail->Password = 'ravk gxlu tgov upyt'; // Actualiza con la contraseña correcta
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
             $mail->setFrom('carlos.ovando@staffbridge.com.mx', 'Carlos Ivan Ovando Toledo');
             $mail->addAddress($request->email, $request->nombre);
-            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->isHTML(true);
             $mail->Subject = 'Verificacion de cuenta';
             $mail->Body = '<div style="max-width:100%; width:80%; margin:auto; padding:2vw; font-family: Arial, sans-serif; background-color: #f9f9f9; border:0.2vw solid #ddd;">
-                                <h3 style="font-style:italick;font-weight:bold; color:black;">Hola, este es un correo generado para la verificacion de tu cuenta en nuestra libreria.</h3>
-                                <p style="font-style: italic; color: #555;">Sigue los pasos a continuación.</p>
-                                <p style="color: #555;">Haz clic en el siguiente enlace:</p>
-                                <a href="' . url('/validar/cuenta_de_usuario') . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Confirmar cuenta</a>
-                            </div>';
+                            <h3 style="font-style:italic; font-weight:bold; color:black;">Hola, este es un correo generado para la verificación de tu cuenta en nuestra librería.</h3>
+                            <p style="font-style:italic; color: #555;">Sigue los pasos a continuación.</p>
+                            <p style="color: #555;">Haz clic en el siguiente enlace:</p>
+                            <a href="' . url('/validar/correo/' . $userId) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Confirmar cuenta</a>
+                        </div>';
             $mail->send();
-            return redirect('/registro/nuevo_usuario')->with('message_cliente_ok', 'Usuario creado con exito, verifique su cuenta por correo');
+            return redirect('/registro/nuevo_usuario/')->with('message_cliente_ok', 'Usuario creado con exito, verifique su cuenta por correo');
         } catch (Exception $e) {
-            return response()->json(['message', $e->getMessage()]);
+            return response()->json(['message' => $e->getMessage()]);
         }
     }
+
     public function validarCuenta()
     {
         return view('validar_cuenta');
     }
-    public function validarCorreo(Request $request)
+    public function validarCorreo($id)
     {
         $correoValidacion = \DB::select(
-            'SELECT email FROM users 
-            WHERE email = (:email)',
-            ['email' => $request->email]
+            'SELECT id FROM users 
+            WHERE id = (:id)',
+            ['id' => $id]
         );
         if ($correoValidacion) {
             $validar = \DB::update(
                 'UPDATE users 
                 SET email_verified_at = (:email_verified_at)
-                WHERE email = (:email)',
+                WHERE id = (:id)',
                 [
-                    'email_verified_at' => $request->btn,
-                    'email' => $request->email
+                    'email_verified_at' => Carbon::now(),
+                    'id' => $id
                 ]
             );
-            return redirect('/validar/cuenta_de_usuario')->with('message_ok', 'Correo validado con exito');
+            return redirect('/inicio_session')->with('message_ok', 'Correo validado con exito');
         }
         return redirect('/validar/cuenta_de_usuario')->with('message_error', 'El correo ingresado no existe');
     }
@@ -218,11 +220,12 @@ class AuthController extends Controller
                     'password' => bcrypt($request->password),
                 ]
             );
-            return view('nueva_contraseña')->with('user', $user);
+            return redirect('/inicio_session')->with('user', $user);
         }
         return response()->json(['message', 'usuario no encontrado']);
     }
-    public function newindex(Request $request){
+    public function newindex(Request $request)
+    {
         $user = User::where('email', $request->email)->first();
         // print_r($data);
         if (!$user || !password_verify($request->password, $user->password)) {
@@ -237,8 +240,9 @@ class AuthController extends Controller
         ];
         return response($response, 201);
     }
-    public function newlogout(){
+    public function newlogout()
+    {
         auth()->user()->tokens()->delete();
-        return response()->json(['message','Has cerrado sesion']);
+        return response()->json(['message', 'Has cerrado sesion']);
     }
 }
