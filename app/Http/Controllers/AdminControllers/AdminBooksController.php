@@ -215,22 +215,6 @@ if (session_status() == PHP_SESSION_NONE) {
                 ['rol_id' => $user_rol]
             );
             if ($query) {
-                /* $books = DB::select(
-                    'SELECT br.user_id,br.prestamo_id,
-                    l.libro_id,b.titulo_libro,
-                    b.descripcion,b.imagen,l.fecha_prestamo,
-                    ct.nombre_categoria,
-                    s.nombre,s.email 
-                    FROM book_returns br
-                    JOIN loans l
-                    ON br.user_id = l.user_id
-                    JOIN books b
-                    ON b.id = l.libro_id
-                    JOIN categories ct
-                    ON b.categoria_id = ct.id
-                    JOIN users s
-                    ON br.user_id = s.id;'
-                ); */
                 $books = DB::select(
                     'SELECT l.id,l.libro_id,l.fecha_prestamo,b.imagen,b.id,
                     b.titulo_libro,b.descripcion,ct.nombre_categoria,u.nombre AS nombre_del_usuario 
@@ -270,5 +254,6 @@ if (session_status() == PHP_SESSION_NONE) {
             }
             return response()->json(['message', 'Debes de iniciar sesion']);
         }
+       
     }
 }

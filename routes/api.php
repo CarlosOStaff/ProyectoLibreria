@@ -3,7 +3,7 @@
 use App\Http\Controllers\AdminControllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteControllers\ClienteController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\pruebaapicontroller;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware'=>'auth:sanctum'],function(){
@@ -11,5 +11,5 @@ Route::group(['middleware'=>'auth:sanctum'],function(){
     Route::get('/home-cliente',[ClienteController::class,'newindex']);
     Route::get('/auth/logout',[AuthController::class,'newlogout']);
 });
-Route::post('login', [AuthController::class, 'newindex']);
-Route::get('/prueba-url',[ClienteController::class,'url']);
+Route::post('/login', [AuthController::class, 'newindex']);
+Route::get('/prueba-url',[ClienteController::class,'url'])->name('pruebaurl');

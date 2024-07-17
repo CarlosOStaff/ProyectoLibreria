@@ -124,20 +124,19 @@ if (session_status() == PHP_SESSION_NONE) {
         public function newindex(){
             $user = \Auth::user();
             if($user->rol_id ===2){
-                $books =\DB::select('SELECT b.id, b.imagen, b.titulo_libro, b.descripcion, b.categoria_id, c.nombre_categoria
-                        FROM books b
-                        JOIN categories c ON b.categoria_id = c.id
-                        WHERE b.id NOT IN (
-                            SELECT b.id
-                            FROM loans l
-                            JOIN books b ON l.libro_id = b.id
-                            WHERE l.user_id = (:user_id)
-                        )
-                        ORDER BY b.id;',
-                        ['user_id' => $user->id]
-                    );
+                    $books = \DB::select('SELECT s.id,s.libro_id,s.fecha_prestamo,b.imagen,b.id,
+                            b.titulo_libro,b.descripcion,ct.nombre_categoria 
+                            FROM loans s 
+                            JOIN books b ON s.libro_id = b.id 
+                            JOIN categories ct ON b.categoria_id = ct.id 
+                            WHERE s.user_id = (:user_id)
+                            ORDER BY b.id;',['user_id'=>$user->id]);
                     return response($books,200);
             }
+        }
+        public function url(){
+            $books = \DB::select('select * from books');
+            return response($books,200);
         }
     }
 }
