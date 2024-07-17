@@ -15,7 +15,7 @@ Proyecto - Libreria
                         <h5 class="h3 mb-1 fst-italic"><a class="text-dark">{{$admin->nombre}}</a></h5>
                         <p class="text-muted fw-bold">{{$admin->apellido}}</p>
                         @if (is_null($admin->email_verified_at))
-                            <a class="text-dark fst-italic">Necesario validar cuenta</a>
+                            <a class="text-dark fst-italic">Necesario confirmar cuenta</a>
                         @endif
                         <div class="mt-auto">
                             <form action="{{route('elimiaradmin', $admin->id)}}" method="post">
@@ -32,5 +32,4 @@ Proyecto - Libreria
         @endforeach
     </div>
 </div>
-
 @endsection

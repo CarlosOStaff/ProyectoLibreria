@@ -17,12 +17,13 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/registro/nuevo_usuario', [AuthController::class, 'newUser'])->name('newUser');
 Route::post('/registro/usuario', [AuthController::class, 'register'])->name('register.newUser');
-Route::get('/recuperar_contraseña',[AuthController::class,'recuperarContraseña'])->name('recuperarContraseña');
-Route::get('/recuperarcontraseña',[AuthController::class,'forgotPassword'])->name('forgotPassword');
-Route::get('/nuevo-password/{id}',[AuthController::class,'newpassword'])->name('newpassword');
-Route::put('/nuevocontraseña/{id}',[AuthController::class,'uploadPassword'])->name('uploadPassword');
+Route::get('/recuperar_contraseña', [AuthController::class, 'recuperarContraseña'])->name('recuperarContraseña');
+Route::get('/recuperarcontraseña', [AuthController::class, 'forgotPassword'])->name('forgotPassword');
+Route::get('/nuevo-password/{id}', [AuthController::class, 'newpassword'])->name('newpassword');
+Route::put('/nuevocontraseña/{id}', [AuthController::class, 'uploadPassword'])->name('uploadPassword');
 /* Route::get('/validar/cuenta_de_usuario',[AuthController::class,'validarCuenta'])->name('validarCuenta'); */
-Route::get('/validar/correo/{id}',[AuthController::class,'validarCorreo'])->name('validarCorreo');
+Route::get('/validar/correo/{id}', [AuthController::class, 'validarCorreo'])->name('validarCorreo');
+
 Route::middleware('role')->group(function () {
     route::get('/cliente/home', [ClienteController::class, 'index'])->name('home.cliente');
     route::get('/cliente/edit', [ClienteController::class, 'edit'])->name('cliente.edit');
@@ -47,11 +48,11 @@ Route::middleware('role')->group(function () {
     Route::delete('/admin/eliminar-usuario/{id}', [AdminUserController::class, 'destroy'])->name('admin.elimiarUser');
 
     Route::get('/admin/estadisticas', [AdminController::class, 'charts'])->name('charts');
-    Route::get('/admin/export', [AdminController::class,'exportexcel'])->name('exportexcel');
+    Route::get('/admin/export', [AdminController::class, 'exportexcel'])->name('exportexcel');
 
 
     Route::get('/admin/lista/libros', [AdminBooksController::class, 'index'])->name('admin.listBooks');
-    Route::get('/admin/detalles/libro/{id}',[AdminBooksController::class,'detallesLibro'])->name('detallesLibro');
+    Route::get('/admin/detalles/libro/{id}', [AdminBooksController::class, 'detallesLibro'])->name('detallesLibro');
     Route::get('/admin/nuevo/libro', [AdminBooksController::class, 'newbook'])->name('newBook');
     Route::post('/admin/nuevo/libro', [AdminBooksController::class, 'store'])->name('store.newBook');
     Route::get('/admin/editar/libro/{id}', [AdminBooksController::class, 'edit'])->name('admin.editBook');
