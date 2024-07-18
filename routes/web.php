@@ -21,7 +21,6 @@ Route::get('/recuperar_contraseña', [AuthController::class, 'recuperarContrase�
 Route::get('/recuperarcontraseña', [AuthController::class, 'forgotPassword'])->name('forgotPassword');
 Route::get('/nuevo-password/{id}', [AuthController::class, 'newpassword'])->name('newpassword');
 Route::put('/nuevocontraseña/{id}', [AuthController::class, 'uploadPassword'])->name('uploadPassword');
-/* Route::get('/validar/cuenta_de_usuario',[AuthController::class,'validarCuenta'])->name('validarCuenta'); */
 Route::get('/validar/correo/{id}', [AuthController::class, 'validarCorreo'])->name('validarCorreo');
 
 Route::middleware('role')->group(function () {
