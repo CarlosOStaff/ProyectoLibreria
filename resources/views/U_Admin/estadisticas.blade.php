@@ -1,12 +1,11 @@
 @extends('Layouts.menu_admin')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 @section('title')
 Proyecto - Libros
 @endsection
 
 @section('content')
 <div class="container py-5">
-    <div class="row">
+    <div class="row p-3">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
