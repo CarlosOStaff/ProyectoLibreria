@@ -13,9 +13,25 @@ Proyecto - Libreria
             <div class="col-xl-6 shadow-lg p-3 rounded-5 bg-white">
                 <div class="">
                     <div class="">
-                        <form action="{{ url('/new-admin') }}" method="POST" id="frm"
+                        <form action="{{ url('/new-admin') }}" enctype="multipart/form-data" method="POST" id="frm"
                             onsubmit="return validarPasswords()">
                             @csrf
+                            <div class="row">
+                                <div class="col-sm-3 text-center">
+                                    <!-- Vista previa de la nueva imagen -->
+                                    <img id="img-preview" class="img-fluid rounded mt-2 mb-4 mx-auto"
+                                        src="/img/users/perfil/default_img.png" alt="Vista previa de la nueva imagen"
+                                        style="display: block; max-height: 200px;">
+                                </div>
+                                <div class="col-sm-9">
+                                    <label for="img_perfil" class="col-form-label fst-italic fw-bold mt-3">Selecciona
+                                        una
+                                        imagen de perfil</label>
+                                    <input class="form-control" id="img_perfil" name="img_perfil" type="file"
+                                        onchange="previewImage()">
+                                </div>
+                            </div>
+
                             <div class="row mb-4">
                                 <label for="horizontal-firstname-input"
                                     class="col-sm-3 col-form-label text-center fst-italic fw-bold">Nombre:</label>
@@ -85,6 +101,10 @@ Proyecto - Libreria
             </div>
         </div>
     </div>
+    @if (session('message_error'))
+        <div class="alert alert-warning mt-2"><i class="fas fa-exclamation-triangle m-2"></i>{{session('message_error')}}
+        </div>
+    @endif
     <script defer type="text/javascript">
         function validarPasswords() {
             var pass = document.getElementById("password").value;
@@ -100,6 +120,33 @@ Proyecto - Libreria
         document.getElementById("frm").onsubmit = function () {
             return validarPasswords();
         };
+    </script>
+    <script>
+        function previewImage() {
+            const file = document.getElementById('img_perfil').files[0];
+            const imgPreview = document.getElementById('img-preview');
+            const currentImg = document.getElementById('current-img');
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (event) {
+                    imgPreview.src = event.target.result;
+                    imgPreview.style.display = 'block';
+                    if (currentImg) {
+                        currentImg.style.display = 'none';
+                    }
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                imgPreview.src = '';
+                imgPreview.style.display = 'none';
+                if (currentImg) {
+                    currentImg.style.display = 'block';
+                }
+            }
+        }
     </script>
 </body>
 @endsection

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->foreignId('rol_id')->references('id')->on('roles');
+            $table->string('img_perfil')->nullable();
             $table->string('nombre');
             $table->string('apellido')->nullable();
             $table->foreignId('ciudad_id')->references('id')->on('cities')->nullable(true);

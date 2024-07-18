@@ -25,34 +25,34 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-    <div class="container-fluid ">
-        <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-                <a class="nav-link text-white fst-italic fw-bold" href="{{url('/cliente/home')}}">Inicio</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white fst-italic fw-bold" href="{{route('user.listBooks')}}">Mis libros</a>
-            </li>
-            <li class="nav-item">
-                <a href="{{route('logout')}}" class="nav-link text-white fst-italic fw-bold">Logout</a>
-            </li>
-        </ul>
-        <ul class="navbar-nav ms-auto">
-            @php
-                $user = $_SESSION['cliente'];
-                echo '<li class="nav-item dropdown">';
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <div class="container-fluid ">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-white fst-italic fw-bold" href="{{url('/cliente/home')}}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white fst-italic fw-bold" href="{{route('user.listBooks')}}">Mis libros</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('logout')}}" class="nav-link text-white fst-italic fw-bold">Logout</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                @php
+                    $user = $_SESSION['cliente'];
+                    echo '<li class="nav-item dropdown">';
                     echo '<a href="#" class="nav-link dropdown-toggle text-white fw-bold" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">';
-                    echo '<i class="fas fa-user mx-2"></i>' . $user->nombre;
+                    echo '<img src="/img/users/perfil/' . $user->img_perfil . '" class="mh-25 h-25 w-25 mx-1 px-3 rounded-circle">' . $user->nombre;
                     echo '</a>';
                     echo '<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">';
                     echo '<li><a class="dropdown-item" href="' . route('cliente.edit') . '">Mi cuenta</a></li>';
                     echo '</ul>';
                     echo '</li>';
-            @endphp
-        </ul>
-    </div>
-</nav>
+                @endphp
+            </ul>
+        </div>
+    </nav>
 
 
     @yield('content')

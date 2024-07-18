@@ -17,34 +17,34 @@
 </head>
 
 <body class="d-flex flex-column vh-100 col-xl-12">
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
-    <div class="container-fluid">
-        <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-                <a class="nav-link text-white fw-bold" href="{{url('/admin/home')}}">Inicio</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white fw-bold" href="{{route('list.users')}}">Usuarios activos</a>
-            </li>
-            <li class="nav-item">
-                <a href="{{route('logout')}}" class="nav-link text-white fw-bold">Logout</a>
-            </li>
-        </ul>
-        <ul class="navbar-nav ms-auto">
-            @php
-                $user = $_SESSION['admin'];
-                echo '<li class="nav-item dropdown">';
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+        <div class="container-fluid">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-white fw-bold" href="{{url('/admin/home')}}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white fw-bold" href="{{route('list.users')}}">Usuarios activos</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('logout')}}" class="nav-link text-white fw-bold">Logout</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                @php
+                    $user = $_SESSION['admin'];
+                    echo '<li class="nav-item dropdown">';
                     echo '<a href="#" class="nav-link dropdown-toggle text-white fw-bold" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">';
-                    echo '<i class="fas fa-user mx-2"></i>' . $user->nombre;
+                    echo '<img src="/img/users/perfil/' . $user->img_perfil . '" class="mh-25 h-25 w-25 mx-1 px-3 rounded-circle">' . $user->nombre;
                     echo '</a>';
                     echo '<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">';
                     echo '<li><a class="dropdown-item" href="' . route('admin.edit') . '">Mi cuenta</a></li>';
                     echo '</ul>';
                     echo '</li>';
-            @endphp
-        </ul>
-    </div>
-</nav>
+                @endphp
+            </ul>
+        </div>
+    </nav>
 
 
     <main class="flex-grow-1">

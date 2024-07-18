@@ -110,7 +110,6 @@ class AuthController extends Controller
             return response()->json(['message' => $e->getMessage()]);
         }
     }
-
     public function validarCuenta()
     {
         return view('validar_cuenta');

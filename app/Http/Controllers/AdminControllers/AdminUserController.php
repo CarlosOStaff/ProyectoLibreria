@@ -23,7 +23,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 );
                 if ($query) {
                     $users = DB::select(
-                        'SELECT u.id 
+                        'SELECT u.img_perfil,u.id 
                     AS user_id,u.nombre,u.apellido,u.ciudad_id,u.email,c.nombre_ciudad
                     FROM users u
                     JOIN cities c

@@ -28,7 +28,8 @@ if (session_status() == PHP_SESSION_NONE) {
                         $libros = DB::select('SELECT count(id) FROM books;');
                         $libros = reset($libros);
 
-                        $users = DB::select('SELECT count(id) FROM users WHERE rol_id = 2;');
+                        $users = DB::select('SELECT count(id) FROM users WHERE rol_id = 2 
+                        AND email_verified_at IS NOT NULL;');
                         $users = reset($users);
 
                         $librosPRestados = DB::select('SELECT COUNT(id) FROM loans');
@@ -48,7 +49,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 $user = $_SESSION['admin']->id;
                 $user_rol = $_SESSION['admin']->rol_id;
                 $query = DB::select(
-                    'SELECT s.id, s.nombre, s.apellido, s.ciudad_id, s.email,c.id, c.nombre_ciudad 
+                    'SELECT s.img_perfil,s.id, s.nombre, s.apellido, s.ciudad_id, s.email,c.id, c.nombre_ciudad 
                     FROM users s
                     JOIN cities c
                     ON s.ciudad_id = c.id
@@ -79,11 +80,19 @@ if (session_status() == PHP_SESSION_NONE) {
                 if (isset($user)) {
                     $ciudad_id = intval($request->ciudad_id);
                     $id = reset($user);
+                    if ($request->hasFile('img_perfil')) {
+                        $file = $request->img_perfil;
+                        $nombreimagen = \Str::slug($request->nombre) . "." . $file->guessExtension();
+                        $ruta = public_path('/img/users/perfil/');
+                        copy($file->getRealPath(), $ruta . $nombreimagen);
+                        $file->img_perfil = $nombreimagen;
+                    }
                     DB::update(
                         'UPDATE users 
-                        SET nombre = (:nombre) ,apellido = (:apellido),ciudad_id = (:ciudad_id),email = (:email)
+                        SET img_perfil = (:img_perfil),nombre = (:nombre) ,apellido = (:apellido),ciudad_id = (:ciudad_id),email = (:email)
                         WHERE id = (:id);',
                         [
+                            'img_perfil' => $file->img_perfil = $nombreimagen,
                             'nombre' => $request->nombre,
                             'apellido' => $request->apellido,
                             'ciudad_id' => $ciudad_id,
@@ -134,43 +143,55 @@ if (session_status() == PHP_SESSION_NONE) {
                         'rol_id' => $user_rol
                     ]
                 );
+                if ($request->hasFile('img_perfil')) {
+                    $file = $request->img_perfil;
+                    $nombreimagen = \Str::slug($request->nombre) . "_" . "$request->apellido" . "." . $file->guessExtension();
+                    $ruta = public_path('/img/users/perfil/');
+                    copy($file->getRealPath(), $ruta . $nombreimagen);
+                    $file->img_perfil = $nombreimagen;
+                }
                 if ($user_admin) {
-                    $userId = DB::table('users')->insertGetId([
-                        'rol_id' => 1,
-                        'nombre' => $request->nombre,
-                        'apellido' => $request->apellido,
-                        'ciudad_id' => $request->ciudad_id,
-                        'email' => $request->email,
-                        'password' => bcrypt($request->password),
-                    ]);
-
-                    $mail = new PHPMailer();
-                    try {
-                        $mail->SMTPDebug = 0;
-                        $mail->isSMTP();
-                        $mail->Host = 'smtp.gmail.com';
-                        $mail->SMTPAuth = true;
-                        $mail->Username = 'carlos.ovando@staffbridge.com.mx';
-                        $mail->Password = 'ravk gxlu tgov upyt'; // Actualiza con la contraseña correcta
-                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                        $mail->Port = 587;
-                        $mail->setFrom('carlos.ovando@staffbridge.com.mx', 'Carlos Ivan Ovando Toledo');
-                        $mail->addAddress($request->email, $request->nombre);
-                        $mail->isHTML(true);
-                        $mail->Subject = 'Verificacion de cuenta';
-                        $mail->Body = '<div style="max-width:100%; width:80%; margin:auto; padding:2vw; font-family: Arial, sans-serif; background-color: #f9f9f9; border:0.2vw solid #ddd;">
+                    $email = DB::select('select email from users where email =(:email)', ['email' => $request->email]);
+                    
+                    if (is_null($email)) {
+                        $userId = DB::table('users')->insertGetId([
+                            'rol_id' => 1,
+                            'img_perfil' => $file->img_perfil = $nombreimagen,
+                            'nombre' => $request->nombre,
+                            'apellido' => $request->apellido,
+                            'ciudad_id' => $request->ciudad_id,
+                            'email' => $request->email,
+                            'password' => bcrypt($request->password),
+                        ]);
+                        $mail = new PHPMailer();
+                        try {
+                            $mail->SMTPDebug = 0;
+                            $mail->isSMTP();
+                            $mail->Host = 'smtp.gmail.com';
+                            $mail->SMTPAuth = true;
+                            $mail->Username = 'carlos.ovando@staffbridge.com.mx';
+                            $mail->Password = 'ravk gxlu tgov upyt'; // Actualiza con la contraseña correcta
+                            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                            $mail->Port = 587;
+                            $mail->setFrom('carlos.ovando@staffbridge.com.mx', 'Carlos Ivan Ovando Toledo');
+                            $mail->addAddress($request->email, $request->nombre);
+                            $mail->isHTML(true);
+                            $mail->Subject = 'Verificacion de cuenta';
+                            $mail->Body = '<div style="max-width:100%; width:80%; margin:auto; padding:2vw; font-family: Arial, sans-serif; background-color: #f9f9f9; border:0.2vw solid #ddd;">
                                         <h3 style="font-style:italic; font-weight:bold; color:black;">Hola, este es un correo generado para la verificación de tu cuenta en nuestra librería.</h3>
                                         <p style="font-style:italic; color: #555;">Sigue los pasos a continuación.</p>
                                         <p style="color: #555;">Haz clic en el siguiente enlace:</p>
                                         <a href="' . url('/validar/correo/' . $userId) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Confirmar cuenta</a>
                                     </div>';
-                        $mail->send();
-                        return redirect('/admin/home')->with('message_cliente_ok', 'Usuario creado con exito, verifique su cuenta por correo');
-                    } catch (Exception $e) {
-                        return response()->json(['message' => $e->getMessage()]);
+                            $mail->send();
+                            return redirect('/registro/admin')->with('message_cliente_ok', 'Usuario creado con exito, verifique su cuenta por correo');
+                        } catch (Exception $e) {
+                            return response()->json(['message' => $e->getMessage()]);
+                        }
                     }
+                    return redirect('/registro/admin')->with('message_error', 'El correo ya existe');
                 }
-                return response()->json(['message', 'Usuario no encontrado']);
+                return redirect('/registro/admin')->with('message_error', 'Usuario no encontrado');
             }
             return response()->json(['message', 'Debes de iniciar sesion']);
         }
@@ -187,7 +208,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 );
                 if ($query) {
                     $admins = DB::select(
-                        'SELECT  u.id,u.nombre,
+                        'SELECT  u.img_perfil,u.id,u.nombre,
                         u.apellido,u.ciudad_id,
                         u.email,c.id,
                         c.nombre_ciudad,u.email_verified_at
@@ -206,27 +227,41 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function destroy($id)
         {
+            // Verificar que las variables de sesión estén configuradas correctamente
+            if (!isset($_SESSION['admin'])) {
+                return 'No tienes permiso para borrar este usuario';
+            }
+
             $admin_id = $_SESSION['admin']->id;
             $admin_rol = $_SESSION['admin']->rol_id;
+
+            // Verificar que el admin está intentando eliminar su propio usuario
             $query = DB::select(
                 'SELECT id, rol_id 
-                FROM users 
-                WHERE id = (:id) 
-                AND rol_id = (:rol_id)',
+        FROM users 
+        WHERE id = :id 
+        AND rol_id = :rol_id',
                 ['id' => $admin_id, 'rol_id' => $admin_rol]
             );
             if ($query) {
-                DB::delete(
+                // Intentar eliminar el usuario
+                $deleteResult = DB::delete(
                     'DELETE FROM users 
-                    WHERE id = (:id) 
-                    AND rol_id = 1',
+            WHERE id = :id',
                     ['id' => $id]
                 );
-                return redirect('/admin/home')->with('success', 'usuario eliminado correctamente');
+
+                // Verificar si la eliminación fue exitosa
+                if ($deleteResult) {
+                    return redirect('/admin/home')->with('success', 'Usuario eliminado correctamente');
+                } else {
+                    return redirect('/admin/home')->with('error', 'Error al eliminar el usuario');
+                }
             } else {
-                return 'no tienes permiso para borrar este usuario';
+                return 'No tienes permiso para borrar este usuario';
             }
         }
+
         public function charts()
         {
             if (isset($_SESSION['admin'])) {
@@ -241,7 +276,7 @@ if (session_status() == PHP_SESSION_NONE) {
                     ON c.id = b.categoria_id 
                     GROUP BY c.nombre_categoria;'
                 );
-                return view('U_Admin.estadisticas',compact('query'));
+                return view('U_Admin.estadisticas', compact('query'));
             }
         }
         public function exportexcel()
