@@ -104,6 +104,13 @@ Proyecto - Libreria
         <div class="alert alert-warning mt-2"><i class="fas fa-exclamation-triangle m-2"></i>{{session('message_error')}}
         </div>
     @endif
+    @if (session('message_error_register'))
+        <div class="alert alert-warning"><i
+                class="fas fa-exclamation-triangle m-2"></i>{{session('message_error_register')}}</div>
+    @endif
+    @if (session('message_admin_ok'))
+                    <div class="alert alert-success"><i class="fas fa-check m-2"></i>{{session('message_admin_ok')}}</div>
+                @endif
     <script defer type="text/javascript">
         function validarPasswords() {
             var pass = document.getElementById("password").value;

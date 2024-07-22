@@ -119,7 +119,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 }
                 return response()->json(['message', 'No tines permisos']);
             }
-            return response()->json(['message', 'Debes de iniciar sesion']);
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
         public function destroy($id)
         {
@@ -145,7 +145,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 }
                 return response()->json(['message', 'No tienes permisos para realizar esta accion']);
             }
-            return response()->json(['message', 'Debes de iniciar sesion']);
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
         public function newbook()
         {
@@ -164,6 +164,7 @@ if (session_status() == PHP_SESSION_NONE) {
                     return view('U_Admin.books.nuevo_libro')->with($catalogues->getData());
                 }
             }
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
         public function store(Request $request)
         {
@@ -203,7 +204,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 }
                 return response()->json(['message', 'Usuario no encontrado']);
             }
-            return view('login');
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
         public function librosprestados()
         {
@@ -226,6 +227,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 );
                 return view('U_Admin.books.lista_libros_prestados')->with('books', $books);
             }
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
         public function detallesLibro($id)
         {
@@ -252,8 +254,7 @@ if (session_status() == PHP_SESSION_NONE) {
                     return response()->json($booksDetails);
                 }
             }
-            return response()->json(['message', 'Debes de iniciar sesion']);
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
-       
     }
 }

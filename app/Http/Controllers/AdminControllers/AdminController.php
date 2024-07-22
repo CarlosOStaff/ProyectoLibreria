@@ -37,11 +37,9 @@ if (session_status() == PHP_SESSION_NONE) {
 
                         return view('U_Admin.index', compact('query'))->with('libros', $libros)->with('users', $users)->with('librosPRestados', $librosPRestados);
                     }
-                    return 'no tienes acceso';
                 }
-                return 'Debes de iniciar session';
             }
-            return 'no puedes acceder a esta ruta';
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
         public function edit()
         {
@@ -61,9 +59,8 @@ if (session_status() == PHP_SESSION_NONE) {
                 if ($query) {
                     return view('U_Admin.admin_cuenta')->with('admin', $query)->with('ciudades', $ciudades);
                 }
-                return 'no tienes permisos para acceder a esta ruta';
             }
-            return 'Debes de iniciar sesion';
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
         public function update(Request $request)
         {
@@ -103,7 +100,7 @@ if (session_status() == PHP_SESSION_NONE) {
                     return redirect('/admin/edit');
                 }
             }
-            return response()->json(['message', 'Debes de iniciar sesion']);
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
         public function newAdmin()
         {
@@ -140,8 +137,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 }
 
                 $email = DB::select('SELECT * FROM users WHERE email =(:email)', ['email' => $request->email]);
-
-                if (!is_null($email)) {
+                if (empty($email)) {
                     $userId = DB::table('users')->insertGetId([
                         'rol_id' => 1,
                         'img_perfil' => $file->img_perfil = $nombreimagen,
@@ -172,14 +168,14 @@ if (session_status() == PHP_SESSION_NONE) {
                                         <a href="' . url('/validar/correo/' . $userId) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Confirmar cuenta</a>
                                     </div>';
                         $mail->send();
-                        return redirect('/registro/admin')->with('message_cliente_ok', 'Usuario creado con exito, verifique su cuenta por correo');
+                        return redirect('/registro/admin')->with('message_admin_ok', 'Usuario creado con exito, verifique su cuenta por correo');
                     } catch (Exception $e) {
                         return response()->json(['message' => $e->getMessage()]);
                     }
                 }
-                return 'el correo ya existe';
+                return redirect('/registro/admin')->with('message_error_register', 'El correo ya existe');
             }
-            return response()->json(['message', 'Debes de iniciar sesion']);
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
         public function listAdmin()
         {
@@ -210,23 +206,22 @@ if (session_status() == PHP_SESSION_NONE) {
                     return view('U_Admin.lista_administradores')->with('admins', $admins);
                 }
             }
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
         public function destroy($id)
         {
             // Verificar que las variables de sesión estén configuradas correctamente
             if (!isset($_SESSION['admin'])) {
-                return 'No tienes permiso para borrar este usuario';
+                return redirect('inicio_session')->with('login_error', 'No tienes permiso para realizar esta accion');
             }
-
             $admin_id = $_SESSION['admin']->id;
             $admin_rol = $_SESSION['admin']->rol_id;
-
             // Verificar que el admin está intentando eliminar su propio usuario
             $query = DB::select(
                 'SELECT id, rol_id 
-        FROM users 
-        WHERE id = :id 
-        AND rol_id = :rol_id',
+                FROM users 
+                WHERE id = :id 
+                AND rol_id = :rol_id',
                 ['id' => $admin_id, 'rol_id' => $admin_rol]
             );
             if ($query) {
@@ -236,7 +231,6 @@ if (session_status() == PHP_SESSION_NONE) {
             WHERE id = :id',
                     ['id' => $id]
                 );
-
                 // Verificar si la eliminación fue exitosa
                 if ($deleteResult) {
                     return redirect('/admin/home')->with('success', 'Usuario eliminado correctamente');
@@ -244,7 +238,8 @@ if (session_status() == PHP_SESSION_NONE) {
                     return redirect('/admin/home')->with('error', 'Error al eliminar el usuario');
                 }
             } else {
-                return 'No tienes permiso para borrar este usuario';
+                return redirect('inicio_session')->with('login_error', 'No tienes permisos para realizar esta acción');
+
             }
         }
 
@@ -264,6 +259,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 );
                 return view('U_Admin.estadisticas', compact('query'));
             }
+            return redirect('inicio_session')->with('login_error', 'No puedes acceder a esta ruta');
         }
         public function exportexcel()
         {
@@ -280,7 +276,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 ];
                 return response($response, 200);
             }
-            return response('No tienes los permisos para acceder a esta ruta', 404);
+            return redirect('inicio_session')->with('login_error', 'No tienes los permisos para acceder a esta ruta');
         }
     }
 }

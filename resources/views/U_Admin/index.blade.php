@@ -10,6 +10,7 @@ Libreria
         alert("{{ session('message_error') }}");
     </script>
 @endif
+
 @foreach ($query as $item)
     <h1 class="text-center fst-italic pt-5">Bienvenido {{$item->nombre}}</h1>
 @endforeach
