@@ -11,11 +11,11 @@
     <div class="row justify-content-md-center mx-auto mt-5">
         <div class="col col-lg-12">
             <br>
-            @if (session('login_error'))
+            <!-- @if (session('login_error'))
                 <script>
                     alert("{{ session('login_error') }}");
                 </script>
-            @endif
+            @endif -->
             @if (session('message_error_validacion'))
                 <div class="alert alert-danger"><i
                         class="fas fa-exclamation-triangle"></i>{{session('message_error_validacion')}}</div>

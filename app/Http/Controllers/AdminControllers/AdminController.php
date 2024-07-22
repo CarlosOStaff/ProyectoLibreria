@@ -131,18 +131,6 @@ if (session_status() == PHP_SESSION_NONE) {
         public function store(Request $request)
         {
             if (isset($_SESSION['admin'])) {
-                $user_id = $_SESSION['admin']->id;
-                $user_rol = $_SESSION['admin']->rol_id;
-                $user_admin = DB::select(
-                    'SELECT id,rol_id 
-                    FROM users 
-                    WHERE id = (:id) 
-                    AND rol_id = (:rol_id)',
-                    [
-                        'id' => $user_id,
-                        'rol_id' => $user_rol
-                    ]
-                );
                 if ($request->hasFile('img_perfil')) {
                     $file = $request->img_perfil;
                     $nombreimagen = \Str::slug($request->nombre) . "_" . "$request->apellido" . "." . $file->guessExtension();
@@ -150,48 +138,46 @@ if (session_status() == PHP_SESSION_NONE) {
                     copy($file->getRealPath(), $ruta . $nombreimagen);
                     $file->img_perfil = $nombreimagen;
                 }
-                if ($user_admin) {
-                    $email = DB::select('select email from users where email =(:email)', ['email' => $request->email]);
-                    
-                    if (is_null($email)) {
-                        $userId = DB::table('users')->insertGetId([
-                            'rol_id' => 1,
-                            'img_perfil' => $file->img_perfil = $nombreimagen,
-                            'nombre' => $request->nombre,
-                            'apellido' => $request->apellido,
-                            'ciudad_id' => $request->ciudad_id,
-                            'email' => $request->email,
-                            'password' => bcrypt($request->password),
-                        ]);
-                        $mail = new PHPMailer();
-                        try {
-                            $mail->SMTPDebug = 0;
-                            $mail->isSMTP();
-                            $mail->Host = 'smtp.gmail.com';
-                            $mail->SMTPAuth = true;
-                            $mail->Username = 'carlos.ovando@staffbridge.com.mx';
-                            $mail->Password = 'ravk gxlu tgov upyt'; // Actualiza con la contraseña correcta
-                            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                            $mail->Port = 587;
-                            $mail->setFrom('carlos.ovando@staffbridge.com.mx', 'Carlos Ivan Ovando Toledo');
-                            $mail->addAddress($request->email, $request->nombre);
-                            $mail->isHTML(true);
-                            $mail->Subject = 'Verificacion de cuenta';
-                            $mail->Body = '<div style="max-width:100%; width:80%; margin:auto; padding:2vw; font-family: Arial, sans-serif; background-color: #f9f9f9; border:0.2vw solid #ddd;">
+
+                $email = DB::select('SELECT * FROM users WHERE email =(:email)', ['email' => $request->email]);
+
+                if (!is_null($email)) {
+                    $userId = DB::table('users')->insertGetId([
+                        'rol_id' => 1,
+                        'img_perfil' => $file->img_perfil = $nombreimagen,
+                        'nombre' => $request->nombre,
+                        'apellido' => $request->apellido,
+                        'ciudad_id' => $request->ciudad_id,
+                        'email' => $request->email,
+                        'password' => bcrypt($request->password),
+                    ]);
+                    $mail = new PHPMailer();
+                    try {
+                        $mail->SMTPDebug = 0;
+                        $mail->isSMTP();
+                        $mail->Host = 'smtp.gmail.com';
+                        $mail->SMTPAuth = true;
+                        $mail->Username = 'carlos.ovando@staffbridge.com.mx';
+                        $mail->Password = 'ravk gxlu tgov upyt'; // Actualiza con la contraseña correcta
+                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                        $mail->Port = 587;
+                        $mail->setFrom('carlos.ovando@staffbridge.com.mx', 'Carlos Ivan Ovando Toledo');
+                        $mail->addAddress($request->email, $request->nombre);
+                        $mail->isHTML(true);
+                        $mail->Subject = 'Verificacion de cuenta';
+                        $mail->Body = '<div style="max-width:100%; width:80%; margin:auto; padding:2vw; font-family: Arial, sans-serif; background-color: #f9f9f9; border:0.2vw solid #ddd;">
                                         <h3 style="font-style:italic; font-weight:bold; color:black;">Hola, este es un correo generado para la verificación de tu cuenta en nuestra librería.</h3>
                                         <p style="font-style:italic; color: #555;">Sigue los pasos a continuación.</p>
                                         <p style="color: #555;">Haz clic en el siguiente enlace:</p>
                                         <a href="' . url('/validar/correo/' . $userId) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Confirmar cuenta</a>
                                     </div>';
-                            $mail->send();
-                            return redirect('/registro/admin')->with('message_cliente_ok', 'Usuario creado con exito, verifique su cuenta por correo');
-                        } catch (Exception $e) {
-                            return response()->json(['message' => $e->getMessage()]);
-                        }
+                        $mail->send();
+                        return redirect('/registro/admin')->with('message_cliente_ok', 'Usuario creado con exito, verifique su cuenta por correo');
+                    } catch (Exception $e) {
+                        return response()->json(['message' => $e->getMessage()]);
                     }
-                    return redirect('/registro/admin')->with('message_error', 'El correo ya existe');
                 }
-                return redirect('/registro/admin')->with('message_error', 'Usuario no encontrado');
+                return 'el correo ya existe';
             }
             return response()->json(['message', 'Debes de iniciar sesion']);
         }

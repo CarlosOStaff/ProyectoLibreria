@@ -27,8 +27,7 @@ Proyecto - Libreria
                                     <label for="img_perfil" class="col-form-label fst-italic fw-bold mt-3">Selecciona
                                         una
                                         imagen de perfil</label>
-                                    <input class="form-control" id="img_perfil" name="img_perfil" type="file"
-                                        onchange="previewImage()">
+                                    <input class="form-control" id="img_perfil" name="img_perfil" type="file">
                                 </div>
                             </div>
 
