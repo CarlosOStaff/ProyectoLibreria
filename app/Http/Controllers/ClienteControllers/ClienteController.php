@@ -59,7 +59,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 }
                 return 'no tienes permisos';
             }
-            return 'debes de iniciar sesion';
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
         public function update(Request $request, $id)
         {
@@ -68,53 +68,87 @@ if (session_status() == PHP_SESSION_NONE) {
                 $rol_id = $_SESSION['cliente']->rol_id;
                 $id = intval($id);
 
-                if ($rol_id === 2 && $user === $id) {
-                    $request->validate([
-                        'nombre' => 'required|string|max:255',
-                        'apellido' => 'required|string|max:255',
-                        'ciudad_id' => 'nullable',
-                        'email' => 'required|string|email|max:255',
-                        'password' => 'nullable|string|min:8|confirmed',
-                        'img_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                    ]);
+                $user = DB::select(
+                    'SELECT id, rol_id, img_perfil 
+                    FROM users 
+                    WHERE id = (:id) AND rol_id = (:rol_id)',
+                    ['id' => $user, 'rol_id' => $rol_id]
+                );
 
-                    $data = [
-                        'nombre' => $request->nombre,
-                        'apellido' => $request->apellido,
-                        'ciudad_id' => intval($request->ciudad_id),
-                        'email' => $request->email,
-                    ];
+                if (isset($user)) {
+                    $user = reset($user);
+                    $ciudadId = intval($request->ciudad_id);
 
                     if ($request->hasFile('img_perfil')) {
-                        $file = $request->file('img_perfil');
-                        $nombreimagen = \Str::slug($request->nombre) . "." . $file->guessExtension();
+                        // Obtener la imagen actual
+                        $currentImage = $user->img_perfil;
+
+                        // Guardar la nueva imagen
+                        $file = $request->img_perfil;
+                        $nombreimagen = \Str::slug($request->nombre) . "_" . $request->apellido . "_" . $user->id . "." . $file->guessExtension();
                         $ruta = public_path('/img/users/perfil/');
+
+                        // Eliminar la imagen anterior si existe
+                        if ($currentImage && file_exists($ruta . $currentImage)) {
+                            unlink($ruta . $currentImage);
+                        }
+
+                        // Guardar la nueva imagen
                         $file->move($ruta, $nombreimagen);
-                        $data['img_perfil'] = $nombreimagen;
+
+                        $newImage = $nombreimagen;
+                    } else {
+                        $newImage = $user->img_perfil;
                     }
-
-                    if ($request->filled('password')) {
-                        $data['password'] = bcrypt($request->password);
+                    if (is_null($request->password)) {
+                        // Actualizar el usuario en la base de datos
+                        DB::update(
+                            'UPDATE users 
+                        SET img_perfil = (:img_perfil), nombre = (:nombre), 
+                        apellido = (:apellido), ciudad_id = (:ciudad_id), 
+                        email = (:email)
+                        WHERE id = (:id)',
+                            [
+                                'img_perfil' => $newImage,
+                                'nombre' => $request->nombre,
+                                'apellido' => $request->apellido,
+                                'ciudad_id' => $ciudadId,
+                                'email' => $request->email,
+                                'id' => $user->id
+                            ]
+                        );
+                        return redirect('/cliente/edit')->with('success', 'Datos guardados');
                     }
-
-                    DB::table('users')->where('id', $id)->update($data);
-
+                    // Actualizar el usuario en la base de datos
+                    DB::update(
+                        'UPDATE users 
+                        SET img_perfil = (:img_perfil), nombre = (:nombre), 
+                        apellido = (:apellido), ciudad_id = (:ciudad_id), 
+                        email = (:email),password = (:password)
+                        WHERE id = (:id)',
+                        [
+                            'img_perfil' => $newImage,
+                            'nombre' => $request->nombre,
+                            'apellido' => $request->apellido,
+                            'ciudad_id' => $ciudadId,
+                            'email' => $request->email,
+                            'password' => bcrypt($request->password),
+                            'id' => $user->id
+                        ]
+                    );
                     if ($request->filled('password')) {
                         session_destroy();
                         return redirect('/inicio_session');
                     }
-
-                    return redirect('/cliente/edit')->with('success', 'Datos guardados');
                 } else {
                     $errorMessage = "Debes iniciar sesión para acceder a esta página.";
-                    echo "<script>alert('$errorMessage'); window.location.href = 'login.blade.php';</script>";
+                    echo "<script>alert('$errorMessage'); window.location.href = '{{route('cliente.edit')}}';</script>";
                     exit;
                 }
             }
 
             return redirect('login');
         }
-
         public function newindex()
         {
             $user = \Auth::user();

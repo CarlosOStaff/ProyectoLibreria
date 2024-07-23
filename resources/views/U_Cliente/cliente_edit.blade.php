@@ -5,7 +5,7 @@ Libreria
 @endsection
 
 @section('content')
-<div class="row mt-5" style="display: flex; justify-content: center;padding-top:3vw;">
+<div class="row mt-0" style="display: flex; justify-content: center;padding-top:3vw;">
     <div class="col-xl-6">
         <div class="card">
             <div class="card-body">

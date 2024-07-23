@@ -41,64 +41,75 @@ if (session_status() == PHP_SESSION_NONE) {
                 }
                 return response()->json(['message', 'No tienes acceso a esta ruta']);
             }
-            return response()->json(['message', 'No tienes acceso']);
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
         public function userBook($id)
         {
-            $book = DB::select(
-                'SELECT b.id,b.titulo_libro,b.descripcion,
-                b.contenido,b.fecha_publicacion,ct.nombre_categoria
-                FROM books b
-                JOIN categories ct
-                ON b.categoria_id = ct.id
-                WHERE b.id = (:id)',
-                ['id' => $id]
-            );
-            return view('U_Cliente.libro')->with('book', $book);
+            $user = $_SESSION['cliente'];
+            if (isset($user)) {
+                $book = DB::select(
+                    'SELECT b.id,b.titulo_libro,b.descripcion,
+                    b.contenido,b.fecha_publicacion,ct.nombre_categoria
+                    FROM books b
+                    JOIN categories ct
+                    ON b.categoria_id = ct.id
+                    WHERE b.id = (:id)',
+                    ['id' => $id]
+                );
+                return view('U_Cliente.libro')->with('book', $book);
+            }
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
         public function regresarLibro($id)
         {
-            $user = $_SESSION['cliente']->id;
-            $id = intval($id);
-            $loan = DB::select(
-                'SELECT * FROM loans 
-                WHERE user_id = (:user_id) 
-                AND libro_id = (:libro_id)',
-                [
-                    'user_id' => $user,
-                    'libro_id' => $id
-                ]
-            );
-            $loan = reset($loan);
-            $devolucion = DB::insert(
-                'INSERT INTO book_returns (user_id,prestamo_id,fecha_devolucion) 
-                    VALUES (:user_id,:prestamo_id,:fecha_devolucion)',
-                ['user_id' => $user, 'prestamo_id' => $loan->id, 'fecha_devolucion' => date('Y-m-d')]
-            );
-            $delete = DB::delete(
-                'DELETE FROM loans 
-                WHERE libro_id = (:libro_id) 
-                AND user_id = (:user_id);',
-                [
-                    'libro_id' => $id,
-                    'user_id' => $user
-                ]
-            );
-            return redirect('/cliente/mis_libros');
+            if (isset($_SESSION['cliente'])) {
+                $user = $_SESSION['cliente']->id;
+                $id = intval($id);
+                $loan = DB::select(
+                    'SELECT * FROM loans 
+                    WHERE user_id = (:user_id) 
+                    AND libro_id = (:libro_id)',
+                    [
+                        'user_id' => $user,
+                        'libro_id' => $id
+                    ]
+                );
+                $loan = reset($loan);
+                $devolucion = DB::insert(
+                    'INSERT INTO book_returns (user_id,prestamo_id,fecha_devolucion) 
+                        VALUES (:user_id,:prestamo_id,:fecha_devolucion)',
+                    ['user_id' => $user, 'prestamo_id' => $loan->id, 'fecha_devolucion' => date('Y-m-d')]
+                );
+                $delete = DB::delete(
+                    'DELETE FROM loans 
+                    WHERE libro_id = (:libro_id) 
+                    AND user_id = (:user_id);',
+                    [
+                        'libro_id' => $id,
+                        'user_id' => $user
+                    ]
+                );
+                return redirect('/cliente/mis_libros');
+            }
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
         }
         public function store($id)
         {
-            $user = $_SESSION['cliente']->id;
-            $loanBook = DB::insert(
-                'INSERT INTO loans (user_id,libro_id,fecha_prestamo) 
-                VALUES (:user_id,:libro_id,:fecha_prestamo)',
-                [
-                    'user_id' => $user,
-                    'libro_id' => $id,
-                    'fecha_prestamo' => date('Y-m-d H:i:s'),
-                ]
-            );
-            return redirect('/cliente/mis_libros');
+            if (isset($_SESSION['cliente'])) {
+                $user = $_SESSION['cliente']->id;
+                $loanBook = DB::insert(
+                    'INSERT INTO loans (user_id,libro_id,fecha_prestamo) 
+                    VALUES (:user_id,:libro_id,:fecha_prestamo)',
+                    [
+                        'user_id' => $user,
+                        'libro_id' => $id,
+                        'fecha_prestamo' => date('Y-m-d H:i:s'),
+                    ]
+                );
+                return redirect('/cliente/mis_libros');
+            }
+            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
+
         }
     }
 }
