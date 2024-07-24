@@ -165,7 +165,7 @@ if (session_status() == PHP_SESSION_NONE) {
         }
         public function url()
         {
-            $books = \DB::select('select * from books');
+            $books = \DB::select('SELECT * FROM books');
             return response($books, 200);
         }
     }
