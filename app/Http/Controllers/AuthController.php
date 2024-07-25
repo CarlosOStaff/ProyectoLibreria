@@ -211,11 +211,11 @@ class AuthController extends Controller
                     'password' => bcrypt($request->password),
                 ]
             );
-            return redirect('/inicio_session')->with('user', $user);
+            return redirect('/nuevo-password/' . $id)
+                ->with('message_password', 'La contraseña se ha actualizado correctamente. <a href="' . url('/inicio_session') . '">Haz clic aquí para iniciar sesión</a>');
         }
         return response()->json(['message', 'usuario no encontrado']);
     }
-
     /*funciones de prueba sanctum*/
     public function newindex(Request $request)
     {

@@ -11,6 +11,10 @@
     <div class="row justify-content-md-center mx-auto mt-5">
         <div class="col col-lg-12">
             <br>
+            @if (session('message_ok'))
+                <div class="alert alert-success"><i
+                        class="fas fa-exclamation-triangle"></i>{{session('message_ok')}}</div>
+            @endif
             @if (session('login_error'))
                 <script>
                     alert("{{ session('login_error') }}");
