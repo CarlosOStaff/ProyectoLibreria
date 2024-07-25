@@ -1,3 +1,6 @@
-<p>{{$token}}</p>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
-<a href="{{url('/auth/logout')}}">logout</a>
+<form method="GET" action="{{ route('newlogout') }}">
+    @csrf
+    <button type="submit">Cerrar sesión</button>
+</form>

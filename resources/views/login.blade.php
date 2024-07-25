@@ -32,7 +32,7 @@
                                 alert("{{ session('error') }}");
                             </script>
                         @endif
-                        <form action="{{url('/login')}}" method="POST">
+                        <form action="{{route('login')}}" method="POST">
                             @csrf
                             <div class="row mb-4">
                                 <label for="horizontal-email-input"

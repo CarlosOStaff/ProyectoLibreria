@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Carbon\Carbon;
+use Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 //Load Composer's autoloader
 require 'C:\laragon\www\prueba\ProyectoPrueba\vendor\autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 class AuthController extends Controller
@@ -21,41 +21,33 @@ class AuthController extends Controller
     }
     public function login(Request $request)
     {
-        session_start();
-
         $request->validate([
             "email" => "required",
             "password" => "required",
         ]);
-
-        $query = DB::select(
-            'SELECT * FROM users 
-            WHERE email = (:email)',
-            ['email' => $request->email]
-        );
-        $query = reset($query);
-        if (password_verify($request->password, $query->password)) {
-            $_SESSION['user'] = $query;
-            $user = json_decode(json_encode($_SESSION['user'], true));
+        $user = User::where('email', $request->email)->first();
+        if ($user) {
+            if (!$user || !password_verify($request->password, $user->password)) {
+                return redirect('/inicio_session')->with('message_error_validacion', 'Tu correo no esta validado');
+            }
             if (!is_null($user->email_verified_at)) {
+                $token = $user->createToken('my_token')->plainTextToken;
+                $cookie = cookie('cookie_token', $token, 60 * 24);
                 if ($user->rol_id === 1) {
-                    $admin = $_SESSION['admin'] = $query;
-
-                    return redirect('/admin/home');
+                    return redirect('/admin/home')->withCookie($cookie);
                 } elseif ($user->rol_id === 2) {
-                    $cliente = $_SESSION['cliente'] = $query;
-                    return redirect('/cliente/home');
+                    return redirect('/cliente/home')->withCookie($cookie);
                 }
             }
             return redirect('/inicio_session')->with('message_error_validacion', 'Tu correo no esta validado');
         }
-        return view('login');
+        return redirect('/login')->with('message_error_validacion', 'Correo no encontrado');
     }
     public function logout()
     {
-        session_start();
-        session_destroy();
-        return view('welcome');
+        auth()->user()->tokens()->delete();
+        $cookie = Cookie::forget('cookie_token');
+        return redirect('/');
     }
     public function register(Request $request)
     {
@@ -223,6 +215,8 @@ class AuthController extends Controller
         }
         return response()->json(['message', 'usuario no encontrado']);
     }
+
+    /*funciones de prueba sanctum*/
     public function newindex(Request $request)
     {
         $user = User::where('email', $request->email)->first();
@@ -233,15 +227,23 @@ class AuthController extends Controller
             ], 404);
         }
         $token = $user->createToken('my-app-token')->plainTextToken;
-        $response = [
-            'user' => $user,
-            'token' => $token
-        ];
-        return response($response, 201);
+        $cookie = cookie('cookie_token', $token, 60 * 24);
+        if ($user->rol_id === 1) {
+            return redirect('/admin/home')->withCookie($cookie);
+        }
+        if ($user->rol_id === 2) {
+            return redirect('/cliente/home')->withCookie($cookie);
+        }
+        return redirect('/prueba')->with('token', $token)->withCookie($cookie);
     }
     public function newlogout()
     {
         auth()->user()->tokens()->delete();
-        return response()->json(['message', 'Has cerrado sesion']);
+        $cookie = Cookie::forget('cookie_token');
+        return redirect('/');
+    }
+    public function prueba()
+    {
+        return view('prueba');
     }
 }

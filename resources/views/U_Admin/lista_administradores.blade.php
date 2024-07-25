@@ -15,7 +15,7 @@ Proyecto - Libreria
                         <img id="current-img" class="img-fluid rounded mt-2 mb-4 mx-auto mh-100 h-50 w-25"
                             src="/img/users/perfil/{{ $admin->img_perfil }}" alt="Imagen actual de perfil">
                         <h5 class="h3 mb-1 fst-italic"><a class="text-dark">{{$admin->nombre}}</a></h5>
-                        <p class="text-muted fw-bold">{{$admin->apellido}},{{$admin->id}}</p>
+                        <p class="text-muted fw-bold">{{$admin->apellido}}</p>
                         @if (is_null($admin->email_verified_at))
                             <a class="text-dark fst-italic">Necesario confirmar cuenta</a>
                         @endif

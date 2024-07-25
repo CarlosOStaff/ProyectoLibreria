@@ -27,7 +27,7 @@
             </ul>
             <ul class="navbar-nav ms-auto text-center">
                 @php
-                    $user = $_SESSION['cliente'];
+                    $user = auth()->user();
                 @endphp
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle text-white fw-bold" id="navbarDropdown" role="button"

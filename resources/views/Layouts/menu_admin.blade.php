@@ -32,7 +32,7 @@
             </ul>
             <ul class="navbar-nav ms-auto text-center">
                 @php
-                    $user = $_SESSION['admin'];
+                    $user = auth()->user();
                     echo '<li class="nav-item dropdown">';
                     echo '<a href="#" class="nav-link dropdown-toggle text-white fw-bold" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">';
                     echo '<img src="/img/users/perfil/' . $user->img_perfil . '" class="mh-25 w-25 mx-1 px-3 rounded-circle" id="profileImage">' . $user->nombre;
