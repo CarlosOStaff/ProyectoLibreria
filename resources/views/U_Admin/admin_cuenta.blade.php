@@ -22,11 +22,14 @@ Proyecto Libreria - Admin
                                         <td>
                                             <!-- Imagen actual -->
                                             @if($item->img_perfil)
-                                                <img id="current-img" class="img-fluid rounded mt-2 mb-4 mx-auto mh-100 h-50 w-25"
-                                                    src="/img/users/perfil/{{ $item->img_perfil }}" alt="Imagen actual de perfil">
+                                                <img id="current-img"
+                                                    class="img-fluid rounded mt-2 mb-4 mx-auto mh-100 h-50 w-25"
+                                                    src="/img/users/perfil/{{ $item->img_perfil }}"
+                                                    alt="Imagen actual de perfil">
                                             @endif
                                             <!-- Vista previa de la nueva imagen -->
-                                            <img id="img-preview" class="img-fluid rounded mt-2 mb-4 mx-auto mh-100 h-50 w-25" src=""
+                                            <img id="img-preview"
+                                                class="img-fluid rounded mt-2 mb-4 mx-auto mh-100 h-50 w-25" src=""
                                                 alt="Vista previa de la nueva imagen" style="display: none;">
                                             <input class="form-control" id="img_perfil" name="img_perfil" type="file"
                                                 onchange="previewImage()">
@@ -74,6 +77,11 @@ Proyecto Libreria - Admin
                                 </tr>
                             </tbody>
                         </table>
+                        @if (session('message_udate_admin'))
+                            <div class="alert alert-success">
+                                {!! session('message_udate_admin') !!}
+                            </div>
+                        @endif
                     </div>
                 </form>
             </div>

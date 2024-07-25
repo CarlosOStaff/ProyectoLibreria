@@ -74,7 +74,6 @@ class AdminController extends Controller
                     if ($currentImage && file_exists($ruta . $currentImage)) {
                         unlink($ruta . $currentImage);
                     }
-
                     // Guardar la nueva imagen
                     $file->move($ruta, $nombreimagen);
 
@@ -99,7 +98,7 @@ class AdminController extends Controller
                         'id' => $user->id
                     ]
                 );
-                return redirect('/admin/edit');
+                return redirect('/admin/edit')->with('message_udate_admin','Tus datos han sido actualizados correctamente');
             }
             return 'no eres administrador';
         }
