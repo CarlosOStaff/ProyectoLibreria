@@ -7,6 +7,8 @@ use Carbon\Carbon;
 use Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
+
 
 //Load Composer's autoloader
 require 'C:\laragon\www\prueba\ProyectoPrueba\vendor\autoload.php';
@@ -28,7 +30,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
         if ($user) {
             if (!$user || !password_verify($request->password, $user->password)) {
-                return redirect('/inicio_session')->with('message_error_validacion', 'Tu correo no esta validado');
+                return redirect('/inicio_session')->with('message_error_validacion', 'Correo o contraseña invalido');
             }
             if (!is_null($user->email_verified_at)) {
                 $token = $user->createToken('my_token')->plainTextToken;
@@ -75,7 +77,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
-
+        $idEncrypt = base64_encode($userId);
         $mail = new PHPMailer();
         try {
             $mail->SMTPDebug = 0;
@@ -94,7 +96,7 @@ class AuthController extends Controller
                             <h3 style="font-style:italic; font-weight:bold; color:black;">Hola, este es un correo generado para la verificación de tu cuenta en nuestra librería.</h3>
                             <p style="font-style:italic; color: #555;">Sigue los pasos a continuación.</p>
                             <p style="color: #555;">Haz clic en el siguiente enlace:</p>
-                            <a href="' . url('/validar/correo/' . $userId) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Confirmar cuenta</a>
+                            <a href="' . url('/validar/correo/' . $idEncrypt) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Confirmar cuenta</a>
                         </div>';
             $mail->send();
             return redirect('/registro/nuevo_usuario/')->with('message_cliente_ok', 'Usuario creado con exito, verifique su cuenta por correo');
@@ -108,10 +110,11 @@ class AuthController extends Controller
     }
     public function validarCorreo($id)
     {
+        $idEncrypt = base64_decode($id);
         $correoValidacion = \DB::select(
             'SELECT id FROM users 
             WHERE id = (:id)',
-            ['id' => $id]
+            ['id' => $idEncrypt]
         );
         if ($correoValidacion) {
             $validar = \DB::update(
@@ -120,7 +123,7 @@ class AuthController extends Controller
                 WHERE id = (:id)',
                 [
                     'email_verified_at' => Carbon::now(),
-                    'id' => $id
+                    'id' => $idEncrypt
                 ]
             );
             return redirect('/inicio_session')->with('message_ok', 'Correo validado con exito');
@@ -145,6 +148,8 @@ class AuthController extends Controller
         );
         if ($query) {
             $user = reset($query);
+            $userId = $user->id;
+            $idEncrypt = base64_encode($userId);
             $mail = new PHPMailer(true);
             try {
                 //Server settings
@@ -169,7 +174,7 @@ class AuthController extends Controller
                         <h3 style="font-style: italic; font-weight: bold; color: black;">Hola, este es un correo generado para la recuperación de tu contraseña.</h3>
                         <p style="font-style: italic; color: #555;">Sigue los pasos a continuación para poder cambiar tu contraseña:</p>
                         <p style="color: #555;">Haz clic en el siguiente enlace:</p>
-                        <a href="' . url('/nuevo-password/' . $user->id) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Cambiar contraseña</a>
+                        <a href="' . url('/nuevo-password/' . $idEncrypt) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Cambiar contraseña</a>
                     </div>';
 
                 $mail->send();
@@ -184,22 +189,26 @@ class AuthController extends Controller
     }
     public function newpassword($id, Request $request)
     {
+        $idEncrypt = base64_decode($id);
         $user = DB::select(
             'SELECT * FROM 
             users WHERE id = (:id)',
-            ['id' => $id]
+            ['id' => $idEncrypt]
         );
+        $user = reset($user);
+        $idEncrypt = base64_encode($user->id);
         if ($user) {
-            return view('nueva_contraseña')->with('user', $user);
+            return view('nueva_contraseña')->with('user', $user->nombre)->with('idEncrypt', $idEncrypt);
         }
-        return response()->json(['message', 'usuario no encontrado']);
+        return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado');
     }
     public function uploadPassword($id, Request $request)
     {
+        $idEncrypt = base64_decode($id);
         $user = DB::select(
             'SELECT * FROM 
             users WHERE id = (:id)',
-            ['id' => $id]
+            ['id' => $idEncrypt]
         );
         if ($user) {
             $newPassword = DB::update(
@@ -207,15 +216,14 @@ class AuthController extends Controller
                 SET password = (:password)
                 WHERE id = (:id)',
                 [
-                    'id' => $id,
+                    'id' => $idEncrypt,
                     'password' => bcrypt($request->password),
                 ]
             );
             return redirect('/nuevo-password/' . $id)
                 ->with('message_password', 'La contraseña se ha actualizado correctamente. <a href="' . url('/inicio_session') . '">Haz clic aquí para iniciar sesión</a>');
         }
-        return response()->json(['message', 'usuario no encontrado']);
-    }
+        return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado');    }
     /*funciones de prueba sanctum*/
     public function newindex(Request $request)
     {

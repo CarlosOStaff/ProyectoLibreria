@@ -137,6 +137,7 @@ class AdminController extends Controller
                     'email' => $request->email,
                     'password' => bcrypt($request->password),
                 ]);
+                $idEncrypt = base64_encode($userId);
                 $mail = new PHPMailer();
                 try {
                     $mail->SMTPDebug = 0;
@@ -155,7 +156,7 @@ class AdminController extends Controller
                                         <h3 style="font-style:italic; font-weight:bold; color:black;">Hola, este es un correo generado para la verificación de tu cuenta en nuestra librería.</h3>
                                         <p style="font-style:italic; color: #555;">Sigue los pasos a continuación.</p>
                                         <p style="color: #555;">Haz clic en el siguiente enlace:</p>
-                                        <a href="' . url('/validar/correo/' . $userId) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Confirmar cuenta</a>
+                                        <a href="' . url('/validar/correo/' . $idEncrypt) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Confirmar cuenta</a>
                                     </div>';
                     $mail->send();
                     return redirect('/registro/admin')->with('message_admin_ok', 'Usuario creado con exito, verifique su cuenta por correo');

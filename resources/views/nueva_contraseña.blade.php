@@ -15,13 +15,11 @@
 
 <body>
     <div class="container py-5">
-        @foreach ($user as $item)
-            <div class="card shadow-lg mt-5 col-lg-6 mx-auto">
-                <div class="card-body p-5">
-                    <h2 class="fst-italic text-center mb-4">Hola, {{$item->nombre}}</h2>
-        @endforeach
+        <div class="card shadow-lg mt-5 col-lg-6 mx-auto">
+            <div class="card-body p-5">
+                <h2 class="fst-italic text-center mb-4">Hola, {{$user}}</h2>
                 <h4 class="fst-italic fw-bold mb-3">Ingresa tu nueva contraseña</h4>
-                <form action="{{route('uploadPassword', $item->id)}}" method="POST" id="frm">
+                <form action="{{route('uploadPassword', $idEncrypt)}}" method="POST" id="frm">
                     @csrf
                     @method('PUT')
                     <div class="form-group">
