@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\AdminControllers\AdminBooksController;
 use App\Http\Controllers\AdminControllers\AdminController;
 use App\Http\Controllers\AdminControllers\AdminUserController;
@@ -8,7 +7,6 @@ use App\Http\Controllers\ClienteControllers\ClientBookController;
 use App\Http\Controllers\ClienteControllers\ClienteController;
 use App\Http\Controllers\indexController;
 use Illuminate\Support\Facades\Route;
-
 
 Route::get('/', [indexController::class, 'index'])->name('home');
 Route::get('/inicio_session', [AuthController::class, 'index'])->name('iniciar-sesion');
