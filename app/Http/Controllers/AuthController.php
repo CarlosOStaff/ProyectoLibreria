@@ -210,7 +210,12 @@ class AuthController extends Controller
             users WHERE id = (:id)',
             ['id' => $idEncrypt]
         );
+        $user = reset($user);
         if ($user) {
+            if(password_verify($request->password, $user->password)){
+                return redirect('/nuevo-password/' . $id)
+                ->with('message_password_error', 'Tu nueva contraseña no debe ser igual que actual');
+            }
             $newPassword = DB::update(
                 'UPDATE users 
                 SET password = (:password)
