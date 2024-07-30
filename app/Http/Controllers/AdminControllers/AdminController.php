@@ -19,19 +19,19 @@ class AdminController extends Controller
     public function index()
     {
         $user = auth()->user();
-            if ($user->rol_id === 1) {
-                $libros = DB::select('SELECT count(id) FROM books;');
-                $libros = reset($libros);
+        if ($user->rol_id === 1) {
+            $libros = DB::select('SELECT count(id) FROM books;');
+            $libros = reset($libros);
 
-                $users = DB::select('SELECT count(id) FROM users WHERE rol_id = 2 
+            $users = DB::select('SELECT count(id) FROM users WHERE rol_id = 2 
                         AND email_verified_at IS NOT NULL;');
-                $users = reset($users);
+            $users = reset($users);
 
-                $librosPRestados = DB::select('SELECT COUNT(id) FROM loans');
-                $librosPRestados = reset($librosPRestados);
-                return view('U_Admin.index', compact('user'))->with('users', $users)->with('libros', $libros)->with('users', $users)->with('librosPRestados', $librosPRestados);
-            }
-        
+            $librosPRestados = DB::select('SELECT COUNT(id) FROM loans');
+            $librosPRestados = reset($librosPRestados);
+            return view('U_Admin.index', compact('user'))
+                ->with(['users' => $users, 'libros' => $libros, 'librosPRestados' => $librosPRestados]);
+        }
         return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
     }
     public function edit()
@@ -49,7 +49,7 @@ class AdminController extends Controller
             );
             $ciudades = DB::select('SELECT * FROM cities;');
             if ($query) {
-                return view('U_Admin.admin_cuenta')->with('admin', $query)->with('ciudades', $ciudades);
+                return view('U_Admin.admin_cuenta')->with(['admin' => $query, 'ciudades' => $ciudades]);
             }
         }
         return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
@@ -98,7 +98,7 @@ class AdminController extends Controller
                         'id' => $user->id
                     ]
                 );
-                return redirect('/admin/edit')->with('message_udate_admin','Tus datos han sido actualizados correctamente');
+                return redirect('/admin/edit')->with('message_udate_admin', 'Tus datos han sido actualizados correctamente');
             }
             return 'no eres administrador';
         }

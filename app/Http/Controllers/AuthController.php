@@ -33,7 +33,7 @@ class AuthController extends Controller
                 return redirect('/inicio_session')->with('message_error_validacion', 'Correo o contraseña invalido');
             }
             if (!is_null($user->email_verified_at)) {
-                $token = $user->createToken('my_token')->plainTextToken;
+                $token = $user->createToken('my_token',['*'],now()->addDays())->plainTextToken;
                 $cookie = cookie('cookie_token', $token, 60 * 24);
                 if ($user->rol_id === 1) {
                     return redirect('/admin/home')->withCookie($cookie);
@@ -225,7 +225,7 @@ class AuthController extends Controller
                     'password' => bcrypt($request->password),
                 ]
             );
-            return redirect('/nuevo-password/' . $id)
+            return \Redirect::route('newpassword',$id)
                 ->with('message_password', 'La contraseña se ha actualizado correctamente. <a href="' . url('/inicio_session') . '">Haz clic aquí para iniciar sesión</a>');
         }
         return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado');    }

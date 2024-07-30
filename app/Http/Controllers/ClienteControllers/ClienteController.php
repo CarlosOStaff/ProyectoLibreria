@@ -27,7 +27,7 @@ class ClienteController extends Controller
                         ORDER BY b.id;',
                     ['user_id' => $user->id]
                 );
-                return view('U_Cliente.index')->with('books', $books)->with('user', $user->nombre);
+                return view('U_Cliente.index')->with(['books' => $books, 'user' => $user->nombre]);
             }
             return redirect('/admin/home')->with('message_error', 'No tienes permiso par acceder a esta ruta');
         }
@@ -47,9 +47,11 @@ class ClienteController extends Controller
                     'SELECT id, nombre_ciudad FROM cities;'
                 );
                 $states = DB::select('SELECT s.nombre_estado FROM states s GROUP BY s.nombre_estado;');
-                return view('U_Cliente.cliente_edit')->with('usuario', $usuario)
-                    ->with('cities', $cities)
-                    ->with('states', $states);
+                return view('U_Cliente.cliente_edit')->with([
+                    'usuario' => $usuario,
+                    'cities' => $cities,
+                    'states' => $states
+                ]);
             }
             return redirect('inicio_session')->with('login_error', 'No tienes los permisos necesarios');
         }

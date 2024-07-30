@@ -47,7 +47,7 @@ class AdminBooksController extends Controller
                     ['id' => $id]
                 );
                 $categorias = DB::select('SELECT * FROM categories;');
-                return view('U_Admin.Books.editar_libros')->with('books', $books)->with('categorias', $categorias);
+                return view('U_Admin.Books.editar_libros')->with(['books' => $books, 'categorias' => $categorias]);
             }
             return redirect('inicio_session')->with('No tienes permisos para realizar esta acción, inicia sesión con un usuario con los permisos necesarios');
         }
@@ -113,7 +113,7 @@ class AdminBooksController extends Controller
         if (isset($user)) {
             if ($user->rol_id === 1) {
                 $catalogues = $this->catalogues();
-                    return view('U_Admin.books.nuevo_libro')->with($catalogues->getData());
+                return view('U_Admin.books.nuevo_libro')->with($catalogues->getData());
             }
             return redirect('inicio_session')->with('login_error', 'No tienes los permisos necesarios');
         }
