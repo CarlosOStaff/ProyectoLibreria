@@ -33,7 +33,7 @@ class AuthController extends Controller
                 return redirect('/inicio_session')->with('message_error_validacion', 'Correo o contraseña invalido');
             }
             if (!is_null($user->email_verified_at)) {
-                $token = $user->createToken('my_token',['*'],now()->addDays())->plainTextToken;
+                $token = $user->createToken('my_token', ['*'], now()->addDays())->plainTextToken;
                 $cookie = cookie('cookie_token', $token, 60 * 24);
                 if ($user->rol_id === 1) {
                     return redirect('/admin/home')->withCookie($cookie);
@@ -198,7 +198,7 @@ class AuthController extends Controller
         $user = reset($user);
         $idEncrypt = base64_encode($user->id);
         if ($user) {
-            return view('nueva_contraseña')->with('user', $user->nombre)->with('idEncrypt', $idEncrypt);
+            return view('nueva_contraseña')->with(['user' => $user->nombre, 'idEncrypt' => $idEncrypt]);
         }
         return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado');
     }
@@ -212,9 +212,9 @@ class AuthController extends Controller
         );
         $user = reset($user);
         if ($user) {
-            if(password_verify($request->password, $user->password)){
+            if (password_verify($request->password, $user->password)) {
                 return redirect('/nuevo-password/' . $id)
-                ->with('message_password_error', 'Tu nueva contraseña no debe ser igual que actual');
+                    ->with('message_password_error', 'Tu nueva contraseña no debe ser igual que actual');
             }
             $newPassword = DB::update(
                 'UPDATE users 
@@ -225,10 +225,11 @@ class AuthController extends Controller
                     'password' => bcrypt($request->password),
                 ]
             );
-            return \Redirect::route('newpassword',$id)
+            return \Redirect::route('newpassword', $id)
                 ->with('message_password', 'La contraseña se ha actualizado correctamente. <a href="' . url('/inicio_session') . '">Haz clic aquí para iniciar sesión</a>');
         }
-        return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado');    }
+        return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado');
+    }
     /*funciones de prueba sanctum*/
     public function newindex(Request $request)
     {
