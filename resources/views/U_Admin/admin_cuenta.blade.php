@@ -6,9 +6,9 @@ Proyecto Libreria - Admin
 
 @section('content')
 <div class="container">
-    <div class="row mx-auto mt-4 justify-content-center align-items-center">
+    <div class="row mx-auto  justify-content-center align-items-center">
         <div class="col-lg-12">
-            <h2 class="card-title p-5 text-center fst-italic">Información personal</h2>
+            <h2 class="card-title p-5 text-center fst-italic m-5">Información personal</h2>
             <div class="card-body col-md-10 mx-auto">
                 <form action="{{ route('admin.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf

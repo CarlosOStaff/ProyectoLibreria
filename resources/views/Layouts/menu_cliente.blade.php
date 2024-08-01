@@ -42,6 +42,16 @@
                 </li>
             </ul>
         </div>
+        <style>
+            .profile-image {
+                width: 20%;
+                /* Tamaño fijo deseado */
+                height: 20%;
+                /* Tamaño fijo deseado */
+                object-fit: cover;
+                /* Asegura que la imagen se ajuste sin distorsionarse */
+            }
+        </style>
     </nav>
 
     @yield('content')

@@ -5,7 +5,7 @@ Proyecto - Libros
 
 @section('content')
 <div class="container py-5">
-    <div class="row p-3">
+    <div class="row p-3 m-5">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">

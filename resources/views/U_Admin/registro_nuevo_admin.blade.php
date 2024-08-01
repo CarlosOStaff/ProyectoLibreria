@@ -7,7 +7,7 @@ Proyecto - Libreria
 @section('content')
 
 <div class="container">
-    <h2 class="card-title text-center p-5 fst-italic ">Nuevo Administrador</h2>
+    <h2 class="card-title text-center p-5 fst-italic m-5">Nuevo Administrador</h2>
     <div class="row mx-auto justify-content-center">
         <div class="col-xl-6 shadow-lg p-3 rounded-5 bg-white">
             <div class="">

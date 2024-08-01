@@ -11,7 +11,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            // Actualiza la URL para eliminar cualquier parámetro de la URL
+            window.history.replaceState({}, '', '/nuevo-password');
 
+        });
+    </script>
 </head>
 
 <body>
@@ -44,9 +50,9 @@
                 </div>
             @endif
             @if (session('message_password_error'))
-                            <div class="alert alert-danger"><i class="mdi mdi-close"></i>
-                                {!! session('message_password_error') !!}
-                            </div>
+                <div class="alert alert-danger"><i class="mdi mdi-close"></i>
+                    {!! session('message_password_error') !!}
+                </div>
             @endif
         </div>
     </div>
