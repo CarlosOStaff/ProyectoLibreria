@@ -191,7 +191,7 @@ class AuthController extends Controller
         if ($user) {
             return view('nueva_contraseña')->with(['user' => $user->nombre, 'token' => $token]);
         }
-        return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado o enlace caducado');
+        return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado o el enlace ha caducado');
     }
     public function uploadPassword($token, Request $request)
     {
