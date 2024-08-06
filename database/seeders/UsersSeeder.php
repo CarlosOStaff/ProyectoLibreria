@@ -23,7 +23,7 @@ class UsersSeeder extends Seeder
         $user->email = $faker->email();
         $user->email_verified_at = Carbon::now();
         $user->ciudad_id = 1;
-        $user->password = bcrypt(12345678);
+        $user->password = bcrypt(1234);
         $user->save();
 
         for ($i = 0; $i < 2; $i++) {
@@ -33,7 +33,7 @@ class UsersSeeder extends Seeder
             $user->apellido = $faker->lastName();
             $user->email = $faker->email();
             $user->ciudad_id = 2;
-            $user->password = bcrypt(123456789);
+            $user->password = bcrypt(1234);
             $user->save();
         }
     }
