@@ -142,8 +142,8 @@ class AuthController extends Controller
     public function forgotPassword(Request $request)
     {
         $user = User::where('email', $request->email)->first();
-        $user->password_reset_token = \Str::random(60);
-        $user->password_reset_expires_at = Carbon::now()->addMinutes(4);
+        $user->password_reset_token = \Str::random(10);
+        $user->password_reset_expires_at = Carbon::now()->addMinutes(1);
         $user->save();
         if ($user) {
             $mail = new PHPMailer(true);
@@ -185,8 +185,10 @@ class AuthController extends Controller
     }
     public function newpassword($token, Request $request)
     {
-        $user = User::where('password_reset_token', $token)->first();
-        if ($user && $user->password_reset_expires_at > now()) {
+        $user = User::where('password_reset_token', $token)
+            ->where('password_reset_expires_at', '>', now())
+            ->first();
+        if ($user) {
             return view('nueva_contraseña')->with(['user' => $user->nombre, 'token' => $token]);
         }
         return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado o enlace caducado');
@@ -194,16 +196,19 @@ class AuthController extends Controller
     public function uploadPassword($token, Request $request)
     {
         $user = User::where('password_reset_token', $token)
-            ->where('password_reset_expires_at', '>', now()) // Verifica si el token no ha expirado
+            ->where('password_reset_expires_at', '>', now())
             ->first();
         if ($user && $user->password_reset_expires_at > now()) {
             if (password_verify($request->password, $user->password)) {
                 return redirect('/nuevo-password/' . $token)
                     ->with('message_password_error', 'Tu nueva contraseña no debe ser igual que actual');
             }
-            $user->update(['password' => bcrypt($request->password)]);
-            return \Redirect::route('newpassword', $token)
-                ->with('message_password', 'La contraseña se ha actualizado correctamente. <a href="' . url('/inicio_session') . '">Haz clic aquí para iniciar sesión</a>');
+            $user->password = bcrypt($request->password);
+            $user->password_reset_token = null;
+            $user->password_reset_expires_at = null;
+            $user->save();
+            return \Redirect::route('iniciar-sesion')
+                ->with('message_password', 'La contraseña se ha actualizado correctamente.');
         }
         return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado o el enlace a caducado');
     }

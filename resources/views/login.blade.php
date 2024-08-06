@@ -13,7 +13,7 @@
             <br>
             @if (session('message_ok'))
                 <div class="alert alert-success"><i
-                        class="fas fa-exclamation-triangle"></i>{{session('message_ok')}}</div>
+                        class="fas fa-check"></i>{{session('message_ok')}}</div>
             @endif
             @if (session('login_error'))
                 <script>
@@ -23,6 +23,11 @@
             @if (session('message_error_validacion'))
                 <div class="alert alert-danger"><i
                         class="fas fa-exclamation-triangle"></i>{{session('message_error_validacion')}}</div>
+            @endif
+            @if (session('message_password'))
+            <div class="alert alert-success">
+                <i class="fas fa-check">{{session('message_password')}}</i>
+            </div>
             @endif
             <div class="col-xl-12 d-flex justify-content-center align-items-center mt-5">
                 <div class="col-sm-8 shadow-lg p-4 rounded-4">
