@@ -141,15 +141,11 @@ class AuthController extends Controller
     }
     public function forgotPassword(Request $request)
     {
-        $query = DB::select(
-            'SELECT * FROM users 
-            WHERE email = (:email)',
-            ['email' => $request->email]
-        );
-        if ($query) {
-            $user = reset($query);
-            $userId = $user->id;
-            $idEncrypt = base64_encode($userId);
+        $user = User::where('email', $request->email)->first();
+        $user->password_reset_token = \Str::random(60);
+        $user->password_reset_expires_at = Carbon::now()->addMinutes(4);
+        $user->save();
+        if ($user) {
             $mail = new PHPMailer(true);
             try {
                 //Server settings
@@ -174,7 +170,7 @@ class AuthController extends Controller
                         <h3 style="font-style: italic; font-weight: bold; color: black;">Hola, este es un correo generado para la recuperación de tu contraseña.</h3>
                         <p style="font-style: italic; color: #555;">Sigue los pasos a continuación para poder cambiar tu contraseña:</p>
                         <p style="color: #555;">Haz clic en el siguiente enlace:</p>
-                        <a href="' .route('newpassword',$idEncrypt).'" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Cambiar contraseña</a>
+                        <a href="' . route('newpassword', $user->password_reset_token) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Cambiar contraseña</a>
                     </div>';
 
                 $mail->send();
@@ -187,48 +183,29 @@ class AuthController extends Controller
             return redirect('/recuperar_contraseña')->with('message_error', 'No se pudo enviar el correo. Inténtalo de nuevo más tarde.');
         }
     }
-    public function newpassword($id, Request $request)
+    public function newpassword($token, Request $request)
     {
-        $idEncrypt = base64_decode($id);
-        $user = DB::select(
-            'SELECT * FROM 
-            users WHERE id = (:id)',
-            ['id' => $idEncrypt]
-        );
-        $user = reset($user);
-        $idEncrypt = base64_encode($user->id);
-        if ($user) {
-            return view('nueva_contraseña')->with(['user' => $user->nombre, 'idEncrypt' => $idEncrypt]);
+        $user = User::where('password_reset_token', $token)->first();
+        if ($user && $user->password_reset_expires_at > now()) {
+            return view('nueva_contraseña')->with(['user' => $user->nombre, 'token' => $token]);
         }
-        return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado');
+        return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado o enlace caducado');
     }
-    public function uploadPassword($id, Request $request)
+    public function uploadPassword($token, Request $request)
     {
-        $idEncrypt = base64_decode($id);
-        $user = DB::select(
-            'SELECT * FROM 
-            users WHERE id = (:id)',
-            ['id' => $idEncrypt]
-        );
-        $user = reset($user);
-        if ($user) {
+        $user = User::where('password_reset_token', $token)
+            ->where('password_reset_expires_at', '>', now()) // Verifica si el token no ha expirado
+            ->first();
+        if ($user && $user->password_reset_expires_at > now()) {
             if (password_verify($request->password, $user->password)) {
-                return redirect('/nuevo-password/' . $id)
+                return redirect('/nuevo-password/' . $token)
                     ->with('message_password_error', 'Tu nueva contraseña no debe ser igual que actual');
             }
-            $newPassword = DB::update(
-                'UPDATE users 
-                SET password = (:password)
-                WHERE id = (:id)',
-                [
-                    'id' => $idEncrypt,
-                    'password' => bcrypt($request->password),
-                ]
-            );
-            return \Redirect::route('newpassword', $id)
+            $user->update(['password' => bcrypt($request->password)]);
+            return \Redirect::route('newpassword', $token)
                 ->with('message_password', 'La contraseña se ha actualizado correctamente. <a href="' . url('/inicio_session') . '">Haz clic aquí para iniciar sesión</a>');
         }
-        return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado');
+        return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado o el enlace a caducado');
     }
     /*funciones de prueba sanctum*/
     public function newindex(Request $request)
