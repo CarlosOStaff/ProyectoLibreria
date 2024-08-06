@@ -157,11 +157,9 @@ class AuthController extends Controller
                 $mail->Password = 'ravk gxlu tgov upyt'; ///2AvD$iFEbS*t3SM 
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port = 587;
-
                 //Recipients
                 $mail->setFrom('carlos.ovando@staffbridge.com.mx', 'Carlos Ivan Ovando Toledo');
                 $mail->addAddress($user->email, $user->nombre);     //Add a recipient
-
                 //Content
                 $mail->isHTML(true);                                  //Set email format to HTML
                 $mail->Subject = 'Recuperacion de password';
