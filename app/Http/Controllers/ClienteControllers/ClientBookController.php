@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\ClienteControllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\BookReturn;
+use App\Models\Loan;
 use Illuminate\Support\Facades\DB;
 
 class ClientBookController extends Controller
@@ -53,30 +55,13 @@ class ClientBookController extends Controller
         $user = auth()->user()->id;
         if (isset($user)) {
             $id = intval($id);
-            $loan = DB::select(
-                'SELECT * FROM loans 
-                    WHERE user_id = (:user_id) 
-                    AND libro_id = (:libro_id)',
-                [
-                    'user_id' => $user,
-                    'libro_id' => $id
-                ]
-            );
-            $loan = reset($loan);
-            $devolucion = DB::insert(
-                'INSERT INTO book_returns (user_id,prestamo_id,fecha_devolucion) 
-                        VALUES (:user_id,:prestamo_id,:fecha_devolucion)',
-                ['user_id' => $user, 'prestamo_id' => $loan->id, 'fecha_devolucion' => date('Y-m-d')]
-            );
-            $delete = DB::delete(
-                'DELETE FROM loans 
-                    WHERE libro_id = (:libro_id) 
-                    AND user_id = (:user_id);',
-                [
-                    'libro_id' => $id,
-                    'user_id' => $user
-                ]
-            );
+            $loan = Loan::where('user_id', $user)->where('libro_id', $id)->first();
+            BookReturn::create([
+                'user_id' => $user,
+                'prestamo_id' => $loan->id,
+                'fecha_devolucion' => date('Y-m-d')
+            ]);
+            $loan->delete();
             return redirect('/cliente/mis_libros');
         }
         return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');

@@ -9,12 +9,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Loan extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
     protected $fillable = [
         "id",
         "user_id",
         "libro_id",
         "fecha_prestamo",
-        "deleted_at"
     ];
 }
