@@ -50,7 +50,7 @@ class ClientBookController extends Controller
     }
     public function regresarLibro($id)
     {
-        $user = auth()->user();
+        $user = auth()->user()->id;
         if (isset($user)) {
             $id = intval($id);
             $loan = DB::select(
@@ -58,7 +58,7 @@ class ClientBookController extends Controller
                     WHERE user_id = (:user_id) 
                     AND libro_id = (:libro_id)',
                 [
-                    'user_id' => $user->id,
+                    'user_id' => $user,
                     'libro_id' => $id
                 ]
             );
@@ -66,7 +66,7 @@ class ClientBookController extends Controller
             $devolucion = DB::insert(
                 'INSERT INTO book_returns (user_id,prestamo_id,fecha_devolucion) 
                         VALUES (:user_id,:prestamo_id,:fecha_devolucion)',
-                ['user_id' => $user->id, 'prestamo_id' => $loan->id, 'fecha_devolucion' => date('Y-m-d')]
+                ['user_id' => $user, 'prestamo_id' => $loan->id, 'fecha_devolucion' => date('Y-m-d')]
             );
             $delete = DB::delete(
                 'DELETE FROM loans 
@@ -74,7 +74,7 @@ class ClientBookController extends Controller
                     AND user_id = (:user_id);',
                 [
                     'libro_id' => $id,
-                    'user_id' => $user->id
+                    'user_id' => $user
                 ]
             );
             return redirect('/cliente/mis_libros');
