@@ -142,7 +142,7 @@ class AuthController extends Controller
     public function forgotPassword(Request $request)
     {
         $user = User::where('email', $request->email)->first();
-        $user->password_reset_token = \Str::random(10);
+        $user->password_reset_token = \Str::random(20);
         $user->password_reset_expires_at = Carbon::now()->addMinutes(1);
         $user->save();
         if ($user) {
@@ -181,7 +181,7 @@ class AuthController extends Controller
             return redirect('/recuperar_contraseña')->with('message_error', 'No se pudo enviar el correo. Inténtalo de nuevo más tarde.');
         }
     }
-    public function newpassword($token, Request $request)
+    public function newpassword($token)
     {
         $user = User::where('password_reset_token', $token)
             ->where('password_reset_expires_at', '>', now())
@@ -193,10 +193,8 @@ class AuthController extends Controller
     }
     public function uploadPassword($token, Request $request)
     {
-        $user = User::where('password_reset_token', $token)
-            ->where('password_reset_expires_at', '>', now())
-            ->first();
-        if ($user && $user->password_reset_expires_at > now()) {
+        $user = User::where('password_reset_token', $token)->first();
+        if ($user) {
             if (password_verify($request->password, $user->password)) {
                 return redirect('/nuevo-password/' . $token)
                     ->with('message_password_error', 'Tu nueva contraseña no debe ser igual que actual');
