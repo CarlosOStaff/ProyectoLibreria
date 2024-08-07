@@ -68,7 +68,7 @@ class AuthController extends Controller
         if ($query) {
             return redirect('/registro/nuevo_usuario')->with('message_error_register', 'El correo ya existe');
         }
-
+        $token = \Str::random(20);
         $userId = DB::table('users')->insertGetId([
             'rol_id' => 2,
             'nombre' => $request->nombre,
@@ -76,8 +76,8 @@ class AuthController extends Controller
             'ciudad_id' => $request->ciudad_id,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'validated_token' => $token
         ]);
-        $idEncrypt = base64_encode($userId);
         $mail = new PHPMailer();
         try {
             $mail->SMTPDebug = 0;
@@ -96,7 +96,7 @@ class AuthController extends Controller
                             <h3 style="font-style:italic; font-weight:bold; color:black;">Hola, este es un correo generado para la verificación de tu cuenta en nuestra librería.</h3>
                             <p style="font-style:italic; color: #555;">Sigue los pasos a continuación.</p>
                             <p style="color: #555;">Haz clic en el siguiente enlace:</p>
-                            <a href="' . url('/validar/correo/' . $idEncrypt) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Confirmar cuenta</a>
+                            <a href="' . url('/validar/correo/' . $token) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Confirmar cuenta</a>
                         </div>';
             $mail->send();
             return redirect('/registro/nuevo_usuario/')->with('message_cliente_ok', 'Usuario creado con exito, verifique su cuenta por correo');
@@ -108,27 +108,16 @@ class AuthController extends Controller
     {
         return view('validar_cuenta');
     }
-    public function validarCorreo($id)
+    public function validarCorreo($token)
     {
-        $idEncrypt = base64_decode($id);
-        $correoValidacion = \DB::select(
-            'SELECT id FROM users 
-            WHERE id = (:id)',
-            ['id' => $idEncrypt]
-        );
+        $correoValidacion = User::where('validated_token', $token)->first();
         if ($correoValidacion) {
-            $validar = \DB::update(
-                'UPDATE users 
-                SET email_verified_at = (:email_verified_at)
-                WHERE id = (:id)',
-                [
-                    'email_verified_at' => Carbon::now(),
-                    'id' => $idEncrypt
-                ]
-            );
+            $correoValidacion->email_verified_at = Carbon::now();
+            $correoValidacion->validated_token = null;
+            $correoValidacion->save();
             return redirect('/inicio_session')->with('message_ok', 'Correo validado con exito');
         }
-        return redirect('/validar/cuenta_de_usuario')->with('message_error', 'El correo ingresado no existe');
+        return redirect('/inicio_session')->with('message_error', 'El correo ya ha sido validado');
     }
     public function newUser()
     {
