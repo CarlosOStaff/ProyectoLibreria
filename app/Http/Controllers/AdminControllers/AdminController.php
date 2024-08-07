@@ -5,6 +5,7 @@ namespace App\Http\Controllers\AdminControllers;
 use App\Exports\CategoriaExport;
 use App\Http\Controllers\Controller;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -136,6 +137,7 @@ class AdminController extends Controller
                     'ciudad_id' => $request->ciudad_id,
                     'email' => $request->email,
                     'password' => bcrypt($request->password),
+                    'created_at' => Carbon::now()
                 ]);
                 $idEncrypt = base64_encode($userId);
                 $mail = new PHPMailer();
@@ -199,7 +201,6 @@ class AdminController extends Controller
                             WHERE id = :id',
                     ['id' => $id]
                 );
-                return $deleteResult;
                 // Verificar si la eliminación fue exitosa
                 if ($deleteResult) {
                     return redirect('/admin/home')->with('success', 'Usuario eliminado correctamente');

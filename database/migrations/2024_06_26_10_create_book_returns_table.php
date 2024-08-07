@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('book_returns', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('prestamo_id');
             $table->date('fecha_devolucion');
             $table->timestamps();

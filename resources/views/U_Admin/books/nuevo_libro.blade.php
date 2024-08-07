@@ -6,7 +6,7 @@ Libros
 
 @section('content')
 <div class="p-5">
-    <div class="container bg-body col-lg-6 p-3 mt-3 pb-4 shadow-lg rounded-4">
+    <div class="container bg-body col-lg-10 p-3 mt-3 pb-4 shadow-lg rounded-4">
         <h2 class="card-title mb-4 text-center mt-2 fst-italic">Registrar un nuevo libro</h2>
         <div class="row justify-content-center align-items-center">
             <div class="col-lg-10 ">
@@ -22,13 +22,13 @@ Libros
                             <div class="mb-3">
                                 <label for="formrow-email-input"
                                     class="form-label fw-bold fst-italic">Descripcion</label>
-                                <input type="text" class="form-control" required name="descripcion" placeholder="Descripcion...">
+                                    <textarea name="descripcion" required id="" row="4" class="form-control" placeholder="Descripcion..."></textarea>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="formrow-email-input" class="form-label fw-bold fst-italic">Contenido</label>
-                                <input type="text" class="form-control" required = reqrequired'); name="contenido" placeholder="Contenido...">
+                                <textarea name="contenido" required id="" row="4" class="form-control" placeholder="Contenido..."></textarea>
                             </div>
                         </div>
                         <div class="row">

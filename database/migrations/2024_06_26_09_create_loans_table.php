@@ -14,8 +14,8 @@ return new class extends Migration
     {
         Schema::create('loans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->references('id')->on('users');
-            $table->foreignId('libro_id')->references('id')->on('books');
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('libro_id')->references('id')->on('books')->onDelete('cascade');
             $table->date('fecha_prestamo');
             $table->date('fecha_devolucion')->nullable();
             $table->timestamps();
