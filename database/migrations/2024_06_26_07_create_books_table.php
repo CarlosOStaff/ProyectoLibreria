@@ -12,11 +12,11 @@ return new class extends Migration {
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
+            $table->string('imagen')->nullable();
             $table->string('titulo_libro');
             $table->mediumText('descripcion');
             $table->text('contenido');
             $table->date('fecha_publicacion')->nullable();
-            //$table->unsignedBigInteger('categoria_id'); // Relación con categorias
             $table->foreignId('categoria_id')->references('id')->on('categories')->onDelete('cascade');
             $table->timestamps();
         });

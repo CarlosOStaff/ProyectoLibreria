@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('book_returns', function (Blueprint $table) {
             $table->id();
-            //$table->unsignedBigInteger('user_id');
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            //$table->unsignedBigInteger('prestamo_id');
-            $table->foreignId('prestamo_id')->references('id')->on('loans')->onDelete('cascade');
+            $table->integer('prestamo_id');
             $table->date('fecha_devolucion');
             $table->timestamps();
         });

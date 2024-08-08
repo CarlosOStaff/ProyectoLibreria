@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('cities', function (Blueprint $table) {
             $table->id();
             $table->string('nombre_ciudad');
-            //$table->unsignedBigInteger('estado_id');
             $table->foreignId('estado_id')->references('id')->on('states');
             $table->timestamps();
         });
