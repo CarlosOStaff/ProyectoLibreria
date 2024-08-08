@@ -194,7 +194,7 @@ class AuthController extends Controller
             ->first();
         if ($user) {
             if (password_verify($request->password, $user->password)) {
-                return redirect('/nuevo-password/' . $token)
+                return redirect('/nuevo-password/' . $email . '/' . $token)
                     ->with('message_password_error', 'Tu nueva contraseña no debe ser igual que actual');
             }
             $user->password = bcrypt($request->password);
