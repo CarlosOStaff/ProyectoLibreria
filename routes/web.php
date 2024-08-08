@@ -15,8 +15,8 @@ Route::get('/registro/nuevo_usuario', [AuthController::class, 'newUser'])->name(
 Route::post('/registro/usuario', [AuthController::class, 'register'])->name('register.newUser');
 Route::get('/recuperar_contraseña', [AuthController::class, 'recuperarContraseña'])->name('recuperarContraseña');
 Route::get('/recuperarcontraseña', [AuthController::class, 'forgotPassword'])->name('forgotPassword');
-Route::get('/nuevo-password/{token}', [AuthController::class, 'newpassword'])->name('newpassword');
-Route::put('/nuevocontraseña/{token}', [AuthController::class, 'uploadPassword'])->name('uploadPassword');
+Route::get('/nuevo-password/{email}/{token}', [AuthController::class, 'newpassword'])->name('newpassword');
+Route::put('/nuevocontraseña/{email}/{token}', [AuthController::class, 'uploadPassword'])->name('uploadPassword');
 Route::get('/validar/correo/{token}', [AuthController::class, 'validarCorreo'])->name('validarCorreo');
 
 Route::middleware('role')->group(function () {

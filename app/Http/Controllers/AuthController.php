@@ -69,6 +69,8 @@ class AuthController extends Controller
             return redirect('/registro/nuevo_usuario')->with('message_error_register', 'El correo ya existe');
         }
         $token = \Str::random(20);
+        $expires_at = Carbon::now()->addMinutes(1);
+
         $userId = DB::table('users')->insertGetId([
             'rol_id' => 2,
             'nombre' => $request->nombre,
@@ -76,7 +78,8 @@ class AuthController extends Controller
             'ciudad_id' => $request->ciudad_id,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'validated_token' => $token
+            'validated_token' => $token,
+            'validated_token_expires_at' => $expires_at
         ]);
         $mail = new PHPMailer();
         try {
@@ -110,14 +113,17 @@ class AuthController extends Controller
     }
     public function validarCorreo($token)
     {
-        $correoValidacion = User::where('validated_token', $token)->first();
-        if ($correoValidacion) {
-            $correoValidacion->email_verified_at = Carbon::now();
-            $correoValidacion->validated_token = null;
-            $correoValidacion->save();
+        $validacion = User::where('validated_token', $token)
+            ->where('validated_token_expires_at', '>', now())
+            ->first();
+        if ($validacion) {
+            $validacion->email_verified_at = Carbon::now();
+            $validacion->validated_token_expires_at = null;
+            $validacion->validated_token = null;
+            $validacion->save();
             return redirect('/inicio_session')->with('message_ok', 'Correo validado con exito');
         }
-        return redirect('/inicio_session')->with('message_error', 'El correo ya ha sido validado');
+        return redirect('/inicio_session')->with('message_error', 'El correo ya ha sido validado o el enlace ha caducado');
     }
     public function newUser()
     {
@@ -131,10 +137,10 @@ class AuthController extends Controller
     public function forgotPassword(Request $request)
     {
         $user = User::where('email', $request->email)->first();
-        $user->password_reset_token = \Str::random(20);
-        $user->password_reset_expires_at = Carbon::now()->addMinutes(1);
-        $user->save();
         if ($user) {
+            $user->password_reset_token = \Str::random(20);
+            $user->password_reset_expires_at = Carbon::now()->addMinutes(1);
+            $user->save();
             $mail = new PHPMailer(true);
             try {
                 //Server settings
@@ -157,7 +163,7 @@ class AuthController extends Controller
                         <h3 style="font-style: italic; font-weight: bold; color: black;">Hola, este es un correo generado para la recuperación de tu contraseña.</h3>
                         <p style="font-style: italic; color: #555;">Sigue los pasos a continuación para poder cambiar tu contraseña:</p>
                         <p style="color: #555;">Haz clic en el siguiente enlace:</p>
-                        <a href="' . route('newpassword', $user->password_reset_token) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Cambiar contraseña</a>
+                        <a href="' . route('newpassword', ['email' => $request->email, 'token' => $user->password_reset_token]) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Cambiar contraseña</a>
                     </div>';
 
                 $mail->send();
@@ -170,19 +176,22 @@ class AuthController extends Controller
             return redirect('/recuperar_contraseña')->with('message_error', 'No se pudo enviar el correo. Inténtalo de nuevo más tarde.');
         }
     }
-    public function newpassword($token)
+    public function newpassword($email, $token)
     {
         $user = User::where('password_reset_token', $token)
+            ->where('email', $email)
             ->where('password_reset_expires_at', '>', now())
             ->first();
         if ($user) {
-            return view('nueva_contraseña')->with(['user' => $user->nombre, 'token' => $token]);
+            return view('nueva_contraseña')->with(['user' => $user->nombre, 'token' => $token, 'email' => $email]);
         }
         return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado o el enlace ha caducado');
     }
-    public function uploadPassword($token, Request $request)
+    public function uploadPassword($email, $token, Request $request)
     {
-        $user = User::where('password_reset_token', $token)->first();
+        $user = User::where('password_reset_token', $token)
+            ->where('email', $email)
+            ->first();
         if ($user) {
             if (password_verify($request->password, $user->password)) {
                 return redirect('/nuevo-password/' . $token)

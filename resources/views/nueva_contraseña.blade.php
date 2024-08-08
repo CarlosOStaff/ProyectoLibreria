@@ -26,7 +26,7 @@
             <div class="card-body p-5">
                 <h2 class="fst-italic text-center mb-4">Hola, {{$user}}</h2>
                 <h4 class="fst-italic fw-bold mb-3">Ingresa tu nueva contraseña</h4>
-                <form action="{{route('uploadPassword', $token)}}" method="POST" id="frm">
+                <form action="{{route('uploadPassword', ['token' => $token, 'email' => $email])}}" method="POST" id="frm">
                     @csrf
                     @method('PUT')
                     <div class="form-group">
