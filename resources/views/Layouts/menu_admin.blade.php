@@ -30,12 +30,12 @@
                     <a href="{{route('logout')}}" class="nav-link text-white fw-bold">Logout</a>
                 </li>
             </ul>
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto text-center">
                 @php
-                    $user = $_SESSION['admin'];
+                    $user = auth()->user();
                     echo '<li class="nav-item dropdown">';
                     echo '<a href="#" class="nav-link dropdown-toggle text-white fw-bold" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">';
-                    echo '<img src="/img/users/perfil/' . $user->img_perfil . '" class="mh-25 h-25 w-25 mx-1 px-3 rounded-circle">' . $user->nombre;
+                    echo '<img src="/img/users/perfil/' . $user->img_perfil . '" class="mh-25 w-25 mx-1 px-3 rounded-circle" id="profileImage">' . $user->nombre;
                     echo '</a>';
                     echo '<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">';
                     echo '<li><a class="dropdown-item" href="' . route('admin.edit') . '">Mi cuenta</a></li>';
@@ -44,6 +44,16 @@
                 @endphp
             </ul>
         </div>
+        <style>
+            .profile-image {
+                width: 20%;
+                /* Tamaño fijo deseado */
+                height: 20%;
+                /* Tamaño fijo deseado */
+                object-fit: cover;
+                /* Asegura que la imagen se ajuste sin distorsionarse */
+            }
+        </style>
     </nav>
 
 
@@ -60,6 +70,20 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function updateProfileImage() {
+                fetch('{{ route('cliente.edit') }}')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('profileImage').src = '/img/users/perfil/' + data.img_perfil;
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+            // Actualizar la imagen del perfil cada 5 segundos
+            setInterval(updateProfileImage, 5000);
+        });
+    </script>
 </body>
 
 </html>

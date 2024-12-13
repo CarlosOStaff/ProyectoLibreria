@@ -5,7 +5,7 @@ Proyecto - Libreria -lista de libros
 
 @section('content')
 <div class="container">
-    <h2 class="card-title text-center pt-5 fst-italic">Libros disponibles</h2>
+    <h2 class="card-title text-center pt-5 fst-italic m-5">Libros disponibles</h2>
 
     <div class="row mx-auto mt-4 justify-content-center align-items-center d-flex">
         @foreach ($books as $book)

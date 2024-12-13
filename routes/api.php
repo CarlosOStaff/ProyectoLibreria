@@ -6,7 +6,7 @@ use App\Http\Controllers\ClienteControllers\ClienteController;
 use App\Http\Controllers\pruebaapicontroller;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware'=>'auth:sanctum'],function(){
+Route::group(['middleware' => ['auth:sanctum']],function(){
     Route::get('/home-admin', [AdminController::class,'index2']);
     Route::get('/home-cliente',[ClienteController::class,'newindex']);
     Route::get('/auth/logout',[AuthController::class,'newlogout']);

@@ -5,7 +5,7 @@ Libreria
 @endsection
 
 @section('content')
-<div class="row mt-5" style="display: flex; justify-content: center;padding-top:3vw;">
+<div class="row mt-0" style="display: flex; justify-content: center;padding-top:3vw;">
     <div class="col-xl-6">
         <div class="card">
             <div class="card-body">
@@ -57,17 +57,7 @@ Libreria
                                             placeholder="Enter Your Email ID" value="{{$item->email}}">
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="formrow-password-input"
-                                            class="form-label fst-italic fw-bold">Password</label>
-                                        <input type="password" name="password" class="form-control"
-                                            id="formrow-password-input" placeholder="Enter Your Password" value="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-4">
+                                <div class="col-6">
                                     <div class="mb-3">
                                         <label for="formrow-inputCity" class="form-label fst-italic fw-bold">Ciudad</label>
                                         <select id="formrow-inputState" name="ciudad_id" class="form-select">
@@ -76,6 +66,25 @@ Libreria
                                                 <option value="{{$city->id}}">{{$city->nombre_ciudad}}</option>
                                             @endforeach
                                         </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="formrow-password-input"
+                                            class="form-label fst-italic fw-bold">Password</label>
+                                        <input type="password" name="password" class="form-control"
+                                            id="formrow-password-input" placeholder="Enter Your Password" value="">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label for="horizontal-password-input"
+                                        class="col-form-label fw-bold fst-italic text-start">Confirmar
+                                        Password:</label>
+                                    <div class="col-sm-12">
+                                        <input type="password" name="confirmar_password" id="confirmar_password"
+                                            class="form-control" placeholder="Ingresa tu contraseña">
                                     </div>
                                 </div>
                             </div>

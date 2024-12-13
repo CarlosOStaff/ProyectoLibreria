@@ -6,7 +6,7 @@ Proyecto - Libreria
 
 @section('content')
 <div class="container">
-    <h1 class="text-center p-5 fst-italic">Lista de administradores activos</h1>
+    <h1 class="text-center p-5 fst-italic m-5">Lista de administradores activos</h1>
     <div class="row mx-auto mt-4 justify-content-center align-items-stretch">
         @foreach ($admins as $admin)
             <div class="col-xl-3 col-sm-6 shadow-lg p-4 mb-5 mx-4">
@@ -15,7 +15,7 @@ Proyecto - Libreria
                         <img id="current-img" class="img-fluid rounded mt-2 mb-4 mx-auto mh-100 h-50 w-25"
                             src="/img/users/perfil/{{ $admin->img_perfil }}" alt="Imagen actual de perfil">
                         <h5 class="h3 mb-1 fst-italic"><a class="text-dark">{{$admin->nombre}}</a></h5>
-                        <p class="text-muted fw-bold">{{$admin->apellido}},{{$admin->id}}</p>
+                        <p class="text-muted fw-bold">{{$admin->apellido}}</p>
                         @if (is_null($admin->email_verified_at))
                             <a class="text-dark fst-italic">Necesario confirmar cuenta</a>
                         @endif
