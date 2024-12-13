@@ -116,13 +116,13 @@ class AuthController extends Controller
     }
     public function validarCorreo($id)
     {
-        $correoValidacion = \DB::select(
+        $correoValidacion = DB::select(
             'SELECT id FROM users 
             WHERE id = (:id)',
             ['id' => $id]
         );
         if ($correoValidacion) {
-            $validar = \DB::update(
+            $validar = DB::update(
                 'UPDATE users 
                 SET email_verified_at = (:email_verified_at)
                 WHERE id = (:id)',
