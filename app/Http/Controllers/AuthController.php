@@ -4,15 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Carbon\Carbon;
-use Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Crypt;
-
 
 //Load Composer's autoloader
 require 'C:\laragon\www\prueba\ProyectoPrueba\vendor\autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 class AuthController extends Controller
@@ -23,33 +21,41 @@ class AuthController extends Controller
     }
     public function login(Request $request)
     {
+        session_start();
+
         $request->validate([
             "email" => "required",
             "password" => "required",
         ]);
-        $user = User::where('email', $request->email)->first();
-        if ($user) {
-            if (!$user || !password_verify($request->password, $user->password)) {
-                return redirect('/inicio_session')->with('message_error_validacion', 'Correo o contraseña invalido');
-            }
+
+        $query = DB::select(
+            'SELECT * FROM users 
+            WHERE email = (:email)',
+            ['email' => $request->email]
+        );
+        $query = reset($query);
+        if (password_verify($request->password, $query->password)) {
+            $_SESSION['user'] = $query;
+            $user = json_decode(json_encode($_SESSION['user'], true));
             if (!is_null($user->email_verified_at)) {
-                $token = $user->createToken('my_token', ['*'], now()->addDays())->plainTextToken;
-                $cookie = cookie('cookie_token', $token, 60 * 24);
                 if ($user->rol_id === 1) {
-                    return redirect('/admin/home')->withCookie($cookie);
+                    $admin = $_SESSION['admin'] = $query;
+
+                    return redirect('/admin/home');
                 } elseif ($user->rol_id === 2) {
-                    return redirect('/cliente/home')->withCookie($cookie);
+                    $cliente = $_SESSION['cliente'] = $query;
+                    return redirect('/cliente/home');
                 }
             }
             return redirect('/inicio_session')->with('message_error_validacion', 'Tu correo no esta validado');
         }
-        return redirect('/login')->with('message_error_validacion', 'Correo no encontrado');
+        return view('login');
     }
     public function logout()
     {
-        auth()->user()->tokens()->delete();
-        $cookie = Cookie::forget('cookie_token');
-        return redirect('/');
+        session_start();
+        session_destroy();
+        return view('welcome');
     }
     public function register(Request $request)
     {
@@ -68,8 +74,6 @@ class AuthController extends Controller
         if ($query) {
             return redirect('/registro/nuevo_usuario')->with('message_error_register', 'El correo ya existe');
         }
-        $token = \Str::random(20);
-        $expires_at = Carbon::now()->addMinutes(1);
 
         $userId = DB::table('users')->insertGetId([
             'rol_id' => 2,
@@ -78,9 +82,8 @@ class AuthController extends Controller
             'ciudad_id' => $request->ciudad_id,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'validated_token' => $token,
-            'validated_token_expires_at' => $expires_at
         ]);
+
         $mail = new PHPMailer();
         try {
             $mail->SMTPDebug = 0;
@@ -99,7 +102,7 @@ class AuthController extends Controller
                             <h3 style="font-style:italic; font-weight:bold; color:black;">Hola, este es un correo generado para la verificación de tu cuenta en nuestra librería.</h3>
                             <p style="font-style:italic; color: #555;">Sigue los pasos a continuación.</p>
                             <p style="color: #555;">Haz clic en el siguiente enlace:</p>
-                            <a href="' . url('/validar/correo/' . $token) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Confirmar cuenta</a>
+                            <a href="' . url('/validar/correo/' . $userId) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Confirmar cuenta</a>
                         </div>';
             $mail->send();
             return redirect('/registro/nuevo_usuario/')->with('message_cliente_ok', 'Usuario creado con exito, verifique su cuenta por correo');
@@ -111,19 +114,26 @@ class AuthController extends Controller
     {
         return view('validar_cuenta');
     }
-    public function validarCorreo($token)
+    public function validarCorreo($id)
     {
-        $validacion = User::where('validated_token', $token)
-            ->where('validated_token_expires_at', '>', now())
-            ->first();
-        if ($validacion) {
-            $validacion->email_verified_at = Carbon::now();
-            $validacion->validated_token_expires_at = null;
-            $validacion->validated_token = null;
-            $validacion->save();
+        $correoValidacion = DB::select(
+            'SELECT id FROM users 
+            WHERE id = (:id)',
+            ['id' => $id]
+        );
+        if ($correoValidacion) {
+            $validar = DB::update(
+                'UPDATE users 
+                SET email_verified_at = (:email_verified_at)
+                WHERE id = (:id)',
+                [
+                    'email_verified_at' => Carbon::now(),
+                    'id' => $id
+                ]
+            );
             return redirect('/inicio_session')->with('message_ok', 'Correo validado con exito');
         }
-        return redirect('/inicio_session')->with('message_error', 'El correo ya ha sido validado o el enlace ha caducado');
+        return redirect('/validar/cuenta_de_usuario')->with('message_error', 'El correo ingresado no existe');
     }
     public function newUser()
     {
@@ -136,11 +146,13 @@ class AuthController extends Controller
     }
     public function forgotPassword(Request $request)
     {
-        $user = User::where('email', $request->email)->first();
-        if ($user) {
-            $user->password_reset_token = \Str::random(20);
-            $user->password_reset_expires_at = Carbon::now()->addMinutes(1);
-            $user->save();
+        $query = DB::select(
+            'SELECT * FROM users 
+            WHERE email = (:email)',
+            ['email' => $request->email]
+        );
+        if ($query) {
+            $user = reset($query);
             $mail = new PHPMailer(true);
             try {
                 //Server settings
@@ -152,9 +164,11 @@ class AuthController extends Controller
                 $mail->Password = 'ravk gxlu tgov upyt'; ///2AvD$iFEbS*t3SM 
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port = 587;
+
                 //Recipients
                 $mail->setFrom('carlos.ovando@staffbridge.com.mx', 'Carlos Ivan Ovando Toledo');
                 $mail->addAddress($user->email, $user->nombre);     //Add a recipient
+
                 //Content
                 $mail->isHTML(true);                                  //Set email format to HTML
                 $mail->Subject = 'Recuperacion de password';
@@ -163,7 +177,7 @@ class AuthController extends Controller
                         <h3 style="font-style: italic; font-weight: bold; color: black;">Hola, este es un correo generado para la recuperación de tu contraseña.</h3>
                         <p style="font-style: italic; color: #555;">Sigue los pasos a continuación para poder cambiar tu contraseña:</p>
                         <p style="color: #555;">Haz clic en el siguiente enlace:</p>
-                        <a href="' . route('newpassword', ['email' => $request->email, 'token' => $user->password_reset_token]) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Cambiar contraseña</a>
+                        <a href="' . url('/nuevo-password/' . $user->id) . '" style="display: inline-block; padding: 1vw 1.5vw; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Cambiar contraseña</a>
                     </div>';
 
                 $mail->send();
@@ -176,37 +190,39 @@ class AuthController extends Controller
             return redirect('/recuperar_contraseña')->with('message_error', 'No se pudo enviar el correo. Inténtalo de nuevo más tarde.');
         }
     }
-    public function newpassword($email, $token)
+    public function newpassword($id, Request $request)
     {
-        $user = User::where('password_reset_token', $token)
-            ->where('email', $email)
-            ->where('password_reset_expires_at', '>', now())
-            ->first();
+        $user = DB::select(
+            'SELECT * FROM 
+            users WHERE id = (:id)',
+            ['id' => $id]
+        );
         if ($user) {
-            return view('nueva_contraseña')->with(['user' => $user->nombre, 'token' => $token, 'email' => $email]);
+            return view('nueva_contraseña')->with('user', $user);
         }
-        return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado o el enlace ha caducado');
+        return response()->json(['message', 'usuario no encontrado']);
     }
-    public function uploadPassword($email, $token, Request $request)
+    public function uploadPassword($id, Request $request)
     {
-        $user = User::where('password_reset_token', $token)
-            ->where('email', $email)
-            ->first();
+        $user = DB::select(
+            'SELECT * FROM 
+            users WHERE id = (:id)',
+            ['id' => $id]
+        );
         if ($user) {
-            if (password_verify($request->password, $user->password)) {
-                return redirect('/nuevo-password/' . $email . '/' . $token)
-                    ->with('message_password_error', 'Tu nueva contraseña no debe ser igual que actual');
-            }
-            $user->password = bcrypt($request->password);
-            $user->password_reset_token = null;
-            $user->password_reset_expires_at = null;
-            $user->save();
-            return \Redirect::route('iniciar-sesion')
-                ->with('message_password', 'La contraseña se ha actualizado correctamente.');
+            $newPassword = DB::update(
+                'UPDATE users 
+                SET password = (:password)
+                WHERE id = (:id)',
+                [
+                    'id' => $id,
+                    'password' => bcrypt($request->password),
+                ]
+            );
+            return redirect('/inicio_session')->with('user', $user);
         }
-        return redirect('/recuperar_contraseña')->with('message_error', 'Usuario no encontrado o el enlace a caducado');
+        return response()->json(['message', 'usuario no encontrado']);
     }
-    /*funciones de prueba sanctum*/
     public function newindex(Request $request)
     {
         $user = User::where('email', $request->email)->first();
@@ -217,23 +233,15 @@ class AuthController extends Controller
             ], 404);
         }
         $token = $user->createToken('my-app-token')->plainTextToken;
-        $cookie = cookie('cookie_token', $token, 60 * 24);
-        if ($user->rol_id === 1) {
-            return redirect('/admin/home')->withCookie($cookie);
-        }
-        if ($user->rol_id === 2) {
-            return redirect('/cliente/home')->withCookie($cookie);
-        }
-        return redirect('/prueba')->with('token', $token)->withCookie($cookie);
+        $response = [
+            'user' => $user,
+            'token' => $token
+        ];
+        return response($response, 201);
     }
     public function newlogout()
     {
         auth()->user()->tokens()->delete();
-        $cookie = Cookie::forget('cookie_token');
-        return redirect('/');
-    }
-    public function prueba()
-    {
-        return view('prueba');
+        return response()->json(['message', 'Has cerrado sesion']);
     }
 }
