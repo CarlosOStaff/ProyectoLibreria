@@ -1,0 +1,2 @@
+- Proyecto creado con laravel 10.48.18
+- Version de php 8.1
