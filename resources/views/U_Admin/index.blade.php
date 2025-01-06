@@ -10,9 +10,8 @@ Libreria
         alert("{{ session('message_error') }}");
     </script>
 @endif
-@foreach ($query as $item)
-    <h1 class="text-center fst-italic mt-4">Bienvenido {{$item->nombre}}</h1>
-@endforeach
+
+    <h1 class="text-center fst-italic pt-5 m-5">Bienvenido {{$user->nombre}}</h1>
 
 <div class="container">
     <div class="row mx-auto mt-4 justify-content-center align-items-center">

@@ -3,133 +3,154 @@
 namespace App\Http\Controllers\ClienteControllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Book;
-use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Controllers\BookController;
+use Cookie;
 
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-    class ClienteController extends Controller
+class ClienteController extends Controller
+{
+    public function index()
     {
-        public function index()
-        {
-            /*         session_start();
-             */
-            if (isset($_SESSION['user'])) {
-                $user = $_SESSION['user']->id;
-                $user_name = $_SESSION['user']->nombre;
-                $query = DB::select('SELECT id FROM users WHERE id = (:id)', [
-                    'id' => $user
-                ]);
-                if ($_SESSION['user']->rol_id === 2) {
-
-                    $books = DB::select(
-                        'SELECT b.id,b.titulo_libro,b.descripcion,b.categoria_id, c.nombre_categoria
-                                FROM books b
-                                JOIN categories c
-                                ON b.categoria_id = c.id
-                                ORDER BY b.id;'
-                    );
-                    return view('U_Cliente.index')->with('books', $books)->with('user', $user_name);
-                }
-                return redirect('/admin/home')->with('message_error', 'No tienes permiso par acceder a esta ruta');
+        $user = auth()->user();
+        if (isset($user)) {
+            if ($user->rol_id === 2) {
+                $books = DB::select(
+                    'SELECT b.id, b.imagen, b.titulo_libro, b.descripcion, b.categoria_id, c.nombre_categoria
+                        FROM books b
+                        JOIN categories c ON b.categoria_id = c.id
+                        WHERE b.id NOT IN (
+                            SELECT b.id
+                            FROM loans l
+                            JOIN books b ON l.libro_id = b.id
+                            WHERE l.user_id = (:user_id)
+                        )
+                        ORDER BY b.id;',
+                    ['user_id' => $user->id]
+                );
+                return view('U_Cliente.index')->with(['books' => $books, 'user' => $user->nombre]);
             }
-            return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
+            return redirect('/admin/home')->with('message_error', 'No tienes permiso par acceder a esta ruta');
         }
-        public function edit()
-        {
-            /*         session_start();
-             */
-            if (isset($_SESSION['user'])) {
-                $user_rol = $_SESSION['user']->rol_id;
-                $user_id = $_SESSION['user']->id;
-                if ($user_rol === 2) {
-                    $usuario = DB::select(
-                        'SELECT id,rol_id,nombre,apellido,ciudad_id,email,password 
+        return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
+    }
+    public function edit()
+    {
+        $user = auth()->user();
+        if (isset($user)) {
+            if ($user->rol_id === 2) {
+                $usuario = DB::select(
+                    'SELECT img_perfil,id,rol_id,nombre,apellido,ciudad_id,email,password 
                         FROM users WHERE id = (:id)',
-                        ['id' => $user_id]
-                    );
-                    $cities = DB::select(
-                        'SELECT id, nombre_ciudad FROM cities;'
-                    );
-                    $states = DB::select('SELECT s.nombre_estado FROM states s GROUP BY s.nombre_estado;');
-                    return view('U_Cliente.cliente_edit')->with('usuario', $usuario)
-                        ->with('cities', $cities)
-                        ->with('states', $states);
-                }
-                return 'no tienes permisos';
+                    ['id' => $user->id]
+                );
+                $cities = DB::select(
+                    'SELECT id, nombre_ciudad FROM cities;'
+                );
+                $states = DB::select('SELECT s.nombre_estado FROM states s GROUP BY s.nombre_estado;');
+                return view('U_Cliente.cliente_edit')->with([
+                    'usuario' => $usuario,
+                    'cities' => $cities,
+                    'states' => $states
+                ]);
             }
-
-            return 'debes de iniciar sesion';
+            return redirect('inicio_session')->with('login_error', 'No tienes los permisos necesarios');
         }
+        return redirect('inicio_session')->with('login_error', 'Debes de iniciar sesion');
+    }
+    public function update(Request $request, $id)
+    {
+        $user = auth()->user();
+        if (isset($user)) {
+            if ($user->rol_id === 2) {
+                $ciudadId = intval($request->ciudad_id);
 
-        public function update(Request $request, $id)
-        {
-            /*         session_start();
-             */
-            if (isset($_SESSION['user'])) {
-                $user = $_SESSION['user']->id;
-                $rol_id = $_SESSION['user']->rol_id;
-                $id = intval($id);
-                if ($rol_id === 2) {
-                    if ($user === $id) {
-                        if (is_null($request->password)) {
-                            $userUpdate = DB::update(
-                                'UPDATE users 
-                            SET nombre = (:nombre),
-                            apellido = (:apellido),
-                            ciudad_id = (:ciudad_id),
-                            email = (:email)
-                            WHERE id = (:id)'
-                                ,
-                                [
-                                    'nombre' => $request->nombre,
-                                    'apellido' => $request->apellido,
-                                    'ciudad_id' => intval($request->ciudad_id),
-                                    'email' => $request->email,
-                                    'id' => $id
-                                ]
-                            );
-                            return redirect('/cliente/edit')->with('success', 'Dagos guardados');
-                        } else {
-                            $userUpdate = DB::update(
-                                'UPDATE users 
-                            SET nombre = (:nombre),
-                            apellido = (:apellido),
-                            ciudad_id = (:ciudad_id),
-                            email = (:email),
-                            password = (:password)
-                            WHERE id = (:id)'
-                                ,
-                                [
-                                    'nombre' => $request->nombre,
-                                    'apellido' => $request->apellido,
-                                    'ciudad_id' => intval($request->ciudad_id),
-                                    'email' => $request->email,
-                                    'password' => bcrypt($request->password),
-                                    'id' => $id
-                                ]
-                            );
-                            session_destroy();
-                            return redirect('/inicio_session');
-                        }
-                    } else {
-                        // El usuario no está logeado, redirecciona o muestra un mensaje de error
-                        $errorMessage = "Debes iniciar sesión para acceder a esta página.";
-                        // Puedes redireccionar a otra página o mostrar un mensaje aquí mismo
-                        echo "<script>alert('$errorMessage'); window.location.href = 'login.blade.phpS';</script>";
-                        exit; // Asegura que el script se detenga después de mostrar el mensaje
+                if ($request->hasFile('img_perfil')) {
+                    // Obtener la imagen actual
+                    $currentImage = $user->img_perfil;
+
+                    // Guardar la nueva imagen
+                    $file = $request->img_perfil;
+                    $nombreimagen = \Str::slug($request->nombre) . "_" . $request->apellido . "_" . $user->id . "." . $file->guessExtension();
+                    $ruta = public_path('/img/users/perfil/');
+
+                    // Eliminar la imagen anterior si existe
+                    if ($currentImage && file_exists($ruta . $currentImage)) {
+                        unlink($ruta . $currentImage);
                     }
+
+                    // Guardar la nueva imagen
+                    $file->move($ruta, $nombreimagen);
+
+                    $newImage = $nombreimagen;
+                } else {
+                    $newImage = $user->img_perfil;
                 }
-                // El usuario no está logeado, redirecciona o muestra un mensaje de error
+                if (is_null($request->password)) {
+                    // Actualizar el usuario en la base de datos
+                    DB::update(
+                        'UPDATE users 
+                        SET img_perfil = (:img_perfil), nombre = (:nombre), 
+                        apellido = (:apellido), ciudad_id = (:ciudad_id), 
+                        email = (:email)
+                        WHERE id = (:id)',
+                        [
+                            'img_perfil' => $newImage,
+                            'nombre' => $request->nombre,
+                            'apellido' => $request->apellido,
+                            'ciudad_id' => $ciudadId,
+                            'email' => $request->email,
+                            'id' => $user->id
+                        ]
+                    );
+                    return redirect('/cliente/edit')->with('success', 'Datos guardados');
+                }
+                // Actualizar el usuario en la base de datos
+                DB::update(
+                    'UPDATE users 
+                        SET img_perfil = (:img_perfil), nombre = (:nombre), 
+                        apellido = (:apellido), ciudad_id = (:ciudad_id), 
+                        email = (:email),password = (:password)
+                        WHERE id = (:id)',
+                    [
+                        'img_perfil' => $newImage,
+                        'nombre' => $request->nombre,
+                        'apellido' => $request->apellido,
+                        'ciudad_id' => $ciudadId,
+                        'email' => $request->email,
+                        'password' => bcrypt($request->password),
+                        'id' => $user->id
+                    ]
+                );
+                if ($request->filled('password')) {
+                    auth()->user()->tokens()->delete();
+                    $cookie = Cookie::forget('cookie_token');
+                    return redirect('/inicio_session');
+                }
+            } else {
                 $errorMessage = "Debes iniciar sesión para acceder a esta página.";
-                // Puedes redireccionar a otra página o mostrar un mensaje aquí mismo
-                echo "<script>alert('$errorMessage'); window.location.href = 'login.blade.phpS';</script>";
-                exit; // Asegura que el script se detenga después de mostrar el mensaje
+                echo "<script>alert('$errorMessage'); window.location.href = '{{route('cliente.edit')}}';</script>";
+                exit;
             }
-            return redirect('login');
         }
+        return redirect('login');
+    }
+    public function newindex()
+    {
+        $user = \Auth::user();
+        if ($user->rol_id === 2) {
+            $books = \DB::select('SELECT s.id,s.libro_id,s.fecha_prestamo,b.imagen,b.id,
+                            b.titulo_libro,b.descripcion,ct.nombre_categoria 
+                            FROM loans s 
+                            JOIN books b ON s.libro_id = b.id 
+                            JOIN categories ct ON b.categoria_id = ct.id 
+                            WHERE s.user_id = (:user_id)
+                            ORDER BY b.id;', ['user_id' => $user->id]);
+            return response($books, 200);
+        }
+    }
+    public function url()
+    {
+        $books = \DB::select('SELECT * FROM books');
+        return response($books, 200);
     }
 }

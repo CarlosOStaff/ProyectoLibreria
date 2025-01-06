@@ -14,7 +14,7 @@ class CategoriesSeeder extends Seeder
     {
         DB::table("categories")->insert([
             ['nombre_categoria' => 'Terror'],
-            ['nombre_categoria' => 'Comedi'],
+            ['nombre_categoria' => 'Comedia'],
             ['nombre_categoria' => 'Romance'],
             ['nombre_categoria'=> 'Acción'],
             ['nombre_categoria'=> 'Ciencia Ficción'],

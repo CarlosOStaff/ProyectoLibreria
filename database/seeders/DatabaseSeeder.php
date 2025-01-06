@@ -22,7 +22,5 @@ class DatabaseSeeder extends Seeder
         $this->call(TagsSeeder::class);
         $this->call(UsersSeeder::class);
         $this->call(BooksSeeder::class);
-        $this->call(LoansSeeder::class);
-        $this->call(ReturnBooksSeeder::class);
     }
 }
